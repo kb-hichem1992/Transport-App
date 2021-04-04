@@ -1,5 +1,5 @@
 import React from "react";
-import "./TableCand.css";
+import "./TableCandForm.css";
 import {
   GridComponent,
   ColumnDirective,
@@ -11,7 +11,7 @@ import {
   Resize,
   Sort,
 } from "@syncfusion/ej2-react-grids";
-export default function TableCand({ data }) {
+export default function TableCandForm({ data }) {
   const filter = {
     type: "CheckBox",
   };

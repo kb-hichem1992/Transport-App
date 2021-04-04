@@ -25,7 +25,7 @@ app.get("/api/get_op/mor", (req, res) => {
 
 app.get("/api/get_op/phy", (req, res) => {
   const sqlquery =
-    "select operateur.NOM_OPERATEUR, operateur.PRENOM_OPERATEUR, operateur.PRENOM_PERE,operateur.DATE_NAIS_OPERATEUR, operateur.LIEU_NAIS_OPERATEUR from operateur where TYPE_OPERATEUR = 'phisique';";
+    "select operateur.NOM_OPERATEUR, operateur.PRENOM_OPERATEUR, operateur.PRENOM_PERE,operateur.DATE_NAIS_OPERATEUR, operateur.LIEU_NAIS_OPERATEUR from operateur where TYPE_OPERATEUR = 'physique';";
   db.query(sqlquery, (err, result) => {
     res.send(result);
   });
@@ -36,7 +36,12 @@ app.get("/api/get_form", (req, res) => {
     res.send(result);
   });
 });
-
+app.get("/api/get_candidat", (req, res) => {
+  const sqlquery = "SELECT * FROM transport.candidat;";
+  db.query(sqlquery, (err, result) => {
+    res.send(result);
+  });
+});
 app.get("/api/get_candidat_form", (req, res) => {
   const sqlquery = "SELECT candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, formation.DEBUT, formation.FIN,passe.REMARQUE from ((passe inner join candidat on candidat.NUMERO_CANDIDAT = passe.NUMERO_CANDIDAT) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION);";
   db.query(sqlquery, (err, result) => {
@@ -67,6 +72,54 @@ app.get("/api/get_Lot_EE", (req, res) => {
     res.send(result);
   });
 });
+
+app.post("/Add_condidat", (req, res) => {
+   const Nom = req.body.Nom;
+   const Prénom = req.body.Prénom;
+   const Date_naissance = req.body.Date_naissance;
+   const Lieu_naissance = req.body.Lieu_naissance;
+   const Niveau = req.body.Niveau;
+   const Adresse = req.body.Adresse;
+   const Prénom_Pére = req.body.Prénom_Pére;
+   const Sexe = req.body.Sexe;
+  
+  db.query(
+    "INSERT INTO candidat (`NOM_CANDIDAT`, `PRENOM_CANDIDAT`, `DATE_NAIS_CANDIDAT`, `LIEU_NAIS_CANDIDAT`, `NIVEAU_SCOL_CANDIDAT`, `ADRESSE_CANDIDAT`, `PRENOM_PERE`, `SEX_CONDIDAT`) VALUES (?,?,?,?,?,?,?,?)",
+    [Nom, Prénom, Date_naissance, Lieu_naissance, Niveau,Adresse,Prénom_Pére, Sexe],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Values Inserted");
+      }
+    }
+  );
+});
+
+app.put("/update_candidat", (req, res) => {
+  const numeroCandidat = req.body.numeroCandidat;
+  const Nom = req.body.Nom;
+  const Prénom = req.body.Prénom;
+  const Date_naissance = req.body.Date_naissance;
+  const Lieu_naissance = req.body.Lieu_naissance;
+  const Niveau = req.body.Niveau;
+  const Adresse = req.body.Adresse;
+  const Prénom_Pére = req.body.Prénom_Pére;
+
+  db.query(
+    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ? WHERE `NUMERO_CANDIDAT`= ? ;",
+    [Nom, Prénom, Date_naissance, Lieu_naissance, Niveau,Adresse,Prénom_Pére,numeroCandidat],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
+
 app.listen(3001, () => {
   console.log("it works");
 });

@@ -13,7 +13,6 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { SecondaryListItems } from "./listItems";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -28,7 +27,7 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import AppOp from "./Tables/AppOp.js";
 import AppFor from "./Table_Formation/AppFor.js";
-import AppCand from "./Table_Candidat/AppCand.js";
+import AppCand from "./Candidat/Candidat.js";
 import AppVeh from "./Table_vehicule//AppVeh.js";
 import Button from "@material-ui/core/Button";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
@@ -38,6 +37,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import InfoIcon from "@material-ui/icons/Info";
 import GroupIcon from "@material-ui/icons/Group";
+
 
 const drawerWidth = 250;
 
@@ -343,7 +343,7 @@ export default function Dashboard() {
                   render={(props) => (
                     <AppCand
                       {...props}
-                      id={"http://localhost:3001/api/get_candidat_form"}
+                      id={"http://localhost:3001/api/get_candidat"}
                     />
                   )}
                 />
