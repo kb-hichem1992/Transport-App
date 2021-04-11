@@ -8,8 +8,6 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import PageHeader from "../PageHeader";
-import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
 import Axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,15 +35,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Candidat(props) {
   const classes = useStyles();
-  const [selectedDate, setSelectedDate] = useState("");
-  const [numeroCandidat, setnumeroCandidat] = useState("");
-  const [Nom, setNom] = useState("");
-  const [Prenom, setPrenom] = useState("");
-  const [PrenomPere, setPrenomPere] = useState("");
-  const [Lieu, setLieu] = useState("");
-  const [Niveau, setNiveau] = useState("");
-  const [Adresse, setAdresse] = useState("");
-  const [Sexe, setSexe] = useState("");
+  const {ADRESSE_CANDIDAT,DATE_NAIS_CANDIDAT,LIEU_NAIS_CANDIDAT,NIVEAU_SCOL_CANDIDAT,NOM_CANDIDAT,NUMERO_CANDIDAT,PRENOM_CANDIDAT,PRENOM_PERE,SEX_CONDIDAT}= props.values;
+  const [selectedDate, setSelectedDate] = useState(DATE_NAIS_CANDIDAT);
+  const [numeroCandidat, setnumeroCandidat] = useState(NUMERO_CANDIDAT);
+  const [Nom, setNom] = useState(NOM_CANDIDAT);
+  const [Prenom, setPrenom] = useState(PRENOM_CANDIDAT);
+  const [PrenomPere, setPrenomPere] = useState(PRENOM_PERE);
+  const [Lieu, setLieu] = useState(LIEU_NAIS_CANDIDAT);
+  const [Niveau, setNiveau] = useState(NIVEAU_SCOL_CANDIDAT);
+  const [Adresse, setAdresse] = useState(ADRESSE_CANDIDAT);
+  const [Sexe, setSexe] = useState(SEX_CONDIDAT);
 
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value);
@@ -54,38 +53,29 @@ export default function Candidat(props) {
     setSexe(event.target.value);
   };
 
-  const addCondidat = () => {
-    Axios.post("http://localhost:3001/Add_condidat", {
-      Nom: Nom,
-      Prénom: Prenom,
-      Date_naissance: selectedDate,
-      Lieu_naissance: Lieu,
-      Niveau: Niveau,
-      Adresse: Adresse,
-      Prénom_Pére: PrenomPere,
-      Sexe: Sexe,
-    }).then(alert("Condidat ajouté"));
-  };
-  const updateCandidat = (id) => {
-    Axios.put("http://localhost:3001/update_candidat", {
-      numeroCandidat: numeroCandidat,
-      Nom: Nom,
-      Prénom: Prenom,
-      Date_naissance: selectedDate,
-      Lieu_naissance: Lieu,
-      Niveau: Niveau,
-      Adresse: Adresse,
-      Prénom_Pére: PrenomPere,
-    }).then(console.log("Modifié"));
-  };
+const Enregister =()=>{
+  if(Nom === '' || Prenom ==='' || selectedDate === '' || Lieu ==='' || Niveau === '' || Adresse ==='' || PrenomPere ==='' || Sexe ===''){
+    alert("Merci de remplir tout les champs")
+  }else{
+    props.onClick(
+      numeroCandidat,
+      Nom,
+      Prenom,
+      selectedDate,
+      Lieu,
+      Niveau,
+      Adresse,
+      PrenomPere,
+      Sexe
+    );
+    props.Close(false);
+}
+ 
+
+  }
 
   return (
     <>
-      <PageHeader
-        title="Candidat"
-        subTitle="Ajouter Condidat"
-        icon={<PeopleOutlineTwoToneIcon fontSize="large" />}
-      />
       <Paper className={classes.pageContent}>
         <form className={classes.root} noValidate autoComplete="off">
           <Grid container spacing={3}>
@@ -131,6 +121,7 @@ export default function Candidat(props) {
                 id="date"
                 label="Date de naissance"
                 type="date"
+                defaultChecked={selectedDate}
                 onChange={handleDateChange}
                 className={classes.textField}
                 InputLabelProps={{
@@ -170,18 +161,7 @@ export default function Candidat(props) {
                   variant="contained"
                   color="primary"
                   size="small"
-                  onClick={() => {
-                    props.Add(
-                      Nom,
-                      Prenom,
-                      selectedDate,
-                      Lieu,
-                      Niveau,
-                      Adresse,
-                      PrenomPere,
-                      Sexe
-                    );
-                  }}
+                  onClick={Enregister}
                 >
                   Enregister
                 </Button>
@@ -190,7 +170,7 @@ export default function Candidat(props) {
                   color="secondary"
                   size="small"
                   onClick={() => {
-                    alert(selectedDate);
+                    props.Close(false);
                   }}
                 >
                   Annuler

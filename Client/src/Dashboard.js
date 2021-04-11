@@ -309,7 +309,7 @@ export default function Dashboard() {
           })}
         >
           <div className={classes.drawerHeader} />
-          <Container maxWidth="lg" className={classes.container}>
+          <Container className={classes.container}>
             <Grid item xs={12}>
               <Switch>
                 <Route path="/" component={Welcome} exact />
