@@ -19,6 +19,8 @@ import Popup from "../components/Popup.js";
 import Button from "../components/controls/Button";
 import AddIcon from "@material-ui/icons/Add";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import DeleteIcon from '@material-ui/icons/Delete';
+import PageHeader from "../PageHeader";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -61,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     display: "flex",
-    justifyContent: "start",
+    justifyContent: "flex-end",
   },
 }));
 
@@ -170,8 +172,20 @@ export default function AppCand({ id }) {
   }
   const Values = rowSelected();
 
+  function convert() {
+    let current_datetime = new Date(Values.DATE_NAIS_CANDIDAT);
+    let formatted_date =
+      current_datetime.getFullYear() +
+      "-" +
+      (current_datetime.getMonth() + 1) +
+      "-" +
+      current_datetime.getDate();
+    return formatted_date;
+  }
+
   return (
     <>
+    <PageHeader title="Candidat" subTitle="La liste des Candidat"/>
       <div className={classes.container}>
         <Button
           text="Ajouter"
@@ -201,7 +215,8 @@ export default function AppCand({ id }) {
           text="Supprimer"
           variant="outlined"
           size="small"
-          startIcon={<EditOutlinedIcon />}
+          color ="secondary"
+          startIcon={<DeleteIcon />}
           className={classes.newButton}
           onClick={() => {
             if (Values !== undefined) {
@@ -209,17 +224,6 @@ export default function AppCand({ id }) {
             } else {
               alert("Merci de choisir un candidat");
             }
-          }}
-        />
-
-        <Button
-          text="test"
-          variant="outlined"
-          size="small"
-          className={classes.newButton}
-          onClick={() => {
-            setEtat(!etat);
-            alert(etat);
           }}
         />
       </div>
@@ -234,7 +238,7 @@ export default function AppCand({ id }) {
             filterSettings={filter}
             allowResizing={true}
             allowSorting={true}
-            height={330}
+            height={180}
             ref={TableRef}
           >
             <ColumnsDirective>
@@ -284,7 +288,7 @@ export default function AppCand({ id }) {
       </div>
 
       <Popup
-        title="Candidat Form"
+        title="Ajouter"
         openPopup={openAjouter}
         setOpenPopup={setOpenAjouter}
       >
@@ -296,7 +300,7 @@ export default function AppCand({ id }) {
       </Popup>
 
       <Popup
-        title="Candidat Form"
+        title="Modéfier"
         openPopup={openModifier}
         setOpenPopup={setOpenModifier}
       >

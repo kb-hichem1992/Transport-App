@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import "date-fns";
 import { Button, Grid, Paper } from "@material-ui/core";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import Axios from "axios";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,6 +51,18 @@ export default function Candidat(props) {
   const handleSexeChange = (event) => {
     setSexe(event.target.value);
   };
+
+// convertir le format de la Date en yyyy-mm-dd
+  function convert(date){
+    const current_datetime = new Date(date);
+    
+    const m =  current_datetime.getMonth() +1 ;
+    if (m > 9) {
+     return ( current_datetime.getFullYear() + "-" + (m) + "-" + current_datetime.getDate())
+    }else{
+      return (current_datetime.getFullYear() + "-" + 0 + (m) + "-" + current_datetime.getDate())
+    }
+  }
 
 const Enregister =()=>{
   if(Nom === '' || Prenom ==='' || selectedDate === '' || Lieu ==='' || Niveau === '' || Adresse ==='' || PrenomPere ==='' || Sexe ===''){
@@ -121,7 +132,7 @@ const Enregister =()=>{
                 id="date"
                 label="Date de naissance"
                 type="date"
-                defaultChecked={selectedDate}
+                value={convert(selectedDate)}
                 onChange={handleDateChange}
                 className={classes.textField}
                 InputLabelProps={{

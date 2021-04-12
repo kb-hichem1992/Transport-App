@@ -161,6 +161,42 @@ app.delete("/delete_candidat/:numeroCandidat", (req, res) => {
   );
 });
 
+app.post("/Add_formation", (req, res) => {
+  const numeroFormation = req.body.numeroFormation;
+  const Type = req.body.Type;
+  const Debut = req.body.Debut;
+  const Fin = req.body.Fin;
+  db.query(
+    "INSERT INTO formation (`NUMERO_FORMATION`, `TYPE_FORMATION`, `DEBUT`, `FIN`) VALUES (?,?,?,?)",
+    [
+      numeroFormation,
+      Type,
+      Debut,
+      Fin,
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Values Inserted");
+      }
+    }
+  );
+});
+app.delete("/delete_formation/:numeroFormation", (req, res) => {
+  const numeroFormation = req.params.numeroFormation;
+  db.query(
+    "delete from formation where NUMERO_FORMATION = ?",
+    numeroFormation,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
 app.listen(3001, () => {
   console.log("it works");
 });

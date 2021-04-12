@@ -1,5 +1,5 @@
 import React from "react";
-import "./TableCandForm.css";
+import "./Candidat.css";
 import {
   GridComponent,
   ColumnDirective,

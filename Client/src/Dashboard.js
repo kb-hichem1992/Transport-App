@@ -26,7 +26,7 @@ import SubdirectoryArrowRightOutlinedIcon from "@material-ui/icons/SubdirectoryA
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import AppOp from "./Tables/AppOp.js";
-import AppFor from "./Table_Formation/AppFor.js";
+import AppFor from "./Formation/Formation.js";
 import AppCand from "./Candidat/Candidat.js";
 import AppVeh from "./Table_vehicule//AppVeh.js";
 import Button from "@material-ui/core/Button";
@@ -231,7 +231,7 @@ export default function Dashboard() {
                 <ListItemText primary="Acceuil" />
               </ListItem>
             </Link>
-            <ListItem button onClick={handleClick}>
+           {/*  <ListItem button onClick={handleClick}>
               <ListItemIcon>
                 <AssignmentIcon />
               </ListItemIcon>
@@ -257,7 +257,7 @@ export default function Dashboard() {
                   </ListItem>
                 </Link>
               </List>
-            </Collapse>
+            </Collapse> */}
             <Link to="/For" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
@@ -309,7 +309,7 @@ export default function Dashboard() {
           })}
         >
           <div className={classes.drawerHeader} />
-          <Container className={classes.container}>
+          <Container maxWidth="lg" className={classes.container}>
             <Grid item xs={12}>
               <Switch>
                 <Route path="/" component={Welcome} exact />
