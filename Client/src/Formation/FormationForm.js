@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import {
   Button,
   Grid,
@@ -10,6 +9,9 @@ import {
   Select,
 } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
+import Controls from "../components/controls/Controls";
+import TableCandForm from "../Candidat/TableCandForm";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,6 +63,10 @@ export default function Form(props) {
   const handleTypeChange = (e) => {
     setTypeFormation(e.target.value);
   };
+
+  const handleInputChange = (e) => {
+    setDebut(convert(e.target.value));
+  };
   // convertir le format de la Date en yyyy-mm-dd
   function convert(date) {
     const current_datetime = new Date(date);
@@ -84,6 +90,7 @@ export default function Form(props) {
       );
     }
   }
+
   const Enregister = () => {
     const dt1 = new Date(debut);
     const dt2 = new Date(fin);
@@ -94,11 +101,13 @@ export default function Form(props) {
       if (dt1 >= dt2) {
         alert("Date debut du formation est supèrieur au date fin ");
       } else {
-        props.onClick(numeroFormation, typeFormation, debut, fin);
+        props.onClick(numeroFormation, typeFormation, convert(debut), convert(fin));
+        alert(numeroFormation + "" + typeFormation + "" + debut + "" + fin);
         props.Close(false);
       }
     }
   };
+
   return (
     <>
       <Paper className={classes.pageContent}>
@@ -121,27 +130,15 @@ export default function Form(props) {
                 </MenuItem>
               </Select>
             </FormControl>
-            <TextField
-              id="date"
-              label="Date début"
-              type="date"
-              defaultValue={new Date()}
-              onChange={handleDateDebutChange}
-              className={classes.textField}
-              InputLabelProps={{
-                shrink: true,
-              }}
+            <Controls.DatePicker
+              label="Date debut"
+              value={debut}
+              onChange={setDebut}
             />
-            <TextField
-              id="date"
+            <Controls.DatePicker
               label="Date fin"
-              type="date"
-              defaultValue={new Date()}
-              onChange={handleDateFinChange}
-              className={classes.textField}
-              InputLabelProps={{
-                shrink: true,
-              }}
+              value={fin}
+              onChange={setFin}
             />
             <Button
               variant="contained"

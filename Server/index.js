@@ -45,11 +45,35 @@ app.get("/api/get_candidat", (req, res) => {
 });
 app.get("/api/get_candidat_form", (req, res) => {
   const sqlquery =
-    "SELECT candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, formation.DEBUT, formation.FIN,passe.REMARQUE from ((passe inner join candidat on candidat.NUMERO_CANDIDAT = passe.NUMERO_CANDIDAT) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION);";
+    "SELECT passe.NUMERO_FORMATION, candidat.NUMERO_CANDIDAT,candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, formation.DEBUT, formation.FIN,passe.REMARQUE, passe.NOTE from ((passe inner join candidat on candidat.NUMERO_CANDIDAT = passe.NUMERO_CANDIDAT) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION) Group by passe.NUMERO_FORMATION;";
   db.query(sqlquery, (err, result) => {
     res.send(result);
   });
 });
+
+app.put("/update_passe", (req, res) => {
+  const remarque = req.body.remarque;
+  const note = req.body.note;
+  const numeroCandidat = req.body.numeroCandidat;
+  const numeroFormation = req.body.numeroFormation;
+  db.query(
+    "UPDATE passe SET `REMARQUE`= ?, `NOTE`= ? WHERE `NUMERO_CANDIDAT`= ? and `NUMERO_FORMATION`= ?;",
+    [
+      remarque,
+      note,
+      numeroCandidat,
+      numeroFormation,
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Values updated");
+      }
+    }
+  );
+});
+
 app.get("/api/get_veh_Mar", (req, res) => {
   const sqlquery =
     "select vehicule.IMMATRECULATION, vehicule.MARQUE, vehicule.PTC, vehicule.PTAC, vehicule.CU  , operateur.NOM_OPERATEUR, operateur.PRENOM_OPERATEUR, operateur.PRENOM_PERE  from vehicule, operateur where vehicule.GENRE = 'Marchandise' and vehicule.NUMERO_OPERATEUR = operateur.NUMERO_OPERATEUR;";
@@ -64,20 +88,7 @@ app.get("/api/get_veh_voyag", (req, res) => {
     res.send(result);
   });
 });
-app.get("/api/get_Lot_TUN", (req, res) => {
-  const sqlquery =
-    "SELECT doc.Date_doc, doc.Date_seq, doc.Ref_MO, doc.Titre, doc.code FROM test.doc where Lot = 'TUN';";
-  db.query(sqlquery, (err, result) => {
-    res.send(result);
-  });
-});
-app.get("/api/get_Lot_EE", (req, res) => {
-  const sqlquery =
-    "SELECT doc.Date_doc, doc.Date_seq, doc.Ref_MO, doc.Titre, doc.code FROM test.doc where Lot like'EE%';";
-  db.query(sqlquery, (err, result) => {
-    res.send(result);
-  });
-});
+
 
 app.post("/Add_condidat", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
@@ -183,6 +194,28 @@ app.post("/Add_formation", (req, res) => {
     }
   );
 });
+app.put("/update_formation", (req, res) => {
+  const Type = req.body.Type;
+  const Debut = req.body.Debut;
+  const Fin = req.body.Fin;
+  const numeroFormation = req.body.numeroFormation;
+  db.query(
+    "UPDATE formation SET `TYPE_FORMATION`= ?, `DEBUT`= ?, `FIN`= ? WHERE `NUMERO_FORMATION`=?;",
+    [
+      Type,
+      Debut,
+      Fin,
+      numeroFormation,
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Values updated");
+      }
+    }
+  );
+});
 app.delete("/delete_formation/:numeroFormation", (req, res) => {
   const numeroFormation = req.params.numeroFormation;
   db.query(
@@ -193,6 +226,29 @@ app.delete("/delete_formation/:numeroFormation", (req, res) => {
         console.log(err);
       } else {
         res.send(result);
+      }
+    }
+  );
+});
+
+app.post("/Add_passe", (req, res) => {
+  const numeroCandidat = req.body.numeroCandidat;
+  const numeroFormation = req.body.numeroFormation;
+  const remarque = req.body.remarque;
+  const note = req.body.note;
+  db.query(
+    "INSERT INTO passe (`NUMERO_CANDIDAT`, `NUMERO_FORMATION`, `REMARQUE`, `NOTE`) VALUES (?,?,?,?)",
+    [
+      numeroCandidat,
+      numeroFormation,
+      remarque,
+      note,
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Values Inserted");
       }
     }
   );

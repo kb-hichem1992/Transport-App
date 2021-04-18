@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./Candidat.css";
 import Candidat from "./CandidatForm.js";
+import TableFormation from "../Formation/TableFormation.js";
+
 import { Paper, Toolbar } from "@material-ui/core";
 import {
   GridComponent,
@@ -19,7 +21,7 @@ import Popup from "../components/Popup.js";
 import Button from "../components/controls/Button";
 import AddIcon from "@material-ui/icons/Add";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from "@material-ui/icons/Delete";
 import PageHeader from "../PageHeader";
 
 require("es6-promise").polyfill();
@@ -71,7 +73,10 @@ export default function AppCand({ id }) {
   const [data, setdata] = useState([]);
   const [openAjouter, setOpenAjouter] = useState(false);
   const [openModifier, setOpenModifier] = useState(false);
+  const [openFormation, setOpenFormation] = useState(false);
+  const [openVehicule, setOpenVehicule] = useState(false);
   const [etat, setEtat] = useState(false);
+
 
   useEffect(() => {
     fetch(id)
@@ -146,7 +151,7 @@ export default function AppCand({ id }) {
 
   const classes = useStyles();
 
-  const TableRef = useRef(null);
+  const TableRef2 = useRef(null);
 
   const initialvalues = {
     NUMERO_CANDIDAT: 0,
@@ -162,7 +167,7 @@ export default function AppCand({ id }) {
 
   function rowSelected() {
     try {
-      const selectedrecords = TableRef.current.getSelectedRecords();
+      const selectedrecords = TableRef2.current.getSelectedRecords();
       const obj = JSON.stringify(selectedrecords);
       const parsedobj = JSON.parse(obj);
       return parsedobj[0];
@@ -172,20 +177,9 @@ export default function AppCand({ id }) {
   }
   const Values = rowSelected();
 
-  function convert() {
-    let current_datetime = new Date(Values.DATE_NAIS_CANDIDAT);
-    let formatted_date =
-      current_datetime.getFullYear() +
-      "-" +
-      (current_datetime.getMonth() + 1) +
-      "-" +
-      current_datetime.getDate();
-    return formatted_date;
-  }
-
   return (
     <>
-    <PageHeader title="Candidat" subTitle="La liste des Candidat"/>
+      <PageHeader title="Candidat" subTitle="La liste des Candidat" />
       <div className={classes.container}>
         <Button
           text="Ajouter"
@@ -215,12 +209,42 @@ export default function AppCand({ id }) {
           text="Supprimer"
           variant="outlined"
           size="small"
-          color ="secondary"
+          color="secondary"
           startIcon={<DeleteIcon />}
           className={classes.newButton}
           onClick={() => {
             if (Values !== undefined) {
               deleteCandidat(Values.NUMERO_CANDIDAT);
+            } else {
+              alert("Merci de choisir un candidat");
+            }
+          }}
+        />
+      </div>
+      <div className={classes.container}>
+        <Button
+          text="Formation"
+          variant="outlined"
+          size="small"
+          startIcon={<AddIcon />}
+          className={classes.newButton}
+          onClick={() => {
+            if (Values !== undefined) {
+              setOpenFormation(true);
+            } else {
+              alert("Merci de choisir un candidat");
+            }
+          }}
+        />
+        <Button
+          text="Vehicule"
+          variant="outlined"
+          size="small"
+          startIcon={<AddIcon />}
+          className={classes.newButton}
+          onClick={() => {
+            if (Values !== undefined) {
+              setOpenVehicule(true);
             } else {
               alert("Merci de choisir un candidat");
             }
@@ -239,7 +263,7 @@ export default function AppCand({ id }) {
             allowResizing={true}
             allowSorting={true}
             height={180}
-            ref={TableRef}
+            ref={TableRef2}
           >
             <ColumnsDirective>
               <ColumnDirective field="NOM_CANDIDAT" headerText="Nom" />
@@ -308,6 +332,17 @@ export default function AppCand({ id }) {
           onClick={updateCandidat}
           Close={setOpenModifier}
           values={Values}
+        />
+      </Popup>
+      <Popup
+        title="Affecter formation"
+        openPopup={openFormation}
+        setOpenPopup={setOpenFormation}
+      >
+        <TableFormation
+          Close={setOpenFormation}
+          rowSelected={rowSelected}
+          valeur={Values}
         />
       </Popup>
     </>

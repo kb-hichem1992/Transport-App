@@ -7,7 +7,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-
+import Controls from "../components/controls/Controls";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +34,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Candidat(props) {
   const classes = useStyles();
-  const {ADRESSE_CANDIDAT,DATE_NAIS_CANDIDAT,LIEU_NAIS_CANDIDAT,NIVEAU_SCOL_CANDIDAT,NOM_CANDIDAT,NUMERO_CANDIDAT,PRENOM_CANDIDAT,PRENOM_PERE,SEX_CONDIDAT}= props.values;
+  const {
+    ADRESSE_CANDIDAT,
+    DATE_NAIS_CANDIDAT,
+    LIEU_NAIS_CANDIDAT,
+    NIVEAU_SCOL_CANDIDAT,
+    NOM_CANDIDAT,
+    NUMERO_CANDIDAT,
+    PRENOM_CANDIDAT,
+    PRENOM_PERE,
+    SEX_CONDIDAT,
+  } = props.values;
   const [selectedDate, setSelectedDate] = useState(DATE_NAIS_CANDIDAT);
   const [numeroCandidat, setnumeroCandidat] = useState(NUMERO_CANDIDAT);
   const [Nom, setNom] = useState(NOM_CANDIDAT);
@@ -52,38 +62,58 @@ export default function Candidat(props) {
     setSexe(event.target.value);
   };
 
-// convertir le format de la Date en yyyy-mm-dd
-  function convert(date){
+  // convertir le format de la Date en yyyy-mm-dd
+  function convert(date) {
     const current_datetime = new Date(date);
-    
-    const m =  current_datetime.getMonth() +1 ;
+
+    const m = current_datetime.getMonth() + 1;
     if (m > 9) {
-     return ( current_datetime.getFullYear() + "-" + (m) + "-" + current_datetime.getDate())
-    }else{
-      return (current_datetime.getFullYear() + "-" + 0 + (m) + "-" + current_datetime.getDate())
+      return (
+        current_datetime.getFullYear() +
+        "-" +
+        m +
+        "-" +
+        current_datetime.getDate()
+      );
+    } else {
+      return (
+        current_datetime.getFullYear() +
+        "-" +
+        0 +
+        m +
+        "-" +
+        current_datetime.getDate()
+      );
     }
   }
 
-const Enregister =()=>{
-  if(Nom === '' || Prenom ==='' || selectedDate === '' || Lieu ==='' || Niveau === '' || Adresse ==='' || PrenomPere ==='' || Sexe ===''){
-    alert("Merci de remplir tout les champs")
-  }else{
-    props.onClick(
-      numeroCandidat,
-      Nom,
-      Prenom,
-      selectedDate,
-      Lieu,
-      Niveau,
-      Adresse,
-      PrenomPere,
-      Sexe
-    );
-    props.Close(false);
-}
- 
-
-  }
+  const Enregister = () => {
+    if (
+      Nom === "" ||
+      Prenom === "" ||
+      selectedDate === "" ||
+      Lieu === "" ||
+      Niveau === "" ||
+      Adresse === "" ||
+      PrenomPere === "" ||
+      Sexe === ""
+    ) {
+      alert("Merci de remplir tout les champs");
+    } else {
+      props.onClick(
+        numeroCandidat,
+        Nom,
+        Prenom,
+        convert(selectedDate),
+        Lieu,
+        Niveau,
+        Adresse,
+        PrenomPere,
+        Sexe
+      );
+      props.Close(false);
+    }
+  };
 
   return (
     <>
@@ -128,16 +158,10 @@ const Enregister =()=>{
                 size="small"
                 onChange={(e) => setLieu(e.target.value)}
               />
-              <TextField
-                id="date"
+              <Controls.DatePicker
                 label="Date de naissance"
-                type="date"
-                value={convert(selectedDate)}
-                onChange={handleDateChange}
-                className={classes.textField}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                value={selectedDate}
+                onChange={setSelectedDate}
               />
               <TextField
                 variant="outlined"

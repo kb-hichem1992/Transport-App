@@ -17,9 +17,11 @@ import Popup from "../components/Popup";
 import Button from "../components/controls/Button";
 import AddIcon from "@material-ui/icons/Add";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from "@material-ui/icons/Delete";
 import axios from "axios";
 import PageHeader from "../PageHeader.js";
+import { Paper } from "@material-ui/core";
+import TableCandForm from "../Candidat/TableCandForm";
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
@@ -55,30 +57,37 @@ function AppFor({ id }) {
       justifyContent: "flex-end",
     },
   }));
-  const addFormation = (
-    numeroFormation,
-    Type,
-    Debut,
-    Fin
-  ) => {
-    axios.post("http://localhost:3001/Add_formation", {
-      numeroFormation,
-      Type: Type,
-      Debut: Debut,
-      Fin: Fin,
-    }).then(() => {
-      setEtat(!etat);
-    });
+  const addFormation = (numeroFormation, Type, Debut, Fin) => {
+    axios
+      .post("http://localhost:3001/Add_formation", {
+        numeroFormation,
+        Type: Type,
+        Debut: Debut,
+        Fin: Fin,
+      })
+      .then(() => {
+        setEtat(!etat);
+      });
   };
-
+  const updateFormation = (numeroFormation, Type, Debut, Fin) => {
+    axios
+      .put("http://localhost:3001/update_formation", {
+        Type: Type,
+        Debut: Debut,
+        Fin: Fin,
+        numeroFormation: numeroFormation,
+      })
+      .then(() => {
+        setEtat(!etat);
+      });
+  };
   const deleteFormation = (numeroFormation) => {
-    axios.delete(
-      `http://localhost:3001/delete_formation/${numeroFormation}`,
-      {}
-    ).then(() => {
-      setEtat(!etat);
-      alert("supprimer");
-    });
+    axios
+      .delete(`http://localhost:3001/delete_formation/${numeroFormation}`, {})
+      .then(() => {
+        setEtat(!etat);
+        alert("supprimer");
+      });
   };
 
   const classes = useStyles();
@@ -109,7 +118,7 @@ function AppFor({ id }) {
 
   return (
     <>
-    <PageHeader title="Formation" subTitle="La liste des formation"/>
+      <PageHeader title="Formation" subTitle="La liste des formation" />
       <div className={classes.container}>
         <Button
           text="Ajouter"
@@ -125,14 +134,13 @@ function AppFor({ id }) {
           text="Modifier"
           variant="outlined"
           size="small"
-          
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
           onClick={() => {
             if (Values !== undefined) {
               setOpenModifier(true);
             } else {
-              alert("Merci de choisir un candidat");
+              alert("Merci de choisir une formation");
             }
           }}
         />
@@ -140,14 +148,14 @@ function AppFor({ id }) {
           text="Supprimer"
           variant="outlined"
           size="small"
-          color ="secondary"
+          color="secondary"
           startIcon={<DeleteIcon />}
           className={classes.newButton}
           onClick={() => {
             if (Values !== undefined) {
               deleteFormation(Values.NUMERO_FORMATION);
             } else {
-              alert("Merci de choisir un candidat");
+              alert("Merci de choisir une formation");
             }
           }}
         />
@@ -196,6 +204,11 @@ function AppFor({ id }) {
           </GridComponent>
         </div>
       </div>
+      <PageHeader title="Formation" subTitle="La liste des candidats pour chaque formation " />
+      <Paper>
+        <TableCandForm />
+      </Paper>
+
 
       <Popup
         title="Ajouter"
@@ -215,7 +228,7 @@ function AppFor({ id }) {
         setOpenPopup={setOpenModifier}
       >
         <Form
-          //    onClick={updateCandidat}
+          onClick={updateFormation}
           Close={setOpenModifier}
           values={Values}
         />
