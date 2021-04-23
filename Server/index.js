@@ -3,11 +3,12 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mysql = require("mysql");
+const pdf  =  require("./report/pdfGenerator.js")
 
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "",
   database: "transport",
 });
 
@@ -230,6 +231,10 @@ app.delete("/delete_formation/:numeroFormation", (req, res) => {
     }
   );
 });
+
+app.get("/report", (req,res) => {
+    pdf.generatepdf(); 
+}) ;  
 
 app.post("/Add_passe", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
