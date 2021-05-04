@@ -46,12 +46,13 @@ const useStyles = makeStyles((theme) => ({
 export default function PasseFrom(props) {
   const classes = useStyles();
 
-  const { NUMERO_FORMATION, NUMERO_CANDIDAT, NOTE, REMARQUE } = props.values;
+  const { NUMERO_FORMATION, NUMERO_CANDIDAT, GROUPE, NOTE, REMARQUE } = props.values;
 
   const [numeroFormation, setNumeroFormation] = useState(NUMERO_FORMATION);
   const [numeroCandidat, setNumeroCandidat] = useState(NUMERO_CANDIDAT);
   const [note, setNote] = useState(NOTE);
   const [remarque, setRemarque] = useState(REMARQUE);
+  const [groupe, setGroupe]=useState(GROUPE); 
 
   const handleNoteChange = (e) => {
     setNote(e.target.value);
@@ -60,14 +61,23 @@ export default function PasseFrom(props) {
     setRemarque(e.target.value);
   };
 
+  const handleGroupeChange = (e) => {
+    setGroupe(e.target.value);
+  };
+
   const Enregister = () => {
-    if (note === "" || remarque === "") {
-      alert("Merci de remplir tout les champs");
-    } else {
-      props.onClick(remarque, note, numeroCandidat, numeroFormation);
-      alert(numeroFormation + "" + numeroCandidat + "" + note + "" + remarque);
-      props.Close(false);
+    try {
+      if (note === "" || remarque === "") {
+        alert("Merci de remplir tout les champs");
+      } else {
+        props.onClick(remarque, note, groupe, numeroCandidat, numeroFormation, GROUPE);
+        alert("Modifié avec succés")
+        props.Close(false);
+      }
+    } catch (error) {
+      console.log(error)
     }
+ 
   };
 
   return (
@@ -75,6 +85,14 @@ export default function PasseFrom(props) {
       <Paper className={classes.pageContent}>
         <form className={classes.root} noValidate autoComplete="off">
           <Grid container spacing={2}>
+          <TextField
+              variant="outlined"
+              label="Groupe"
+              size="small"
+              type="number"
+              value={groupe}
+              onChange={handleGroupeChange}
+            />
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-simple-select-label">Remarque</InputLabel>
               <Select

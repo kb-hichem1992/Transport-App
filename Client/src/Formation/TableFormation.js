@@ -11,7 +11,7 @@ import {
   Resize,
   Sort,
 } from "@syncfusion/ej2-react-grids";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, TextField } from "@material-ui/core";
 import Button from "../components/controls/Button";
 import axios from "axios";
 
@@ -20,6 +20,7 @@ export default function TableFormation(props) {
   const [data, setdata] = useState([]);
   const [numeroFormation, setNumeroFormation] = useState();
   const {NUMERO_CANDIDAT}=props.valeur;
+  const [groupe, setGroupe]=useState(); 
 
 
   const useStyles = makeStyles((theme) => ({
@@ -58,17 +59,23 @@ export default function TableFormation(props) {
 
   const values= rowSelected();
 
+  const handleGroupeChange = (e) => {
+    setGroupe(e.target.value);
+  };
+
   const AffecteFormation = (
     numeroCandidat,
     numeroFormation,
+    groupe,
     remarque,
     note
   ) => {
     axios.post("http://localhost:3001/Add_passe", {
       numeroCandidat : numeroCandidat,
       numeroFormation : numeroFormation,
+      groupe : groupe,
       remarque: remarque,
-      note: note,
+      note: note
     }).then(() => {
       alert("Formation affecter")
       props.Close(false);
@@ -119,6 +126,14 @@ export default function TableFormation(props) {
           <Inject services={[Page, Sort, Filter, Group, Resize]} />
         </GridComponent>
         <div className={classes.container}>
+        <TextField
+              variant="outlined"
+              label="Groupe"
+              size="small"
+              type="number"
+              value={groupe}
+              onChange={handleGroupeChange}
+            />
           <Button
             text="Affecter"
             variant="outlined"
@@ -126,7 +141,7 @@ export default function TableFormation(props) {
             className={classes.newButton}
             onClick={() => {
               if (values !== undefined) {
-              AffecteFormation(NUMERO_CANDIDAT,values.NUMERO_FORMATION)
+              AffecteFormation(NUMERO_CANDIDAT,values.NUMERO_FORMATION, groupe)
               } else {
                 alert("Merci de choisir une formation");
                 alert(values)

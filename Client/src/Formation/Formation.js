@@ -25,6 +25,28 @@ import TableCandForm from "../Candidat/TableCandForm";
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    ...theme.typography.button,
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(1),
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  formControl: {
+    display: "inline-flex",
+    margin: theme.spacing(2),
+    minWidth: 170,
+  },
+  container: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+}));
+
 function AppFor({ id }) {
   const [data, setdata] = useState([]);
   const [openAjouter, setOpenAjouter] = useState(false);
@@ -36,27 +58,7 @@ function AppFor({ id }) {
       .then((response) => response.json())
       .then((json) => setdata(json));
   }, [id, data, etat]);
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      ...theme.typography.button,
-      backgroundColor: theme.palette.background.paper,
-      padding: theme.spacing(1),
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-    formControl: {
-      display: "inline-flex",
-      margin: theme.spacing(2),
-      minWidth: 170,
-    },
-    container: {
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-      display: "flex",
-      justifyContent: "flex-end",
-    },
-  }));
+
   const addFormation = (numeroFormation, Type, Debut, Fin) => {
     axios
       .post("http://localhost:3001/Add_formation", {
@@ -95,12 +97,14 @@ function AppFor({ id }) {
   const filter = {
     type: "CheckBox",
   };
+
   const initialvalues = {
     NUMERO_FORMATION: 0,
     TYPE_FORMATION: "",
     DEBUT: new Date(),
     FIN: new Date(),
   };
+
   const TableRef = useRef(null);
 
   function rowSelected() {
@@ -136,12 +140,9 @@ function AppFor({ id }) {
           size="small"
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
+          disabled={Values === undefined ? true : false}
           onClick={() => {
-            if (Values !== undefined) {
-              setOpenModifier(true);
-            } else {
-              alert("Merci de choisir une formation");
-            }
+            setOpenModifier(true);
           }}
         />
         <Button
@@ -151,12 +152,9 @@ function AppFor({ id }) {
           color="secondary"
           startIcon={<DeleteIcon />}
           className={classes.newButton}
+          disabled={Values === undefined ? true : false}
           onClick={() => {
-            if (Values !== undefined) {
-              deleteFormation(Values.NUMERO_FORMATION);
-            } else {
-              alert("Merci de choisir une formation");
-            }
+            deleteFormation(Values.NUMERO_FORMATION);
           }}
         />
       </div>
@@ -204,11 +202,17 @@ function AppFor({ id }) {
           </GridComponent>
         </div>
       </div>
-      <PageHeader title="Formation" subTitle="La liste des candidats pour chaque formation " />
+      <PageHeader
+        title="Formation"
+        subTitle="La liste des candidats pour chaque formation "
+      />
       <Paper>
-        <TableCandForm />
+        <TableCandForm
+          setEtat={setEtat}
+          etat={etat}
+          numeroFormation={Values === undefined ? 0 : Values.NUMERO_FORMATION}
+        />
       </Paper>
-
 
       <Popup
         title="Ajouter"

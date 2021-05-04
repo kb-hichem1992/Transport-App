@@ -67,6 +67,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "flex-end",
   },
+  div: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    display: "flex",
+    justifyContent: "space-between",
+  },
 }));
 
 export default function AppCand({ id }) {
@@ -74,9 +80,7 @@ export default function AppCand({ id }) {
   const [openAjouter, setOpenAjouter] = useState(false);
   const [openModifier, setOpenModifier] = useState(false);
   const [openFormation, setOpenFormation] = useState(false);
-  const [openVehicule, setOpenVehicule] = useState(false);
   const [etat, setEtat] = useState(false);
-
 
   useEffect(() => {
     fetch(id)
@@ -93,7 +97,12 @@ export default function AppCand({ id }) {
     Niveau,
     Adresse,
     PrenomPere,
-    Sexe
+    Sexe,
+    Num_permis,
+    date_liv,
+    date_exp,
+    categorie_permis,
+    type_permis,
   ) => {
     Axios.post("http://localhost:3001/Add_condidat", {
       numeroCandidat,
@@ -105,6 +114,11 @@ export default function AppCand({ id }) {
       Adresse: Adresse,
       Prénom_Pére: PrenomPere,
       Sexe: Sexe,
+      Num_permis : Num_permis,
+      date_liv:date_liv,
+      date_exp: date_exp,
+      categorie_permis : categorie_permis ,
+      type_permis : type_permis
     }).then(() => {
       setEtat(!etat);
     });
@@ -118,7 +132,12 @@ export default function AppCand({ id }) {
     Niveau,
     Adresse,
     PrenomPere,
-    Sexe
+    Sexe,
+    Num_permis,
+    date_liv,
+    date_exp,
+    categorie_permis,
+    type_permis,
   ) => {
     Axios.put("http://localhost:3001/update_candidat", {
       numeroCandidat: numeroCandidat,
@@ -130,6 +149,11 @@ export default function AppCand({ id }) {
       Adresse: Adresse,
       Prénom_Pére: PrenomPere,
       Sexe: Sexe,
+      Num_permis : Num_permis,
+      date_liv:date_liv,
+      date_exp: date_exp,
+      categorie_permis : categorie_permis ,
+      type_permis : type_permis
     }).then(() => {
       setEtat(!etat);
     });
@@ -163,6 +187,12 @@ export default function AppCand({ id }) {
     ADRESSE_CANDIDAT: "",
     PRENOM_PERE: "",
     SEX_CONDIDAT: "",
+    NUM_PERMIS : "",
+    DATE_LIV_PERMIS : new Date(),
+    DATE_EXP_PERMIS : new Date(),
+    CATEGORIE_PERMIS : "",
+    TYPE_PERMIS : "Normal",
+
   };
 
   function rowSelected() {
@@ -180,76 +210,55 @@ export default function AppCand({ id }) {
   return (
     <>
       <PageHeader title="Candidat" subTitle="La liste des Candidat" />
-      <div className={classes.container}>
-        <Button
-          text="Ajouter"
-          variant="outlined"
-          size="small"
-          startIcon={<AddIcon />}
-          className={classes.newButton}
-          onClick={() => {
-            setOpenAjouter(true);
-          }}
-        />
-        <Button
-          text="Modifier"
-          variant="outlined"
-          size="small"
-          startIcon={<EditOutlinedIcon />}
-          className={classes.newButton}
-          onClick={() => {
-            if (Values !== undefined) {
+      <div className={classes.div}>
+        <div className={classes.container}>
+          <Button
+            text="Ajouter"
+            variant="outlined"
+            size="small"
+            startIcon={<AddIcon />}
+            className={classes.newButton}
+            onClick={() => {
+              setOpenAjouter(true);
+            }}
+          />
+          <Button
+            text="Modifier"
+            variant="outlined"
+            size="small"
+            startIcon={<EditOutlinedIcon />}
+            className={classes.newButton}
+            disabled={Values === undefined ? true : false}
+            onClick={() => {
               setOpenModifier(true);
-            } else {
-              alert("Merci de choisir un candidat");
-            }
-          }}
-        />
-        <Button
-          text="Supprimer"
-          variant="outlined"
-          size="small"
-          color="secondary"
-          startIcon={<DeleteIcon />}
-          className={classes.newButton}
-          onClick={() => {
-            if (Values !== undefined) {
+            }}
+          />
+          <Button
+            text="Supprimer"
+            variant="outlined"
+            size="small"
+            color="secondary"
+            startIcon={<DeleteIcon />}
+            className={classes.newButton}
+            disabled={Values === undefined ? true : false}
+            onClick={() => {
               deleteCandidat(Values.NUMERO_CANDIDAT);
-            } else {
-              alert("Merci de choisir un candidat");
-            }
-          }}
-        />
-      </div>
-      <div className={classes.container}>
-        <Button
-          text="Formation"
-          variant="outlined"
-          size="small"
-          startIcon={<AddIcon />}
-          className={classes.newButton}
-          onClick={() => {
-            if (Values !== undefined) {
+            }}
+          />
+        </div>
+        <div>
+          <Button
+            text="Formation"
+            variant="outlined"
+            size="small"
+            startIcon={<AddIcon />}
+            className={classes.newButton}
+            disabled={Values === undefined ? true : false}
+            onClick={() => {
               setOpenFormation(true);
-            } else {
-              alert("Merci de choisir un candidat");
-            }
-          }}
-        />
-        <Button
-          text="Vehicule"
-          variant="outlined"
-          size="small"
-          startIcon={<AddIcon />}
-          className={classes.newButton}
-          onClick={() => {
-            if (Values !== undefined) {
-              setOpenVehicule(true);
-            } else {
-              alert("Merci de choisir un candidat");
-            }
-          }}
-        />
+            }}
+          />
+        </div>
       </div>
       <div className={classes.container}>
         <Paper className={classes.paper}>
@@ -320,6 +329,7 @@ export default function AppCand({ id }) {
           onClick={addCondidat}
           Close={setOpenAjouter}
           values={initialvalues}
+          data={data}
         />
       </Popup>
 
@@ -332,6 +342,7 @@ export default function AppCand({ id }) {
           onClick={updateCandidat}
           Close={setOpenModifier}
           values={Values}
+          data={data}
         />
       </Popup>
       <Popup

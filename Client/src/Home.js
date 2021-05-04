@@ -7,7 +7,7 @@ const Home = () => {
   const {isAuthenticated } = useAuth0();
   const { isLoading } = useAuth0();
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <div>Chargement...</div>
   if (isAuthenticated === true) {
     return <Dashboard />;
   } else {

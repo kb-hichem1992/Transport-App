@@ -71,9 +71,9 @@ export default function SearchAppBar() {
       <AppBar position="static">
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap>
-            Tableau des Documents
+           Centre de Formation
           </Typography>
-          <Button color="inherit" onClick={() => loginWithRedirect()}>Login</Button>
+          <Button color="inherit" onClick={() => loginWithRedirect()}>Connexion</Button>
         </Toolbar>
       </AppBar>
     </div>

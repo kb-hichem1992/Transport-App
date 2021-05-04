@@ -11,11 +11,11 @@ import {
   Group,
   Resize,
   Sort,
-  fltrPrevent,
 } from "@syncfusion/ej2-react-grids";
 import Button from "../components/controls/Button";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteIcon from "@material-ui/icons/Delete";
+import PrintIcon from "@material-ui/icons/Print";
 import Popup from "../components/Popup";
 import PasseFrom from "../Formation/PasseForm";
 import axios from "axios";
@@ -62,18 +62,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TableCandForm() {
+export default function TableCandForm({ setEtat, etat, numeroFormation }) {
   const [data, setdata] = useState([]);
   const [openModifier, setOpenModifier] = useState(false);
-  const [etat, setEtat] = useState(false);
-  const [evaluation, setEvaluation] = useState();
-  
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/get_candidat_form")
+    fetch(`http://localhost:3001/api/get_candidat_form/${numeroFormation}`)
       .then((response) => response.json())
       .then((json) => setdata(json));
-  }, [etat]);
+  }, [etat, numeroFormation]);
 
   const filter = {
     type: "Excel",
@@ -81,12 +78,22 @@ export default function TableCandForm() {
   const TableRef3 = useRef(null);
   const classes = useStyles();
 
-  const updatePasse = (remarque, note, numeroCandidat, numeroFormation) => {
-    axios.put("http://localhost:3001/update_passe", {
+  const updatePasse = (
+    remarque,
+    note,
+    groupe,
+    numeroCandidat,
+    numeroFormation,
+    GROUPE
+  ) => {
+    axios
+      .put("http://localhost:3001/update_passe", {
         remarque: remarque,
         note: note,
+        groupe: groupe,
         numeroCandidat: numeroCandidat,
         numeroFormation: numeroFormation,
+        GROUPE: GROUPE,
       })
       .then(() => {
         setEtat(!etat);
@@ -113,29 +120,19 @@ export default function TableCandForm() {
           size="small"
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
+          disabled={Values === undefined ? true : false}
           onClick={() => {
-            if (Values !== undefined) {
-              setOpenModifier(true);
-            } else {
-              alert("Merci de choisir une formation");
-            }
+            setOpenModifier(true);
           }}
         />
         <Button
-          text="Supprimer"
+          text="Imprimer"
           variant="outlined"
           size="small"
-          color="secondary"
-       //   disabled= { Values.NOTE < 10  ? Values.NOTE === undefined  ? true : false }
-          startIcon={<DeleteIcon />}
+          color="primary"
+          disabled={Values === undefined || Values.NOTE < 10 ? true : false}
+          startIcon={<PrintIcon />}
           className={classes.newButton}
-          // onClick={() => {
-          //   if (Values !== undefined) {
-          //     deleteFormation(Values.NUMERO_FORMATION);
-          //   } else {
-          //     alert("Merci de choisir une formation");
-          //   }
-          // }}
         />
       </div>
       <div id="cont">
@@ -150,12 +147,11 @@ export default function TableCandForm() {
           allowSorting={true}
           height={200}
           ref={TableRef3}
-        
         >
           <ColumnsDirective>
             <ColumnDirective
-              field="NUMERO_FORMATION"
-              headerText="N° Formation"
+              field="GROUPE"
+              headerText="Groupe"
               clipMode="EllipsisWithTooltip"
             />
             <ColumnDirective
@@ -172,27 +168,6 @@ export default function TableCandForm() {
               field="PRENOM_PERE"
               headerText="Prénom Père"
               clipMode="EllipsisWithTooltip"
-            />
-            <ColumnDirective
-              field="TYPE_FORMATION"
-              headerText="Type formation"
-              clipMode="EllipsisWithTooltip"
-            />
-            <ColumnDirective
-              field="DEBUT"
-              headerText="Début Formation"
-              type="date"
-              format="dd/MM/yyyy"
-              clipMode="EllipsisWithTooltip"
-              allowFiltering={false}
-            />
-            <ColumnDirective
-              field="FIN"
-              headerText="Fin Formation"
-              type="date"
-              format="dd/MM/yyyy"
-              clipMode="EllipsisWithTooltip"
-              allowFiltering={false}
             />
             <ColumnDirective
               field="REMARQUE"
