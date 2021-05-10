@@ -23,6 +23,8 @@ import AddIcon from "@material-ui/icons/Add";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PageHeader from "../PageHeader";
+import CandidatInfo from "./CandidatInfo";
+import { ContextMenu, ContextMenuItemModel} from '@syncfusion/ej2-react-grids';
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -80,6 +82,7 @@ export default function AppCand({ id }) {
   const [openAjouter, setOpenAjouter] = useState(false);
   const [openModifier, setOpenModifier] = useState(false);
   const [openFormation, setOpenFormation] = useState(false);
+  const [openDetail, setOpenDetail] = useState(false);
   const [etat, setEtat] = useState(false);
 
   useEffect(() => {
@@ -102,7 +105,7 @@ export default function AppCand({ id }) {
     date_liv,
     date_exp,
     categorie_permis,
-    type_permis,
+    type_permis
   ) => {
     Axios.post("http://localhost:3001/Add_condidat", {
       numeroCandidat,
@@ -114,11 +117,11 @@ export default function AppCand({ id }) {
       Adresse: Adresse,
       Prénom_Pére: PrenomPere,
       Sexe: Sexe,
-      Num_permis : Num_permis,
-      date_liv:date_liv,
+      Num_permis: Num_permis,
+      date_liv: date_liv,
       date_exp: date_exp,
-      categorie_permis : categorie_permis ,
-      type_permis : type_permis
+      categorie_permis: categorie_permis,
+      type_permis: type_permis,
     }).then(() => {
       setEtat(!etat);
     });
@@ -137,7 +140,7 @@ export default function AppCand({ id }) {
     date_liv,
     date_exp,
     categorie_permis,
-    type_permis,
+    type_permis
   ) => {
     Axios.put("http://localhost:3001/update_candidat", {
       numeroCandidat: numeroCandidat,
@@ -149,11 +152,11 @@ export default function AppCand({ id }) {
       Adresse: Adresse,
       Prénom_Pére: PrenomPere,
       Sexe: Sexe,
-      Num_permis : Num_permis,
-      date_liv:date_liv,
+      Num_permis: Num_permis,
+      date_liv: date_liv,
       date_exp: date_exp,
-      categorie_permis : categorie_permis ,
-      type_permis : type_permis
+      categorie_permis: categorie_permis,
+      type_permis: type_permis,
     }).then(() => {
       setEtat(!etat);
     });
@@ -187,12 +190,11 @@ export default function AppCand({ id }) {
     ADRESSE_CANDIDAT: "",
     PRENOM_PERE: "",
     SEX_CONDIDAT: "",
-    NUM_PERMIS : "",
-    DATE_LIV_PERMIS : new Date(),
-    DATE_EXP_PERMIS : new Date(),
-    CATEGORIE_PERMIS : "",
-    TYPE_PERMIS : "Normal",
-
+    NUM_PERMIS: "",
+    DATE_LIV_PERMIS: new Date(),
+    DATE_EXP_PERMIS: new Date(),
+    CATEGORIE_PERMIS: "",
+    TYPE_PERMIS: "Normal",
   };
 
   function rowSelected() {
@@ -206,6 +208,16 @@ export default function AppCand({ id }) {
     }
   }
   const Values = rowSelected();
+
+  const ContextMenuItemModel = [
+    {text: 'Affiche Détail', target: '.e-content', id: 'Details'}
+  ];
+
+    const contextMenuClick = (MenuEventArgs) => {
+      if(TableRef2 && MenuEventArgs.item.id === 'Details' && Values !== undefined){
+        setOpenDetail(true)
+      }
+  }
 
   return (
     <>
@@ -273,9 +285,24 @@ export default function AppCand({ id }) {
             allowSorting={true}
             height={180}
             ref={TableRef2}
+            recordDoubleClick={() => {
+              setOpenDetail(true)
+            }}
+            contextMenuItems={ContextMenuItemModel}
+            contextMenuClick={contextMenuClick}
           >
             <ColumnsDirective>
-              <ColumnDirective field="NOM_CANDIDAT" headerText="Nom" />
+              <ColumnDirective
+                field="NUM_PERMIS"
+                headerText="N° Permis"
+                clipMode="EllipsisWithTooltip"
+              />
+              <ColumnDirective
+                field="NOM_CANDIDAT"
+                headerText="Nom"
+                clipMode="EllipsisWithTooltip"
+              />
+
               <ColumnDirective
                 field="PRENOM_CANDIDAT"
                 headerText="Prénom"
@@ -299,23 +326,8 @@ export default function AppCand({ id }) {
                 headerText="Lieu de naissance"
                 clipMode="EllipsisWithTooltip"
               />
-              <ColumnDirective
-                field="NIVEAU_SCOL_CANDIDAT"
-                headerText="Niveau Scolaire"
-                clipMode="EllipsisWithTooltip"
-              />
-              <ColumnDirective
-                field="ADRESSE_CANDIDAT"
-                headerText="Adresse"
-                clipMode="EllipsisWithTooltip"
-              />
-              <ColumnDirective
-                field="SEX_CONDIDAT"
-                headerText="Sexe"
-                clipMode="EllipsisWithTooltip"
-              />
             </ColumnsDirective>
-            <Inject services={[Page, Sort, Filter, Group, Resize]} />
+            <Inject services={[Page, Sort, Filter, Group, Resize, ContextMenu]} />
           </GridComponent>
         </Paper>
       </div>
@@ -354,6 +366,17 @@ export default function AppCand({ id }) {
           Close={setOpenFormation}
           rowSelected={rowSelected}
           valeur={Values}
+        />
+      </Popup>
+      <Popup
+        title="Détails"
+        openPopup={openDetail}
+        setOpenPopup={setOpenDetail}
+      >
+        <CandidatInfo
+          Close={setOpenDetail}
+          rowSelected={rowSelected}
+          values={Values}
         />
       </Popup>
     </>

@@ -2,6 +2,7 @@ import React from 'react'
 import { Dialog, DialogTitle, DialogContent, makeStyles, Typography } from '@material-ui/core';
 import Controls from "./controls/Controls";
 import CloseIcon from '@material-ui/icons/Close';
+import '@fontsource/roboto';
 
 const useStyles = makeStyles(theme => ({
     dialogWrapper: {

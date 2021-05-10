@@ -8,7 +8,7 @@ const pdf  =  require("./report/pdfGenerator.js")
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "root",
   database: "transport",
 });
 

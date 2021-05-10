@@ -15,7 +15,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Controls from "../components/controls/Controls";
-import { TramOutlined, TrendingUpRounded } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -152,9 +151,9 @@ export default function Candidat(props) {
       Typepermis === ""
     ) {
       alert("Merci de remplir tout les champs");
-    } else if (dt1.getDate() >= dt0.getDate()) {
+    } else if (convert(dt1) >= convert(dt0)) {
       alert("Date de naissance erronée");
-    } else if (dt2.getDate() >= dt3.getDate()) {
+    } else if (convert(dt2) >= convert(dt3)) {
       alert("Date de livraison erronée");
     } else if (
       CandidatExists(NumPermis) === true &&
@@ -188,8 +187,20 @@ export default function Candidat(props) {
     }
   };
 
-  const categorie1 = ["A", "B", "C"];
-  const categorie2 = ["D", "E", "F"];
+  const categorie1 = ["A1", "A2", "B", "C1", "C2", "D", "E", "F"];
+  const categorie2 = [
+    "A1",
+    "A",
+    "B",
+    "D",
+    "C1",
+    "C",
+    "BE",
+    "C1E",
+    "CE",
+    "DE",
+    "F",
+  ];
   const niveauScolaire = ["ابتدائي", "متوسط", "ثانوي", "جامعي"];
 
   return (
