@@ -19,6 +19,7 @@ import PrintIcon from "@material-ui/icons/Print";
 import Popup from "../components/Popup";
 import PasseFrom from "../Formation/PasseForm";
 import axios from "axios";
+import BrevetForm from "../Formation/BrevetForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
 export default function TableCandForm({ setEtat, etat, numeroFormation }) {
   const [data, setdata] = useState([]);
   const [openModifier, setOpenModifier] = useState(false);
+  const [openImprimer, setOpenImprimer] = useState(false);
 
   useEffect(() => {
     fetch(`http://localhost:3001/api/get_candidat_form/${numeroFormation}`)
@@ -91,6 +93,28 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
         remarque: remarque,
         note: note,
         groupe: groupe,
+        numeroCandidat: numeroCandidat,
+        numeroFormation: numeroFormation,
+        GROUPE: GROUPE,
+      })
+      .then(() => {
+        setEtat(!etat);
+      });
+  };
+
+  const insertBrevet = (
+    NumeroBrevet,
+    LivBrevet,
+    ExpBrevet,
+    numeroCandidat,
+    numeroFormation,
+    GROUPE
+  ) => {
+    axios
+      .put("http://localhost:3001/insert_brevet", {
+        NumeroBrevet: NumeroBrevet,
+        LivBrevet: LivBrevet,
+        ExpBrevet: ExpBrevet,
         numeroCandidat: numeroCandidat,
         numeroFormation: numeroFormation,
         GROUPE: GROUPE,
@@ -133,6 +157,9 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
           disabled={Values === undefined || Values.NOTE < 10 ? true : false}
           startIcon={<PrintIcon />}
           className={classes.newButton}
+          onClick={() => {
+            setOpenImprimer(true);
+          }}
         />
       </div>
       <div id="cont">
@@ -192,6 +219,18 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
           onClick={updatePasse}
           Close={setOpenModifier}
           values={Values}
+        />
+      </Popup>
+      <Popup
+        title="Brevet"
+        openPopup={openImprimer}
+        setOpenPopup={setOpenImprimer}
+      >
+        <BrevetForm
+          onClick={insertBrevet}
+          Close={setOpenImprimer}
+          values={Values}
+          data={data}
         />
       </Popup>
     </>

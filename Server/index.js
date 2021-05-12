@@ -81,6 +81,26 @@ app.put("/update_passe", (req, res) => {
     }
   );
 });
+app.put("/insert_brevet", (req, res) => {
+  const NumeroBrevet = req.body.NumeroBrevet;
+  const LivBrevet = req.body.LivBrevet;
+  const ExpBrevet = req.body.ExpBrevet;
+  const numeroCandidat = req.body.numeroCandidat;
+  const numeroFormation = req.body.numeroFormation;
+  const GROUPE = req.body.GROUPE;
+ 
+  db.query(
+    "UPDATE passe SET `BREVET`= ?, `LIV_BREVET`= ? , `EXP_BREVET` = ? WHERE `NUMERO_CANDIDAT`= ? and `NUMERO_FORMATION`= ? and `GROUPE`= ? ;",
+    [NumeroBrevet, LivBrevet, ExpBrevet, numeroCandidat, numeroFormation, GROUPE],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Values updated");
+      }
+    }
+  );
+});
 
 app.get("/api/get_veh_Mar", (req, res) => {
   const sqlquery =
