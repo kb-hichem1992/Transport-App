@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import Controls from "../components/controls/Controls";
-import TableCandForm from "../Candidat/TableCandForm";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -49,24 +49,16 @@ export default function Form(props) {
 
   const { NUMERO_FORMATION, TYPE_FORMATION, DEBUT, FIN } = props.values;
 
-  const [numeroFormation, setNumeroFormation] = useState(NUMERO_FORMATION);
+  const [numeroFormation] = useState(NUMERO_FORMATION);
   const [typeFormation, setTypeFormation] = useState(TYPE_FORMATION);
   const [debut, setDebut] = useState(DEBUT);
   const [fin, setFin] = useState(FIN);
 
-  const handleDateDebutChange = (e) => {
-    setDebut(e.target.value);
-  };
-  const handleDateFinChange = (e) => {
-    setFin(e.target.value);
-  };
+
   const handleTypeChange = (e) => {
     setTypeFormation(e.target.value);
   };
 
-  const handleInputChange = (e) => {
-    setDebut(convert(e.target.value));
-  };
   // convertir le format de la Date en yyyy-mm-dd
   function convert(date) {
     const current_datetime = new Date(date);

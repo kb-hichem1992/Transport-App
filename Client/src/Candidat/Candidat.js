@@ -3,8 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import "./Candidat.css";
 import Candidat from "./CandidatForm.js";
 import TableFormation from "../Formation/TableFormation.js";
-
-import { Paper, Toolbar } from "@material-ui/core";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Paper } from "@material-ui/core";
 import {
   GridComponent,
   ColumnDirective,
@@ -24,7 +24,8 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PageHeader from "../PageHeader";
 import CandidatInfo from "./CandidatInfo";
-import { ContextMenu, ContextMenuItemModel} from '@syncfusion/ej2-react-grids';
+import { ContextMenu } from "@syncfusion/ej2-react-grids";
+import GroupIcon from "@material-ui/icons/Group";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -84,6 +85,7 @@ export default function AppCand({ id }) {
   const [openFormation, setOpenFormation] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
   const [etat, setEtat] = useState(false);
+  const { user } = useAuth0();
 
   useEffect(() => {
     fetch(id)
@@ -203,25 +205,31 @@ export default function AppCand({ id }) {
       const obj = JSON.stringify(selectedrecords);
       const parsedobj = JSON.parse(obj);
       return parsedobj[0];
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
   const Values = rowSelected();
 
   const ContextMenuItemModel = [
-    {text: 'Affiche Détail', target: '.e-content', id: 'Details'}
+    { text: "Affiche Détail", target: ".e-content", id: "Details" },
   ];
 
-    const contextMenuClick = (MenuEventArgs) => {
-      if(TableRef2 && MenuEventArgs.item.id === 'Details' && Values !== undefined){
-        setOpenDetail(true)
-      }
-  }
+  const contextMenuClick = (MenuEventArgs) => {
+    if (
+      TableRef2 &&
+      MenuEventArgs.item.id === "Details" &&
+      Values !== undefined
+    ) {
+      setOpenDetail(true);
+    }
+  };
 
   return (
     <>
-      <PageHeader title="Candidat" subTitle="La liste des Candidat" />
+      <PageHeader
+        title="Candidat"
+        subTitle="La liste des Candidat"
+        icon={<GroupIcon />}
+      />
       <div className={classes.div}>
         <div className={classes.container}>
           <Button
@@ -240,7 +248,11 @@ export default function AppCand({ id }) {
             size="small"
             startIcon={<EditOutlinedIcon />}
             className={classes.newButton}
-            disabled={Values === undefined ? true : false}
+            disabled={
+              Values === undefined || user.email !== "kb-hichem@hotmail.fr"
+                ? true
+                : false
+            }
             onClick={() => {
               setOpenModifier(true);
             }}
@@ -252,7 +264,11 @@ export default function AppCand({ id }) {
             color="secondary"
             startIcon={<DeleteIcon />}
             className={classes.newButton}
-            disabled={Values === undefined ? true : false}
+            disabled={
+              Values === undefined || user.email !== "kb-hichem@hotmail.fr"
+                ? true
+                : false
+            }
             onClick={() => {
               deleteCandidat(Values.NUMERO_CANDIDAT);
             }}
@@ -286,7 +302,7 @@ export default function AppCand({ id }) {
             height={180}
             ref={TableRef2}
             recordDoubleClick={() => {
-              setOpenDetail(true)
+              setOpenDetail(true);
             }}
             contextMenuItems={ContextMenuItemModel}
             contextMenuClick={contextMenuClick}
@@ -327,7 +343,9 @@ export default function AppCand({ id }) {
                 clipMode="EllipsisWithTooltip"
               />
             </ColumnsDirective>
-            <Inject services={[Page, Sort, Filter, Group, Resize, ContextMenu]} />
+            <Inject
+              services={[Page, Sort, Filter, Group, Resize, ContextMenu]}
+            />
           </GridComponent>
         </Paper>
       </div>
@@ -338,6 +356,7 @@ export default function AppCand({ id }) {
         setOpenPopup={setOpenAjouter}
       >
         <Candidat
+          setOpenWindows={setOpenAjouter}
           onClick={addCondidat}
           Close={setOpenAjouter}
           values={initialvalues}
@@ -351,6 +370,7 @@ export default function AppCand({ id }) {
         setOpenPopup={setOpenModifier}
       >
         <Candidat
+          setOpenWindows={setOpenModifier}
           onClick={updateCandidat}
           Close={setOpenModifier}
           values={Values}
@@ -363,6 +383,7 @@ export default function AppCand({ id }) {
         setOpenPopup={setOpenFormation}
       >
         <TableFormation
+          key="TableFormation"
           Close={setOpenFormation}
           rowSelected={rowSelected}
           valeur={Values}
@@ -374,6 +395,7 @@ export default function AppCand({ id }) {
         setOpenPopup={setOpenDetail}
       >
         <CandidatInfo
+          key="CandidatInfo"
           Close={setOpenDetail}
           rowSelected={rowSelected}
           values={Values}

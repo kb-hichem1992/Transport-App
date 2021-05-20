@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
-import Controls from "../components/controls/Controls";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,8 +48,8 @@ export default function PasseFrom(props) {
 
   const { NUMERO_FORMATION, NUMERO_CANDIDAT, GROUPE, NOTE, REMARQUE } = props.values;
 
-  const [numeroFormation, setNumeroFormation] = useState(NUMERO_FORMATION);
-  const [numeroCandidat, setNumeroCandidat] = useState(NUMERO_CANDIDAT);
+  const [numeroFormation] = useState(NUMERO_FORMATION);
+  const [numeroCandidat ] = useState(NUMERO_CANDIDAT);
   const [note, setNote] = useState(NOTE);
   const [remarque, setRemarque] = useState(REMARQUE);
   const [groupe, setGroupe]=useState(GROUPE); 

@@ -22,6 +22,9 @@ import axios from "axios";
 import PageHeader from "../PageHeader.js";
 import { Paper } from "@material-ui/core";
 import TableCandForm from "../Candidat/TableCandForm";
+import LaptopChromebookIcon from "@material-ui/icons/LaptopChromebook";
+import { useAuth0 } from "@auth0/auth0-react";
+
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
@@ -52,6 +55,7 @@ function AppFor({ id }) {
   const [openAjouter, setOpenAjouter] = useState(false);
   const [openModifier, setOpenModifier] = useState(false);
   const [etat, setEtat] = useState(false);
+  const { user } = useAuth0();
 
   useEffect(() => {
     fetch(id)
@@ -122,7 +126,11 @@ function AppFor({ id }) {
 
   return (
     <>
-      <PageHeader title="Formation" subTitle="La liste des formation" />
+      <PageHeader
+        title="Formation"
+        subTitle="La liste des formation"
+        icon={<LaptopChromebookIcon />}
+      />
       <div className={classes.container}>
         <Button
           text="Ajouter"
@@ -140,7 +148,11 @@ function AppFor({ id }) {
           size="small"
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
-          disabled={Values === undefined ? true : false}
+          disabled={
+            Values === undefined || user.email !== "kb-hichem@hotmail.fr"
+              ? true
+              : false
+          }
           onClick={() => {
             setOpenModifier(true);
           }}
@@ -152,7 +164,11 @@ function AppFor({ id }) {
           color="secondary"
           startIcon={<DeleteIcon />}
           className={classes.newButton}
-          disabled={Values === undefined ? true : false}
+          disabled={
+            Values === undefined || user.email !== "kb-hichem@hotmail.fr"
+              ? true
+              : false
+          }
           onClick={() => {
             deleteFormation(Values.NUMERO_FORMATION);
           }}
@@ -205,6 +221,7 @@ function AppFor({ id }) {
       <PageHeader
         title="Formation"
         subTitle="La liste des candidats pour chaque formation "
+        icon={<LaptopChromebookIcon />}
       />
       <Paper>
         <TableCandForm

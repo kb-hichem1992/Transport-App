@@ -15,6 +15,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Controls from "../components/controls/Controls";
+import AlertDialog from "../components/controls/Dialog";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,7 +71,7 @@ export default function Candidat(props) {
   } = props.values;
 
   const [selectedDate, setSelectedDate] = useState(DATE_NAIS_CANDIDAT);
-  const [numeroCandidat, setnumeroCandidat] = useState(NUMERO_CANDIDAT);
+  const [numeroCandidat] = useState(NUMERO_CANDIDAT);
   const [Nom, setNom] = useState(NOM_CANDIDAT);
   const [Prenom, setPrenom] = useState(PRENOM_CANDIDAT);
   const [PrenomPere, setPrenomPere] = useState(PRENOM_PERE);
@@ -83,6 +85,12 @@ export default function Candidat(props) {
   const [ExpPermis, setExpPermis] = useState(DATE_EXP_PERMIS);
   const [CategoriePermis, setCategoriePermis] = useState(CATEGORIE_PERMIS);
   const [textChanged, setTextChanged] = useState(false);
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
   const handleSexeChange = (event) => {
     setSexe(event.target.value);
@@ -150,7 +158,7 @@ export default function Candidat(props) {
       CategoriePermis === "" ||
       Typepermis === ""
     ) {
-      alert("Merci de remplir tout les champs");
+      alert("Champs vides ");
     } else if (convert(dt1) >= convert(dt0)) {
       alert("Date de naissance erronée");
     } else if (convert(dt2) >= convert(dt3)) {
@@ -167,23 +175,7 @@ export default function Candidat(props) {
     ) {
       alert("Candidat existe déja");
     } else {
-      props.onClick(
-        numeroCandidat,
-        Nom,
-        Prenom,
-        convert(selectedDate),
-        Lieu,
-        Niveau,
-        Adresse,
-        PrenomPere,
-        Sexe,
-        NumPermis,
-        convert(LivPermis),
-        convert(ExpPermis),
-        CategoriePermis,
-        Typepermis
-      );
-      props.Close(false);
+      handleClickOpen();
     }
   };
 
@@ -260,7 +252,12 @@ export default function Candidat(props) {
                   onChange={(e) => setNiveau(e.target.value)}
                 >
                   {niveauScolaire.map((niveau) => {
-                    return <MenuItem value={niveau}> {niveau}</MenuItem>;
+                    return (
+                      <MenuItem key={niveau} value={niveau}>
+                        {" "}
+                        {niveau}
+                      </MenuItem>
+                    );
                   })}
                 </Select>
               </FormControl>
@@ -343,10 +340,20 @@ export default function Candidat(props) {
                 >
                   {Typepermis === "Normal"
                     ? categorie1.map((cat) => {
-                        return <MenuItem value={cat}> {cat}</MenuItem>;
+                        return (
+                          <MenuItem key={cat} value={cat}>
+                            {" "}
+                            {cat}
+                          </MenuItem>
+                        );
                       })
                     : categorie2.map((cat) => {
-                        return <MenuItem value={cat}> {cat}</MenuItem>;
+                        return (
+                          <MenuItem key={cat} value={cat}>
+                            {" "}
+                            {cat}
+                          </MenuItem>
+                        );
                       })}
                 </Select>
               </FormControl>
@@ -374,6 +381,32 @@ export default function Candidat(props) {
           </Grid>
         </form>
       </Paper>
+
+      <AlertDialog
+        title="Confirmation"
+        message="Voulez vous enregistrer ?"
+        open={open}
+        setOpen={setOpen}
+        method={() => {
+          props.onClick(
+            numeroCandidat,
+            Nom,
+            Prenom,
+            convert(selectedDate),
+            Lieu,
+            Niveau,
+            Adresse,
+            PrenomPere,
+            Sexe,
+            NumPermis,
+            convert(LivPermis),
+            convert(ExpPermis),
+            CategoriePermis,
+            Typepermis
+          );
+          props.setOpenWindows(false);
+        }}
+      />
     </>
   );
 }

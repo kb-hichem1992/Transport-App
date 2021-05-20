@@ -14,12 +14,12 @@ import {
 } from "@syncfusion/ej2-react-grids";
 import Button from "../components/controls/Button";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteIcon from "@material-ui/icons/Delete";
 import PrintIcon from "@material-ui/icons/Print";
 import Popup from "../components/Popup";
 import PasseFrom from "../Formation/PasseForm";
 import axios from "axios";
 import BrevetForm from "../Formation/BrevetForm";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,6 +67,7 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
   const [data, setdata] = useState([]);
   const [openModifier, setOpenModifier] = useState(false);
   const [openImprimer, setOpenImprimer] = useState(false);
+  const { user } = useAuth0();
 
   useEffect(() => {
     fetch(`http://localhost:3001/api/get_candidat_form/${numeroFormation}`)
@@ -144,7 +145,11 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
           size="small"
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
-          disabled={Values === undefined ? true : false}
+          disabled={
+              Values === undefined || user.email !== "kb-hichem@hotmail.fr"
+                ? true
+                : false
+            }
           onClick={() => {
             setOpenModifier(true);
           }}
@@ -154,7 +159,7 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
           variant="outlined"
           size="small"
           color="primary"
-          disabled={Values === undefined || Values.NOTE < 10 ? true : false}
+          disabled={Values === undefined || Values.NOTE < 10  || user.email !== "kb-hichem@hotmail.fr" ? true : false}
           startIcon={<PrintIcon />}
           className={classes.newButton}
           onClick={() => {

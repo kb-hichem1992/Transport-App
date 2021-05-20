@@ -34,11 +34,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function BrevetForm(props) {
   const classes = useStyles();
-  const [Brevet, setBrevet] = useState();
-  const [LivBrevt, setLivBrevt] = useState();
-  const [ExpBrevet, setExpBrevet] = useState();
+  const { NUMERO_FORMATION, NUMERO_CANDIDAT, GROUPE, BREVET, LIV_BREVET, EXP_BREVET } = props.values;
 
-  const { NUMERO_FORMATION, NUMERO_CANDIDAT, GROUPE } = props.values;
+  const [Brevet, setBrevet] = useState(BREVET);
+  const [LivBrevt, setLivBrevt] = useState(LIV_BREVET)
+  const [ExpBrevet, setExpBrevet] = useState(EXP_BREVET);
+  
+
 
   function convert(date) {
     const current_datetime = new Date(date);
@@ -63,12 +65,24 @@ export default function BrevetForm(props) {
       );
     }
   }
+
+  function BrevetExist(id) {
+    return props.data.some(function (el) {
+      if (el.BREVET === id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
   
   const Enregister = () => {
     try {
       if (Brevet === "" || LivBrevt === "" || ExpBrevet === "") {
         alert("Merci de remplir tout les champs");
-      } else {
+      } else if (BrevetExist(Brevet) === true ) {
+        alert("Numéro du Diplôme existe déja ");
+      }else {
         props.onClick(Brevet, convert(LivBrevt), convert(ExpBrevet), NUMERO_CANDIDAT, NUMERO_FORMATION, GROUPE);
         alert("Modifié avec succés")
         props.Close(false);

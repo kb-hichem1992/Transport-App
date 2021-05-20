@@ -18,7 +18,6 @@ import axios from "axios";
 
 export default function TableFormation(props) {
   const [data, setdata] = useState([]);
-  const [numeroFormation, setNumeroFormation] = useState();
   const {NUMERO_CANDIDAT}=props.valeur;
   const [groupe, setGroupe]=useState(); 
 
@@ -45,7 +44,7 @@ export default function TableFormation(props) {
       .then((response) => response.json())
       .then((json) => setdata(json));
   }, [data]);
-
+  
   function rowSelected() {
     try {
       const selectedrecords = TableRef.current.getSelectedRecords();
@@ -144,7 +143,6 @@ export default function TableFormation(props) {
               AffecteFormation(NUMERO_CANDIDAT,values.NUMERO_FORMATION, groupe)
               } else {
                 alert("Merci de choisir une formation");
-                alert(values)
               }
             }}
           />

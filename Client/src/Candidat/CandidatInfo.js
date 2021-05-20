@@ -56,7 +56,6 @@ export default function CandidatInfo(props) {
     LIEU_NAIS_CANDIDAT,
     NIVEAU_SCOL_CANDIDAT,
     NOM_CANDIDAT,
-    NUMERO_CANDIDAT,
     PRENOM_CANDIDAT,
     PRENOM_PERE,
     SEX_CONDIDAT,

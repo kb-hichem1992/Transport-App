@@ -16,15 +16,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import DashboardIcon from "@material-ui/icons/Dashboard";
 import LaptopChromebookIcon from "@material-ui/icons/LaptopChromebook";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import DirectionsIcon from "@material-ui/icons/Directions";
-import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
-import Collapse from "@material-ui/core/Collapse";
-import SubdirectoryArrowRightOutlinedIcon from "@material-ui/icons/SubdirectoryArrowRightOutlined";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
 import AppOp from "./Tables/AppOp.js";
 import AppFor from "./Formation/Formation.js";
 import AppCand from "./Candidat/Candidat.js";
@@ -34,10 +26,9 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Welcome from "./welcome";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { useAuth0 } from "@auth0/auth0-react";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import InfoIcon from "@material-ui/icons/Info";
 import GroupIcon from "@material-ui/icons/Group";
-
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import AppBrevet from "./Brevet/Brevet.js";
 
 const drawerWidth = 250;
 
@@ -154,16 +145,13 @@ export default function Dashboard() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
-  const [openSide, setOpenSide] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const handleClick = () => {
-    setOpenSide(!openSide);
-  };
+  
   return (
     // the Appbar Starts from here
     <Router>
@@ -197,7 +185,7 @@ export default function Dashboard() {
               Centre de Formation
             </Typography>
             <Button color="inherit" onClick={() => logout()}>
-              Log Out
+              Déconnexion
             </Button>
           </Toolbar>
         </AppBar>
@@ -223,7 +211,7 @@ export default function Dashboard() {
           <Divider />
 
           <List>
-            <Link to="/" className={classes.link}>
+            {/*  <Link to="/" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
                   <DashboardIcon />
@@ -231,7 +219,7 @@ export default function Dashboard() {
                 <ListItemText primary="Acceuil" />
               </ListItem>
             </Link>
-           {/*  <ListItem button onClick={handleClick}>
+            <ListItem button onClick={handleClick}>
               <ListItemIcon>
                 <AssignmentIcon />
               </ListItemIcon>
@@ -261,7 +249,7 @@ export default function Dashboard() {
             <Link to="/For" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
-                  <DirectionsIcon />
+                  <LaptopChromebookIcon />
                 </ListItemIcon>
                 <ListItemText primary="Formations" />
               </ListItem>
@@ -269,22 +257,30 @@ export default function Dashboard() {
             <Link to="/candidat" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
-                  <PhotoCameraIcon />
+                  <GroupIcon />
                 </ListItemIcon>
                 <ListItemText primary="Candidats" />
               </ListItem>
             </Link>
-            <Link to="/Vehicule" className={classes.link}>
+            {/*        <Link to="/Vehicule" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
                   <LaptopChromebookIcon />
                 </ListItemIcon>
                 <ListItemText primary="Véhicules" />
               </ListItem>
+            </Link> */}
+            <Link to="/Diplômes" className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <LibraryBooksIcon />
+                </ListItemIcon>
+                <ListItemText primary="Diplômes" />
+              </ListItem>
             </Link>
           </List>
 
-          <Divider />
+          {/*    <Divider />
           <List>
             <ListSubheader inset> Configuration </ListSubheader>
             <ListItem button>
@@ -301,7 +297,7 @@ export default function Dashboard() {
                 <ListItemText primary="A propos" />
               </ListItem>
             </Link>
-          </List>
+          </List> */}
         </Drawer>
         <main
           className={clsx(classes.content, {
@@ -312,6 +308,16 @@ export default function Dashboard() {
           <Container maxWidth="lg" className={classes.container}>
             <Grid item xs={12}>
               <Switch>
+              <Route
+                  path="/"
+                  exact
+                  render={(props) => (
+                    <AppFor
+                      {...props}
+                      id={"http://localhost:3001/api/get_form"}
+                    />
+                  )}
+                />
                 <Route path="/" component={Welcome} exact />
                 <Route path="/op/mor">
                   <AppOp
@@ -330,7 +336,7 @@ export default function Dashboard() {
                   )}
                 />
                 <Route
-                  path="/For"
+                  path="/for"
                   render={(props) => (
                     <AppFor
                       {...props}
@@ -354,6 +360,15 @@ export default function Dashboard() {
                       {...props}
                       id={"http://localhost:3001/api/get_veh_Mar"}
                       id2={"http://localhost:3001/api/get_veh_voyag"}
+                    />
+                  )}
+                />
+                <Route
+                  path="/Diplômes"
+                  render={(props) => (
+                    <AppBrevet
+                      {...props}
+                      id={"http://localhost:3001/api/get_brevet"}
                     />
                   )}
                 />

@@ -52,6 +52,7 @@ app.get("/api/get_candidat_form", (req, res) => {
   });
 });
 
+
 app.get("/api/get_candidat_form/:numeroFormation", (req, res) => {
   const numeroFormation = req.params.numeroFormation;
   db.query(
@@ -80,6 +81,13 @@ app.put("/update_passe", (req, res) => {
       }
     }
   );
+});
+app.get("/api/get_brevet", (req, res) => {
+  const sqlquery =
+    "SELECT passe.BREVET, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, passe.LIV_BREVET, passe.EXP_BREVET , formation.TYPE_FORMATION , passe.GROUPE, formation.NUMERO_FORMATION, candidat.NUMERO_CANDIDAT  from ((passe inner join candidat on candidat.NUMERO_CANDIDAT = passe.NUMERO_CANDIDAT) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION);";
+  db.query(sqlquery, (err, result) => {
+    res.send(result);
+  });
 });
 app.put("/insert_brevet", (req, res) => {
   const NumeroBrevet = req.body.NumeroBrevet;
