@@ -18,7 +18,7 @@ import axios from "axios";
 
 export default function TableFormation(props) {
   const [data, setdata] = useState([]);
-  const {NUMERO_CANDIDAT}=props.valeur;
+  const {NUM_INS}=props.valeur;
   const [groupe, setGroupe]=useState(); 
 
 
@@ -140,7 +140,7 @@ export default function TableFormation(props) {
             className={classes.newButton}
             onClick={() => {
               if (values !== undefined) {
-              AffecteFormation(NUMERO_CANDIDAT,values.NUMERO_FORMATION, groupe)
+              AffecteFormation(NUM_INS,values.NUMERO_FORMATION, groupe)
               } else {
                 alert("Merci de choisir une formation");
               }

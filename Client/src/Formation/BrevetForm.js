@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function BrevetForm(props) {
   const classes = useStyles();
-  const { NUMERO_FORMATION, NUMERO_CANDIDAT, GROUPE, BREVET, LIV_BREVET, EXP_BREVET } = props.values;
+  const { NUMERO_FORMATION, NUM_INS, GROUPE, BREVET, LIV_BREVET, EXP_BREVET } = props.values;
 
   const [Brevet, setBrevet] = useState(BREVET);
   const [LivBrevt, setLivBrevt] = useState(LIV_BREVET)
@@ -83,7 +83,7 @@ export default function BrevetForm(props) {
       } else if (BrevetExist(Brevet) === true ) {
         alert("Numéro du Diplôme existe déja ");
       }else {
-        props.onClick(Brevet, convert(LivBrevt), convert(ExpBrevet), NUMERO_CANDIDAT, NUMERO_FORMATION, GROUPE);
+        props.onClick(Brevet, convert(LivBrevt), convert(ExpBrevet), NUM_INS, NUMERO_FORMATION, GROUPE);
         alert("Modifié avec succés")
         props.Close(false);
       }

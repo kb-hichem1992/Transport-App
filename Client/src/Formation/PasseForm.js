@@ -46,10 +46,10 @@ const useStyles = makeStyles((theme) => ({
 export default function PasseFrom(props) {
   const classes = useStyles();
 
-  const { NUMERO_FORMATION, NUMERO_CANDIDAT, GROUPE, NOTE, REMARQUE } = props.values;
+  const { NUMERO_FORMATION, NUM_INS, GROUPE, NOTE, REMARQUE } = props.values;
 
   const [numeroFormation] = useState(NUMERO_FORMATION);
-  const [numeroCandidat ] = useState(NUMERO_CANDIDAT);
+  const [numeroCandidat ] = useState(NUM_INS);
   const [note, setNote] = useState(NOTE);
   const [remarque, setRemarque] = useState(REMARQUE);
   const [groupe, setGroupe]=useState(GROUPE); 

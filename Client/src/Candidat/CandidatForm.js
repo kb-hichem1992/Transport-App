@@ -3,8 +3,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import {
   Button,
+  Checkbox,
+  FormGroup,
   Grid,
   InputLabel,
+  List,
   MenuItem,
   Paper,
   Select,
@@ -16,7 +19,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Controls from "../components/controls/Controls";
 import AlertDialog from "../components/controls/Dialog";
-
+import { FormatColorResetSharp } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +62,7 @@ export default function Candidat(props) {
     LIEU_NAIS_CANDIDAT,
     NIVEAU_SCOL_CANDIDAT,
     NOM_CANDIDAT,
-    NUMERO_CANDIDAT,
+    NUM_INS,
     PRENOM_CANDIDAT,
     PRENOM_PERE,
     SEX_CONDIDAT,
@@ -68,10 +71,14 @@ export default function Candidat(props) {
     DATE_EXP_PERMIS,
     CATEGORIE_PERMIS,
     TYPE_PERMIS,
+    DATE_INS,
+    TYPE_CANDIDAT,
   } = props.values;
 
   const [selectedDate, setSelectedDate] = useState(DATE_NAIS_CANDIDAT);
-  const [numeroCandidat] = useState(NUMERO_CANDIDAT);
+  const [numeroCandidat, setNumeroCandidat] = useState(NUM_INS);
+  const [Date_ins, setDate_ins] = useState(DATE_INS);
+  const [Type_candidat, setType_candidat] = useState(TYPE_CANDIDAT);
   const [Nom, setNom] = useState(NOM_CANDIDAT);
   const [Prenom, setPrenom] = useState(PRENOM_CANDIDAT);
   const [PrenomPere, setPrenomPere] = useState(PRENOM_PERE);
@@ -85,21 +92,72 @@ export default function Candidat(props) {
   const [ExpPermis, setExpPermis] = useState(DATE_EXP_PERMIS);
   const [CategoriePermis, setCategoriePermis] = useState(CATEGORIE_PERMIS);
   const [textChanged, setTextChanged] = useState(false);
-
   const [open, setOpen] = useState(false);
+  const [Cat, setCat] = useState([]);
+  const [CatNormal, setCatNormal] = useState({
+    A1: false,
+    A2: false,
+    B: false,
+    C1: false,
+    C2: false,
+    D: false,
+    E: false,
+    F: false,
+  });
+  const [CatNew, setCatNew] = useState({
+    A1: false,
+    A: false,
+    B: false,
+    D: false,
+    C1: false,
+    C: false,
+    BE: false,
+    C1E: false,
+    CE: false,
+    DE: false,
+    F: false,
+  });
 
+  const Normal = Object.keys(CatNormal);
+  const New = Object.keys(CatNew);
+
+  const categorie1 = ["A1", "A2", "B", "C1", "C2", "D", "E", "F"];
+  const categorie2 = [
+    "A1",
+    "A",
+    "B",
+    "D",
+    "C1",
+    "C",
+    "BE",
+    "C1E",
+    "CE",
+    "DE",
+    "F",
+  ];
+
+  const getting_Categorie = (list_categorie) => {
+    for (const key in list_categorie) {
+      console.log(key + ": " + list_categorie[key]);
+      // if (list_categorie[key] === true) {
+      // str.concat(key + "");
+    }
+  };
+
+  const handleCatNormalChange = (event) => {
+    setCatNormal({ ...CatNormal, [event.target.name]: event.target.checked });
+  };
+  const handleCatNewChange = (event) => {
+    setCatNew({ ...CatNew, [event.target.name]: event.target.checked });
+  };
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleSexeChange = (event) => {
     setSexe(event.target.value);
   };
   const handleTypePermisChange = (event) => {
     setTypePermis(event.target.value);
-  };
-  const handleCategoriePermisChange = (event) => {
-    setCategoriePermis(event.target.value);
   };
 
   // convertir le format de la Date en yyyy-mm-dd
@@ -179,21 +237,22 @@ export default function Candidat(props) {
     }
   };
 
-  const categorie1 = ["A1", "A2", "B", "C1", "C2", "D", "E", "F"];
-  const categorie2 = [
-    "A1",
-    "A",
-    "B",
-    "D",
-    "C1",
-    "C",
-    "BE",
-    "C1E",
-    "CE",
-    "DE",
-    "F",
-  ];
   const niveauScolaire = ["ابتدائي", "متوسط", "ثانوي", "جامعي"];
+  const getCat = (catnrml) => {
+    Typepermis === "Normal"
+      ? Normal.map((cat) => {
+          if (catnrml.cat === true) {
+            catnrml.push(cat);
+          }
+          return catnrml;
+        })
+      : New.map((cat) => {
+          if (catnrml.cat === true) {
+            catnrml.push(cat);
+          }
+          return catnrml;
+        });
+  };
 
   return (
     <>
@@ -201,6 +260,18 @@ export default function Candidat(props) {
         <form className={classes.root} noValidate autoComplete="off">
           <Grid container spacing={2}>
             <Grid item xs={6}>
+              <TextField
+                variant="outlined"
+                label="Numéro d'inscription"
+                value={numeroCandidat}
+                size="small"
+                onChange={(e) => setNumeroCandidat(e.target.value)}
+              />
+              <Controls.DatePicker
+                label="Date d'inscription"
+                value={Date_ins}
+                onChange={setDate_ins}
+              />
               <TextField
                 variant="outlined"
                 label="Nom du condidat"
@@ -221,6 +292,13 @@ export default function Candidat(props) {
                 size="small"
                 value={PrenomPere}
                 onChange={(e) => setPrenomPere(e.target.value)}
+              />
+              <TextField
+                variant="outlined"
+                label="Type du Candidat"
+                size="small"
+                value={Type_candidat}
+                onChange={(e) => setType_candidat(e.target.value)}
               />
               <TextField
                 variant="outlined"
@@ -328,35 +406,53 @@ export default function Candidat(props) {
                   />
                 </RadioGroup>
               </FormControl>
-              <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">
-                  Catégorie Permis
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select"
-                  id="demo-simple-select"
-                  value={CategoriePermis}
-                  onChange={handleCategoriePermisChange}
+              <div className={classes.root}>
+                <FormControl
+                  component="fieldset"
+                  className={classes.formControl}
                 >
-                  {Typepermis === "Normal"
-                    ? categorie1.map((cat) => {
-                        return (
-                          <MenuItem key={cat} value={cat}>
-                            {" "}
-                            {cat}
-                          </MenuItem>
-                        );
-                      })
-                    : categorie2.map((cat) => {
-                        return (
-                          <MenuItem key={cat} value={cat}>
-                            {" "}
-                            {cat}
-                          </MenuItem>
-                        );
-                      })}
-                </Select>
-              </FormControl>
+                  <FormLabel component="legend">Catégories de permis</FormLabel>
+                  <FormGroup row>
+                    {Typepermis === "Normal"
+                      ? Normal.map((key) => {
+                          return (
+                            <FormControlLabel
+                              key={key}
+                              control={
+                                <Checkbox
+                                  value={key}
+                                  name={key}
+                                  checked={CatNormal.key}
+                                  onChange={(e) => {
+                                    handleCatNormalChange(e);
+                                  }}
+                                />
+                              }
+                              label={key}
+                            />
+                          );
+                        })
+                      : New.map((key) => {
+                          return (
+                            <FormControlLabel
+                              key={key}
+                              control={
+                                <Checkbox
+                                  value={key}
+                                  name={key}
+                                  checked={CatNew.key}
+                                  onChange={(e) => {
+                                    handleCatNewChange(e);
+                                  }}
+                                />
+                              }
+                              label={key}
+                            />
+                          );
+                        })}
+                  </FormGroup>
+                </FormControl>
+              </div>
               <Grid item xs={12}>
                 <Button
                   variant="contained"
@@ -371,7 +467,9 @@ export default function Candidat(props) {
                   color="secondary"
                   size="small"
                   onClick={() => {
-                    props.Close(false);
+                    // props.Close(false);
+                    const array = getCat(CategoriePermis);
+                    console.log(array.ToSring());
                   }}
                 >
                   Annuler
@@ -390,6 +488,7 @@ export default function Candidat(props) {
         method={() => {
           props.onClick(
             numeroCandidat,
+            convert(Date_ins),
             Nom,
             Prenom,
             convert(selectedDate),
@@ -398,6 +497,7 @@ export default function Candidat(props) {
             Adresse,
             PrenomPere,
             Sexe,
+            Type_candidat,
             NumPermis,
             convert(LivPermis),
             convert(ExpPermis),

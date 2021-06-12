@@ -92,17 +92,52 @@ export default function AppCand({ id }) {
       .then((response) => response.json())
       .then((json) => setdata(json));
   }, [id, data, etat]);
+  function convert(date) {
+    const current_datetime = new Date(date);
+
+    const m = current_datetime.getMonth() + 1;
+    if (m > 9) {
+      return (
+        current_datetime.getFullYear() +
+        "-" +
+        m +
+        "-" +
+        current_datetime.getDate()
+      );
+    } else {
+      return (
+        current_datetime.getFullYear() +
+        "-" +
+        0 +
+        m +
+        "-" +
+        current_datetime.getDate()
+      );
+    }
+  }
+  const addCategorie = (numeroCandidat, Date_ins, Num_permis, code) => {
+    Axios.post("http://localhost:3001/Add_categorie", {
+      numeroCandidat: numeroCandidat,
+      Date_ins: Date_ins,
+      Num_permis: Num_permis,
+      code: code,
+    }).then(() => {
+      setEtat(!etat);
+    });
+  };
 
   const addCondidat = (
     numeroCandidat,
+    Date_ins,
     Nom,
-    Prenom,
+    Prénom,
     Date_naissance,
-    Lieu,
+    Lieu_naissance,
     Niveau,
     Adresse,
-    PrenomPere,
+    Prénom_Pére,
     Sexe,
+    Type_Candidat,
     Num_permis,
     date_liv,
     date_exp,
@@ -110,15 +145,17 @@ export default function AppCand({ id }) {
     type_permis
   ) => {
     Axios.post("http://localhost:3001/Add_condidat", {
-      numeroCandidat,
+      numeroCandidat: numeroCandidat,
+      Date_ins: Date_ins,
       Nom: Nom,
-      Prénom: Prenom,
+      Prénom: Prénom,
       Date_naissance: Date_naissance,
-      Lieu_naissance: Lieu,
+      Lieu_naissance: Lieu_naissance,
       Niveau: Niveau,
       Adresse: Adresse,
-      Prénom_Pére: PrenomPere,
+      Prénom_Pére: Prénom_Pére,
       Sexe: Sexe,
+      Type_Candidat: Type_Candidat,
       Num_permis: Num_permis,
       date_liv: date_liv,
       date_exp: date_exp,
@@ -164,11 +201,12 @@ export default function AppCand({ id }) {
     });
   };
 
-  const deleteCandidat = (numeroCandidat) => {
-    Axios.delete(
-      `http://localhost:3001/delete_candidat/${numeroCandidat}`,
-      {}
-    ).then(() => {
+  const deleteCandidat = (Num_permis, Date_ins, numeroCandidat) => {
+    Axios.post(`http://localhost:3001/delete_candidat`, {
+      Num_permis: Num_permis,
+      Date_ins: Date_ins,
+      numeroCandidat: numeroCandidat,
+    }).then(() => {
       setEtat(!etat);
       alert("supprimer");
     });
@@ -183,7 +221,8 @@ export default function AppCand({ id }) {
   const TableRef2 = useRef(null);
 
   const initialvalues = {
-    NUMERO_CANDIDAT: 0,
+    NUM_INS: "",
+    DATE_INS: new Date(),
     NOM_CANDIDAT: "",
     PRENOM_CANDIDAT: "",
     DATE_NAIS_CANDIDAT: new Date(),
@@ -192,6 +231,7 @@ export default function AppCand({ id }) {
     ADRESSE_CANDIDAT: "",
     PRENOM_PERE: "",
     SEX_CONDIDAT: "",
+    TYPE_CANDIDAT: "",
     NUM_PERMIS: "",
     DATE_LIV_PERMIS: new Date(),
     DATE_EXP_PERMIS: new Date(),
@@ -270,7 +310,11 @@ export default function AppCand({ id }) {
                 : false
             }
             onClick={() => {
-              deleteCandidat(Values.NUMERO_CANDIDAT);
+              deleteCandidat(
+                Values.NUM_PERMIS,
+                convert(Values.DATE_INS),
+                Values.NUM_INS
+              );
             }}
           />
         </div>
@@ -356,6 +400,7 @@ export default function AppCand({ id }) {
         setOpenPopup={setOpenAjouter}
       >
         <Candidat
+          key="Ajouter"
           setOpenWindows={setOpenAjouter}
           onClick={addCondidat}
           Close={setOpenAjouter}

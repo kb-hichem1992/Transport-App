@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mysql = require("mysql");
-const pdf  =  require("./report/pdfGenerator.js")
+const pdf = require("./report/pdfGenerator.js");
 
 const db = mysql.createPool({
   host: "localhost",
@@ -46,17 +46,15 @@ app.get("/api/get_candidat", (req, res) => {
 });
 app.get("/api/get_candidat_form", (req, res) => {
   const sqlquery =
-    "SELECT passe.NUMERO_FORMATION, candidat.NUMERO_CANDIDAT,candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, passe.GROUPE, formation.DEBUT, formation.FIN,passe.REMARQUE, passe.NOTE from ((passe inner join candidat on candidat.NUMERO_CANDIDAT = passe.NUMERO_CANDIDAT) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION) where passe.NUMERO_FORMATION= ?";
+    "SELECT passe.NUMERO_FORMATION, candidat.NUM_INS,candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, passe.GROUPE, formation.DEBUT, formation.FIN,passe.REMARQUE, passe.NOTE from ((passe inner join candidat on candidat.NUM_INS = passe.NUM_INS) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION) where passe.NUMERO_FORMATION= ?";
   db.query(sqlquery, (err, result) => {
     res.send(result);
   });
 });
-
-
 app.get("/api/get_candidat_form/:numeroFormation", (req, res) => {
   const numeroFormation = req.params.numeroFormation;
   db.query(
-    "SELECT passe.NUMERO_FORMATION, candidat.NUMERO_CANDIDAT,candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, passe.GROUPE, formation.DEBUT, formation.FIN,passe.REMARQUE, passe.NOTE from ((passe inner join candidat on candidat.NUMERO_CANDIDAT = passe.NUMERO_CANDIDAT) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION) where passe.NUMERO_FORMATION= ?",
+    "SELECT passe.NUMERO_FORMATION, candidat.NUM_INS,candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, passe.GROUPE, formation.DEBUT, formation.FIN,passe.REMARQUE, passe.NOTE from ((passe inner join candidat on candidat.NUM_INS = passe.NUM_INS) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION) where passe.NUMERO_FORMATION= ?",
     numeroFormation,
     (err, result) => {
       res.send(result);
@@ -71,7 +69,7 @@ app.put("/update_passe", (req, res) => {
   const groupe = req.body.groupe;
   const GROUPE = req.body.GROUPE;
   db.query(
-    "UPDATE passe SET `REMARQUE`= ?, `NOTE`= ? , `GROUPE` = ? WHERE `NUMERO_CANDIDAT`= ? and `NUMERO_FORMATION`= ? and `GROUPE`= ? ;",
+    "UPDATE passe SET `REMARQUE`= ?, `NOTE`= ? , `GROUPE` = ? WHERE `NUM_INS`= ? and `NUMERO_FORMATION`= ? and `GROUPE`= ? ;",
     [remarque, note, groupe, numeroCandidat, numeroFormation, GROUPE],
     (err, result) => {
       if (err) {
@@ -84,7 +82,7 @@ app.put("/update_passe", (req, res) => {
 });
 app.get("/api/get_brevet", (req, res) => {
   const sqlquery =
-    "SELECT passe.BREVET, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, passe.LIV_BREVET, passe.EXP_BREVET , formation.TYPE_FORMATION , passe.GROUPE, formation.NUMERO_FORMATION, candidat.NUMERO_CANDIDAT  from ((passe inner join candidat on candidat.NUMERO_CANDIDAT = passe.NUMERO_CANDIDAT) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION);";
+    "SELECT passe.BREVET, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, passe.LIV_BREVET, passe.EXP_BREVET , formation.TYPE_FORMATION , passe.GROUPE, formation.NUMERO_FORMATION, candidat.NUM_INS  from ((passe inner join candidat on candidat.NUM_INS = passe.NUM_INS) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION);";
   db.query(sqlquery, (err, result) => {
     res.send(result);
   });
@@ -96,10 +94,17 @@ app.put("/insert_brevet", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
   const numeroFormation = req.body.numeroFormation;
   const GROUPE = req.body.GROUPE;
- 
+
   db.query(
-    "UPDATE passe SET `BREVET`= ?, `LIV_BREVET`= ? , `EXP_BREVET` = ? WHERE `NUMERO_CANDIDAT`= ? and `NUMERO_FORMATION`= ? and `GROUPE`= ? ;",
-    [NumeroBrevet, LivBrevet, ExpBrevet, numeroCandidat, numeroFormation, GROUPE],
+    "UPDATE passe SET `BREVET`= ?, `LIV_BREVET`= ? , `EXP_BREVET` = ? WHERE `NUM_INS`= ? and `NUMERO_FORMATION`= ? and `GROUPE`= ? ;",
+    [
+      NumeroBrevet,
+      LivBrevet,
+      ExpBrevet,
+      numeroCandidat,
+      numeroFormation,
+      GROUPE,
+    ],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -109,7 +114,6 @@ app.put("/insert_brevet", (req, res) => {
     }
   );
 });
-
 app.get("/api/get_veh_Mar", (req, res) => {
   const sqlquery =
     "select vehicule.IMMATRECULATION, vehicule.MARQUE, vehicule.PTC, vehicule.PTAC, vehicule.CU  , operateur.NOM_OPERATEUR, operateur.PRENOM_OPERATEUR, operateur.PRENOM_PERE  from vehicule, operateur where vehicule.GENRE = 'Marchandise' and vehicule.NUMERO_OPERATEUR = operateur.NUMERO_OPERATEUR;";
@@ -124,9 +128,9 @@ app.get("/api/get_veh_voyag", (req, res) => {
     res.send(result);
   });
 });
-
 app.post("/Add_condidat", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
+  const Date_ins = req.body.Date_ins;
   const Nom = req.body.Nom;
   const Prénom = req.body.Prénom;
   const Date_naissance = req.body.Date_naissance;
@@ -135,15 +139,18 @@ app.post("/Add_condidat", (req, res) => {
   const Adresse = req.body.Adresse;
   const Prénom_Pére = req.body.Prénom_Pére;
   const Sexe = req.body.Sexe;
+  const Type_Candidat = req.body.Type_Candidat;
   const Num_permis = req.body.Num_permis;
   const date_liv = req.body.date_liv;
   const date_exp = req.body.date_exp;
-  const categorie_permis = req.body.categorie_permis;
   const type_permis = req.body.type_permis;
+  const categorie_permis = req.body.categorie_permis;
+
   db.query(
-    "INSERT INTO candidat (`NUMERO_CANDIDAT`, `NOM_CANDIDAT`, `PRENOM_CANDIDAT`, `DATE_NAIS_CANDIDAT`, `LIEU_NAIS_CANDIDAT`, `NIVEAU_SCOL_CANDIDAT`, `ADRESSE_CANDIDAT`, `PRENOM_PERE`, `SEX_CONDIDAT`, `NUM_PERMIS`, `DATE_LIV_PERMIS`, `DATE_EXP_PERMIS`, `CATEGORIE_PERMIS`, `TYPE_PERMIS`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO candidat (`NUM_INS`, `DATE_INS`,`NOM_CANDIDAT`, `PRENOM_CANDIDAT`, `DATE_NAIS_CANDIDAT`, `LIEU_NAIS_CANDIDAT`, `NIVEAU_SCOL_CANDIDAT`, `ADRESSE_CANDIDAT`, `PRENOM_PERE`, `SEX_CONDIDAT`,`TYPE_CANDIDAT`,`NUM_PERMIS`, `DATE_LIV_PERMIS`, `DATE_EXP_PERMIS`, `TYPE_PERMIS`, `CATEGORIE_PERMIS`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
     [
       numeroCandidat,
+      Date_ins,
       Nom,
       Prénom,
       Date_naissance,
@@ -152,11 +159,12 @@ app.post("/Add_condidat", (req, res) => {
       Adresse,
       Prénom_Pére,
       Sexe,
+      Type_Candidat,
       Num_permis,
       date_liv,
       date_exp,
-      categorie_permis,
       type_permis,
+      categorie_permis
     ],
     (err, result) => {
       if (err) {
@@ -167,7 +175,6 @@ app.post("/Add_condidat", (req, res) => {
     }
   );
 });
-
 app.put("/update_candidat", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
   const Nom = req.body.Nom;
@@ -184,7 +191,7 @@ app.put("/update_candidat", (req, res) => {
   const categorie_permis = req.body.categorie_permis;
   const type_permis = req.body.type_permis;
   db.query(
-    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `NUM_PERMIS` = ?, `DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ? WHERE `NUMERO_CANDIDAT`= ? ;",
+    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `NUM_PERMIS` = ?, `DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ? WHERE `NUM_INS`= ? ;",
     [
       Nom,
       Prénom,
@@ -210,12 +217,13 @@ app.put("/update_candidat", (req, res) => {
     }
   );
 });
-
-app.delete("/delete_candidat/:numeroCandidat", (req, res) => {
-  const numeroCandidat = req.params.numeroCandidat;
+app.post("/delete_candidat", (req, res) => {
+  const Num_permis = req.body.Num_permis;
+  const Date_ins = req.body.Date_ins;
+  const numeroCandidat = req.body.numeroCandidat;
   db.query(
-    "delete from candidat where NUMERO_CANDIDAT = ?",
-    numeroCandidat,
+    "delete from candidat where `NUM_PERMIS` = ? and `DATE_INS` = ? and NUM_INS = ? ",
+    [Num_permis, Date_ins, numeroCandidat],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -225,7 +233,6 @@ app.delete("/delete_candidat/:numeroCandidat", (req, res) => {
     }
   );
 });
-
 app.post("/Add_formation", (req, res) => {
   const numeroFormation = req.body.numeroFormation;
   const Type = req.body.Type;
@@ -275,9 +282,9 @@ app.delete("/delete_formation/:numeroFormation", (req, res) => {
   );
 });
 
-app.get("/report", (req,res) => {
-    pdf.generatepdf(); 
-}) ;  
+app.get("/report", (req, res) => {
+  pdf.generatepdf();
+});
 
 app.post("/Add_passe", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
@@ -286,8 +293,26 @@ app.post("/Add_passe", (req, res) => {
   const note = req.body.note;
   const groupe = req.body.groupe;
   db.query(
-    "INSERT INTO passe (`NUMERO_CANDIDAT`, `NUMERO_FORMATION`, `GROUPE` , `REMARQUE`, `NOTE` ) VALUES (?,?,?,?,?)",
+    "INSERT INTO passe (`NUM_INS`, `NUMERO_FORMATION`, `GROUPE` , `REMARQUE`, `NOTE` ) VALUES (?,?,?,?,?)",
     [numeroCandidat, numeroFormation, groupe, remarque, note],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Values Inserted");
+      }
+    }
+  );
+});
+app.post("/Add_categorie", (req, res) => {
+  const numeroCandidat = req.body.numeroCandidat;
+  const Date_ins = req.body.Date_ins;
+  const Num_permis = req.body.Num_permis;
+  const code = req.body.code;
+  
+  db.query(
+    "INSERT INTO avoir (`NUM_INS`, `DATE_INS`, `NUM_PERMIS`, `CODE`) VALUES  (?,?,?,?)",
+    [numeroCandidat, Date_ins, Num_permis, code],
     (err, result) => {
       if (err) {
         console.log(err);

@@ -56,6 +56,7 @@ export default function CandidatInfo(props) {
     LIEU_NAIS_CANDIDAT,
     NIVEAU_SCOL_CANDIDAT,
     NOM_CANDIDAT,
+    NUM_INS,
     PRENOM_CANDIDAT,
     PRENOM_PERE,
     SEX_CONDIDAT,
@@ -64,6 +65,8 @@ export default function CandidatInfo(props) {
     DATE_EXP_PERMIS,
     CATEGORIE_PERMIS,
     TYPE_PERMIS,
+    DATE_INS,
+    TYPE_CANDIDAT,
   } = props.values;
 
   return (
@@ -71,6 +74,12 @@ export default function CandidatInfo(props) {
       <Paper className={classes.pageContent}>
         <Grid container className={classes.root} spacing={3}>
           <Grid item xs={6}>
+            <Typography  color ="textSecondary" variant="h6"  paragraph={true}>
+              N° inscription : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{NUM_INS}</Typography>
+            </Typography>
+            <Typography  color ="textSecondary" variant="h6"  paragraph={true}>
+              Date d'inscription : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{convert(DATE_INS)}</Typography>
+            </Typography>
             <Typography  color ="textSecondary" variant="h6"  paragraph={true}>
               Nom : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{NOM_CANDIDAT}</Typography>
             </Typography>
@@ -94,6 +103,9 @@ export default function CandidatInfo(props) {
             </Typography>
             <Typography color ="textSecondary" variant="h6"  paragraph={true}>
               Adresse: <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{ADRESSE_CANDIDAT}</Typography>
+            </Typography>
+            <Typography color ="textSecondary" variant="h6"  paragraph={true}>
+              Type de candidat: <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{TYPE_CANDIDAT}</Typography>
             </Typography>
           </Grid>
           <Grid item xs={6}>
