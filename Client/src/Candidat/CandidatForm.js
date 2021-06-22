@@ -7,7 +7,6 @@ import {
   FormGroup,
   Grid,
   InputLabel,
-  List,
   MenuItem,
   Paper,
   Select,
@@ -19,7 +18,9 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Controls from "../components/controls/Controls";
 import AlertDialog from "../components/controls/Dialog";
-import { FormatColorResetSharp } from "@material-ui/icons";
+import Popup from "../components/Popup";
+import Opérateur from "../Opérateur/Opérateur";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +51,15 @@ const useStyles = makeStyles((theme) => ({
     width: "auto",
     height: "auto",
   },
+  Div: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
 }));
 
 export default function Candidat(props) {
@@ -73,6 +83,7 @@ export default function Candidat(props) {
     TYPE_PERMIS,
     DATE_INS,
     TYPE_CANDIDAT,
+    NOM_OP,
   } = props.values;
 
   const [selectedDate, setSelectedDate] = useState(DATE_NAIS_CANDIDAT);
@@ -90,10 +101,11 @@ export default function Candidat(props) {
   const [NumPermis, setNumPermis] = useState(NUM_PERMIS);
   const [LivPermis, setLivPermis] = useState(DATE_LIV_PERMIS);
   const [ExpPermis, setExpPermis] = useState(DATE_EXP_PERMIS);
-  const [CategoriePermis, setCategoriePermis] = useState(CATEGORIE_PERMIS);
+  const [CategoriePermis] = useState(CATEGORIE_PERMIS.split(","));
   const [textChanged, setTextChanged] = useState(false);
   const [open, setOpen] = useState(false);
-  const [Cat, setCat] = useState([]);
+  const [OpenOperateur, setOpenOperateur] = useState(false);
+  const [operateur, setOperateur] = useState(NOM_OP);
   const [CatNormal, setCatNormal] = useState({
     A1: false,
     A2: false,
@@ -121,34 +133,25 @@ export default function Candidat(props) {
   const Normal = Object.keys(CatNormal);
   const New = Object.keys(CatNew);
 
-  const categorie1 = ["A1", "A2", "B", "C1", "C2", "D", "E", "F"];
-  const categorie2 = [
-    "A1",
-    "A",
-    "B",
-    "D",
-    "C1",
-    "C",
-    "BE",
-    "C1E",
-    "CE",
-    "DE",
-    "F",
-  ];
-
-  const getting_Categorie = (list_categorie) => {
-    for (const key in list_categorie) {
-      console.log(key + ": " + list_categorie[key]);
-      // if (list_categorie[key] === true) {
-      // str.concat(key + "");
-    }
-  };
-
   const handleCatNormalChange = (event) => {
     setCatNormal({ ...CatNormal, [event.target.name]: event.target.checked });
+    if (
+      event.target.checked === true &&
+      CategoriePermis.includes(event.target.name) === false
+    ) {
+      CategoriePermis.push(event.target.name);
+    }
+    console.log(CategoriePermis.toString());
   };
   const handleCatNewChange = (event) => {
     setCatNew({ ...CatNew, [event.target.name]: event.target.checked });
+    if (
+      event.target.checked === true &&
+      CategoriePermis.includes(event.target.name) === false
+    ) {
+      CategoriePermis.push(event.target.name);
+    }
+    console.log(CategoriePermis.toString());
   };
   const handleClickOpen = () => {
     setOpen(true);
@@ -236,28 +239,25 @@ export default function Candidat(props) {
       handleClickOpen();
     }
   };
-
-  const niveauScolaire = ["ابتدائي", "متوسط", "ثانوي", "جامعي"];
-  const getCat = (catnrml) => {
-    Typepermis === "Normal"
-      ? Normal.map((cat) => {
-          if (catnrml.cat === true) {
-            catnrml.push(cat);
-          }
-          return catnrml;
-        })
-      : New.map((cat) => {
-          if (catnrml.cat === true) {
-            catnrml.push(cat);
-          }
-          return catnrml;
-        });
+  const affecter_Op = (numeroCandidat, Date_ins, Num_permis, operateur) => {
+    axios
+      .post("http://localhost:3001/add_travail", {
+        numeroCandidat: numeroCandidat,
+        Date_ins: Date_ins,
+        Num_permis: Num_permis,
+        Nom_OP: operateur,
+      })
+      .then(() => {
+        console.log("Ajouter avec succés");
+      });
   };
+  const niveauScolaire = ["ابتدائي", "متوسط", "ثانوي", "جامعي"];
+  const Type = ["عامل", "حر"];
 
   return (
     <>
       <Paper className={classes.pageContent}>
-        <form className={classes.root} noValidate autoComplete="off">
+        <form className={classes.root} noValidate autoComplete="on">
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <TextField
@@ -272,6 +272,51 @@ export default function Candidat(props) {
                 value={Date_ins}
                 onChange={setDate_ins}
               />
+
+              <FormControl>
+                <InputLabel id="demo-simple-select-label">
+                  Type du Candidat
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select"
+                  id="demo-simple-select"
+                  value={Type_candidat}
+                  onChange={(e) => setType_candidat(e.target.value)}
+                >
+                  {Type.map((type) => {
+                    return (
+                      <MenuItem key={type} value={type}>
+                        {" "}
+                        {type}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+
+{/*               <Button
+                variant="outlined"
+                color="primary"
+                endIcon={<AddIcon />}
+                disabled={
+                  Type_candidat === "حر" || Type_candidat === "" ? true : false
+                }
+                onClick={() => {
+                  setOpenOperateur(true);
+                }}
+                style={{ width: 123, height: 42 }}
+              >
+                Opérateur
+              </Button>
+              <TextField
+                variant="outlined"
+                label="Opérateur"
+                value={operateur}
+                size="small"
+                style={{ width: 193 }}
+                inputProps={{ style: { fontSize: 18 }, readOnly: true }}
+              />
+ */}
               <TextField
                 variant="outlined"
                 label="Nom du condidat"
@@ -292,13 +337,6 @@ export default function Candidat(props) {
                 size="small"
                 value={PrenomPere}
                 onChange={(e) => setPrenomPere(e.target.value)}
-              />
-              <TextField
-                variant="outlined"
-                label="Type du Candidat"
-                size="small"
-                value={Type_candidat}
-                onChange={(e) => setType_candidat(e.target.value)}
               />
               <TextField
                 variant="outlined"
@@ -452,6 +490,15 @@ export default function Candidat(props) {
                         })}
                   </FormGroup>
                 </FormControl>
+                <TextField
+                  variant="outlined"
+                  label="Liste des catégoriés"
+                  autoFocus={true}
+                  defaultValue=""
+                  value={CategoriePermis}
+                  size="small"
+                  inputProps={{ style: { fontSize: 18 }, readOnly: true }}
+                />
               </div>
               <Grid item xs={12}>
                 <Button
@@ -467,9 +514,8 @@ export default function Candidat(props) {
                   color="secondary"
                   size="small"
                   onClick={() => {
-                    // props.Close(false);
-                    const array = getCat(CategoriePermis);
-                    console.log(array.ToSring());
+                    //  props.Close(false);
+                    console.log(NOM_OP);
                   }}
                 >
                   Annuler
@@ -486,27 +532,41 @@ export default function Candidat(props) {
         open={open}
         setOpen={setOpen}
         method={() => {
-          props.onClick(
-            numeroCandidat,
-            convert(Date_ins),
-            Nom,
-            Prenom,
-            convert(selectedDate),
-            Lieu,
-            Niveau,
-            Adresse,
-            PrenomPere,
-            Sexe,
-            Type_candidat,
-            NumPermis,
-            convert(LivPermis),
-            convert(ExpPermis),
-            CategoriePermis,
-            Typepermis
-          );
-          props.setOpenWindows(false);
+          if (Type_candidat === "عامل" && NOM_OP === "") {
+            alert("يجب إختيار المتعامل");
+          } else {
+            props.onClick(
+              numeroCandidat,
+              convert(Date_ins),
+              Nom,
+              Prenom,
+              convert(selectedDate),
+              Lieu,
+              Niveau,
+              Adresse,
+              PrenomPere,
+              Sexe,
+              Type_candidat,
+              NumPermis,
+              convert(LivPermis),
+              convert(ExpPermis),
+              CategoriePermis.toString(),
+              Typepermis
+            );
+            if (NOM_OP !== "") {
+              affecter_Op(numeroCandidat, convert(Date_ins), NumPermis, operateur);
+            }
+            props.setOpenWindows(false);
+          }
         }}
       />
+      <Popup
+        title="إختيار المتعامل"
+        openPopup={OpenOperateur}
+        setOpenPopup={setOpenOperateur}
+      >
+        <Opérateur key="Opérateur" Close={setOpenOperateur} setOp={setOperateur} />
+      </Popup>
     </>
   );
 }

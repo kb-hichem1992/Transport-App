@@ -16,6 +16,7 @@ import {
   Resize,
   Sort,
 } from "@syncfusion/ej2-react-grids";
+import { L10n } from "@syncfusion/ej2-base";
 import Axios from "axios";
 import Popup from "../components/Popup.js";
 import Button from "../components/controls/Button";
@@ -78,6 +79,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+L10n.load({
+  "ar-AE": {
+    grid: {
+      EmptyDataSourceError:
+        "يجب أن يكون مصدر البيانات فارغة في التحميل الأولي منذ يتم إنشاء الأعمدة من مصدر البيانات في أوتوجينيراتد عمود الشبكة",
+      EmptyRecord: "لا سجلات لعرضها",
+      SelectAll: "أختر الكل",
+      FilterButton: "بحث ",
+      ClearButton: "مسح ",
+      Search: "بحث ",
+      GroupDropArea: "اسحب رأس العمود هنا لتجميع العمود الخاص به ",
+      
+    },
+
+    pager: {
+      currentPageInfo: "{0} من {1} صفحة",
+      firstPageTooltip: "انتقل إلى الصفحة الأولى",
+      lastPageTooltip: "انتقل إلى الصفحة الأخيرة",
+      nextPageTooltip: "انتقل إلى الصفحة التالية",
+      nextPagerTooltip: "الذهاب إلى بيجر المقبل",
+      previousPageTooltip: "انتقل إلى الصفحة السابقة",
+      previousPagerTooltip: "الذهاب إلى بيجر السابقة",
+      totalItemsInfo: "({0} العناصر)",
+    },
+  },
+});
+
 export default function AppCand({ id }) {
   const [data, setdata] = useState([]);
   const [openAjouter, setOpenAjouter] = useState(false);
@@ -115,16 +143,6 @@ export default function AppCand({ id }) {
       );
     }
   }
-  const addCategorie = (numeroCandidat, Date_ins, Num_permis, code) => {
-    Axios.post("http://localhost:3001/Add_categorie", {
-      numeroCandidat: numeroCandidat,
-      Date_ins: Date_ins,
-      Num_permis: Num_permis,
-      code: code,
-    }).then(() => {
-      setEtat(!etat);
-    });
-  };
 
   const addCondidat = (
     numeroCandidat,
@@ -168,13 +186,14 @@ export default function AppCand({ id }) {
   const updateCandidat = (
     numeroCandidat,
     Nom,
-    Prenom,
+    Prénom,
     Date_naissance,
-    Lieu,
+    Lieu_naissance,
     Niveau,
     Adresse,
-    PrenomPere,
+    Prénom_Pére,
     Sexe,
+    Type_Candidat,
     Num_permis,
     date_liv,
     date_exp,
@@ -182,15 +201,15 @@ export default function AppCand({ id }) {
     type_permis
   ) => {
     Axios.put("http://localhost:3001/update_candidat", {
-      numeroCandidat: numeroCandidat,
       Nom: Nom,
-      Prénom: Prenom,
+      Prénom: Prénom,
       Date_naissance: Date_naissance,
-      Lieu_naissance: Lieu,
+      Lieu_naissance: Lieu_naissance,
       Niveau: Niveau,
       Adresse: Adresse,
-      Prénom_Pére: PrenomPere,
+      Prénom_Pére: Prénom_Pére,
       Sexe: Sexe,
+      Type_Candidat: Type_Candidat,
       Num_permis: Num_permis,
       date_liv: date_liv,
       date_exp: date_exp,
@@ -336,6 +355,7 @@ export default function AppCand({ id }) {
         <Paper className={classes.paper}>
           <GridComponent
             dataSource={data}
+            enableRtl={true}
             allowPaging={true}
             pageSettings={{ pageSize: 10 }}
             allowFiltering={true}
@@ -350,32 +370,33 @@ export default function AppCand({ id }) {
             }}
             contextMenuItems={ContextMenuItemModel}
             contextMenuClick={contextMenuClick}
+            locale="ar-AE"
           >
             <ColumnsDirective>
               <ColumnDirective
                 field="NUM_PERMIS"
-                headerText="N° Permis"
+                headerText="رقم رخسة السياقة"
                 clipMode="EllipsisWithTooltip"
               />
               <ColumnDirective
                 field="NOM_CANDIDAT"
-                headerText="Nom"
+                headerText="اللقب"
                 clipMode="EllipsisWithTooltip"
               />
 
               <ColumnDirective
                 field="PRENOM_CANDIDAT"
-                headerText="Prénom"
+                headerText="الاسم"
                 clipMode="EllipsisWithTooltip"
               />
               <ColumnDirective
                 field="PRENOM_PERE"
-                headerText="Prénom Père"
+                headerText="إسم الأب"
                 clipMode="EllipsisWithTooltip"
               />
               <ColumnDirective
                 field="DATE_NAIS_CANDIDAT"
-                headerText="Date de naissance"
+                headerText="تاريخ الميلاد"
                 type="date"
                 format="dd/MM/yyyy"
                 clipMode="EllipsisWithTooltip"
@@ -383,7 +404,12 @@ export default function AppCand({ id }) {
               />
               <ColumnDirective
                 field="LIEU_NAIS_CANDIDAT"
-                headerText="Lieu de naissance"
+                headerText="مكان الميلاد"
+                clipMode="EllipsisWithTooltip"
+              />
+              <ColumnDirective
+                field="TYPE_CANDIDAT"
+                headerText="نوع المترشح"
                 clipMode="EllipsisWithTooltip"
               />
             </ColumnsDirective>

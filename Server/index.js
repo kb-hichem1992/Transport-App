@@ -16,21 +16,15 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/api/get_op/mor", (req, res) => {
+app.get("/api/getOp", (req, res) => {
   const sqlquery =
-    "select operateur.NOM_OPERATEUR, operateur.PRENOM_OPERATEUR, operateur.PRENOM_PERE,operateur.DATE_NAIS_OPERATEUR, operateur.LIEU_NAIS_OPERATEUR from operateur where TYPE_OPERATEUR = 'morale';";
+    "SELECT * FROM transport.operateur;";
   db.query(sqlquery, (err, result) => {
     res.send(result);
   });
 });
 
-app.get("/api/get_op/phy", (req, res) => {
-  const sqlquery =
-    "select operateur.NOM_OPERATEUR, operateur.PRENOM_OPERATEUR, operateur.PRENOM_PERE,operateur.DATE_NAIS_OPERATEUR, operateur.LIEU_NAIS_OPERATEUR from operateur where TYPE_OPERATEUR = 'physique';";
-  db.query(sqlquery, (err, result) => {
-    res.send(result);
-  });
-});
+
 app.get("/api/get_form", (req, res) => {
   const sqlquery =
     "select formation.NUMERO_FORMATION, formation.TYPE_FORMATION, formation.DEBUT, formation.FIN from formation;";
@@ -177,6 +171,7 @@ app.post("/Add_condidat", (req, res) => {
 });
 app.put("/update_candidat", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
+  const Date_ins = req.body.Date_ins;
   const Nom = req.body.Nom;
   const Prénom = req.body.Prénom;
   const Date_naissance = req.body.Date_naissance;
@@ -185,13 +180,14 @@ app.put("/update_candidat", (req, res) => {
   const Adresse = req.body.Adresse;
   const Prénom_Pére = req.body.Prénom_Pére;
   const Sexe = req.body.Sexe;
+  const Type_Candidat = req.body.Type_Candidat;
   const Num_permis = req.body.Num_permis;
   const date_liv = req.body.date_liv;
   const date_exp = req.body.date_exp;
-  const categorie_permis = req.body.categorie_permis;
   const type_permis = req.body.type_permis;
+  const categorie_permis = req.body.categorie_permis;
   db.query(
-    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `NUM_PERMIS` = ?, `DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ? WHERE `NUM_INS`= ? ;",
+    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `TYPE_CANDIDAT`= ?, `DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ? WHERE  `NUM_PERMIS` = ? ;",
     [
       Nom,
       Prénom,
@@ -201,12 +197,12 @@ app.put("/update_candidat", (req, res) => {
       Adresse,
       Prénom_Pére,
       Sexe,
-      Num_permis,
+      Type_Candidat,
       date_liv,
       date_exp,
       categorie_permis,
       type_permis,
-      numeroCandidat,
+      Num_permis,
     ],
     (err, result) => {
       if (err) {
@@ -304,15 +300,14 @@ app.post("/Add_passe", (req, res) => {
     }
   );
 });
-app.post("/Add_categorie", (req, res) => {
+app.post("/add_travail", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
   const Date_ins = req.body.Date_ins;
   const Num_permis = req.body.Num_permis;
-  const code = req.body.code;
-  
+  const Nom_OP = req.body.Nom_OP; 
   db.query(
-    "INSERT INTO avoir (`NUM_INS`, `DATE_INS`, `NUM_PERMIS`, `CODE`) VALUES  (?,?,?,?)",
-    [numeroCandidat, Date_ins, Num_permis, code],
+    "INSERT INTO `travail` (`NUM_INS`, `DATE_INS`, `NUM_PERMIS`, `NOM_OP`) VALUES (?,?,?,?)",
+    [numeroCandidat, Date_ins, Num_permis, Nom_OP],
     (err, result) => {
       if (err) {
         console.log(err);
