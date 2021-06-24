@@ -90,7 +90,6 @@ L10n.load({
       ClearButton: "مسح ",
       Search: "بحث ",
       GroupDropArea: "اسحب رأس العمود هنا لتجميع العمود الخاص به ",
-      
     },
 
     pager: {
@@ -120,6 +119,7 @@ export default function AppCand({ id }) {
       .then((response) => response.json())
       .then((json) => setdata(json));
   }, [id, data, etat]);
+
   function convert(date) {
     const current_datetime = new Date(date);
 
@@ -255,7 +255,7 @@ export default function AppCand({ id }) {
     DATE_LIV_PERMIS: new Date(),
     DATE_EXP_PERMIS: new Date(),
     CATEGORIE_PERMIS: "",
-    TYPE_PERMIS: "Normal",
+    TYPE_PERMIS: "القديم",
   };
 
   function rowSelected() {
@@ -269,7 +269,7 @@ export default function AppCand({ id }) {
   const Values = rowSelected();
 
   const ContextMenuItemModel = [
-    { text: "Affiche Détail", target: ".e-content", id: "Details" },
+    { text: "معلومات إضافية", target: ".e-content", id: "Details" },
   ];
 
   const contextMenuClick = (MenuEventArgs) => {
@@ -421,7 +421,7 @@ export default function AppCand({ id }) {
       </div>
 
       <Popup
-        title="Ajouter"
+        title="إضافة المترشح"
         openPopup={openAjouter}
         setOpenPopup={setOpenAjouter}
       >
@@ -436,7 +436,7 @@ export default function AppCand({ id }) {
       </Popup>
 
       <Popup
-        title="Modéfier"
+        title="تعديل البيانات"
         openPopup={openModifier}
         setOpenPopup={setOpenModifier}
       >
@@ -449,7 +449,7 @@ export default function AppCand({ id }) {
         />
       </Popup>
       <Popup
-        title="Affecter formation"
+        title="تحديد التكوين"
         openPopup={openFormation}
         setOpenPopup={setOpenFormation}
       >
@@ -461,7 +461,7 @@ export default function AppCand({ id }) {
         />
       </Popup>
       <Popup
-        title="Détails"
+        title="بيانات المترشح"
         openPopup={openDetail}
         setOpenPopup={setOpenDetail}
       >

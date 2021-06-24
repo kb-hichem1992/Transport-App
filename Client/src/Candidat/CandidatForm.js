@@ -1,16 +1,18 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import {
   Button,
-  Checkbox,
   FormGroup,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Paper,
   Select,
+  Typography,
 } from "@material-ui/core";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -21,6 +23,7 @@ import AlertDialog from "../components/controls/Dialog";
 import Popup from "../components/Popup";
 import Opérateur from "../Opérateur/Opérateur";
 import axios from "axios";
+import ListCategorie from "./CategoriePermis";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,58 +104,13 @@ export default function Candidat(props) {
   const [NumPermis, setNumPermis] = useState(NUM_PERMIS);
   const [LivPermis, setLivPermis] = useState(DATE_LIV_PERMIS);
   const [ExpPermis, setExpPermis] = useState(DATE_EXP_PERMIS);
-  const [CategoriePermis] = useState(CATEGORIE_PERMIS.split(","));
+  const [CategoriePermis, setCategoriePermis] = useState(CATEGORIE_PERMIS);
   const [textChanged, setTextChanged] = useState(false);
   const [open, setOpen] = useState(false);
   const [OpenOperateur, setOpenOperateur] = useState(false);
   const [operateur, setOperateur] = useState(NOM_OP);
-  const [CatNormal, setCatNormal] = useState({
-    A1: false,
-    A2: false,
-    B: false,
-    C1: false,
-    C2: false,
-    D: false,
-    E: false,
-    F: false,
-  });
-  const [CatNew, setCatNew] = useState({
-    A1: false,
-    A: false,
-    B: false,
-    D: false,
-    C1: false,
-    C: false,
-    BE: false,
-    C1E: false,
-    CE: false,
-    DE: false,
-    F: false,
-  });
+  const [Categorie, setOpenCategorie] = useState(false);
 
-  const Normal = Object.keys(CatNormal);
-  const New = Object.keys(CatNew);
-
-  const handleCatNormalChange = (event) => {
-    setCatNormal({ ...CatNormal, [event.target.name]: event.target.checked });
-    if (
-      event.target.checked === true &&
-      CategoriePermis.includes(event.target.name) === false
-    ) {
-      CategoriePermis.push(event.target.name);
-    }
-    console.log(CategoriePermis.toString());
-  };
-  const handleCatNewChange = (event) => {
-    setCatNew({ ...CatNew, [event.target.name]: event.target.checked });
-    if (
-      event.target.checked === true &&
-      CategoriePermis.includes(event.target.name) === false
-    ) {
-      CategoriePermis.push(event.target.name);
-    }
-    console.log(CategoriePermis.toString());
-  };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -239,6 +197,7 @@ export default function Candidat(props) {
       handleClickOpen();
     }
   };
+
   const affecter_Op = (numeroCandidat, Date_ins, Num_permis, operateur) => {
     axios
       .post("http://localhost:3001/add_travail", {
@@ -251,6 +210,7 @@ export default function Candidat(props) {
         console.log("Ajouter avec succés");
       });
   };
+
   const niveauScolaire = ["ابتدائي", "متوسط", "ثانوي", "جامعي"];
   const Type = ["عامل", "حر"];
 
@@ -262,20 +222,20 @@ export default function Candidat(props) {
             <Grid item xs={6}>
               <TextField
                 variant="outlined"
-                label="Numéro d'inscription"
+                label=" رقم التسجيل"
                 value={numeroCandidat}
                 size="small"
                 onChange={(e) => setNumeroCandidat(e.target.value)}
               />
               <Controls.DatePicker
-                label="Date d'inscription"
+                label="تاريخ التسجيل"
                 value={Date_ins}
                 onChange={setDate_ins}
               />
 
               <FormControl>
                 <InputLabel id="demo-simple-select-label">
-                  Type du Candidat
+                  نوع المترشح
                 </InputLabel>
                 <Select
                   labelId="demo-simple-select"
@@ -294,7 +254,7 @@ export default function Candidat(props) {
                 </Select>
               </FormControl>
 
-{/*               <Button
+              {/*               <Button
                 variant="outlined"
                 color="primary"
                 endIcon={<AddIcon />}
@@ -319,47 +279,47 @@ export default function Candidat(props) {
  */}
               <TextField
                 variant="outlined"
-                label="Nom du condidat"
+                label="اللقب"
                 value={Nom}
                 size="small"
                 onChange={(e) => setNom(e.target.value)}
               />
               <TextField
                 variant="outlined"
-                label="Prénom du condidat"
+                label="الإسم"
                 size="small"
                 value={Prenom}
                 onChange={(e) => setPrenom(e.target.value)}
               />
               <TextField
                 variant="outlined"
-                label="Prénom du père"
+                label="إسم الأب"
                 size="small"
                 value={PrenomPere}
                 onChange={(e) => setPrenomPere(e.target.value)}
               />
               <TextField
                 variant="outlined"
-                label="Adresse"
+                label="العنوان"
                 value={Adresse}
                 size="small"
                 onChange={(e) => setAdresse(e.target.value)}
               />
               <TextField
                 variant="outlined"
-                label="Lieu de naissance"
+                label="مكان الميلاد"
                 value={Lieu}
                 size="small"
                 onChange={(e) => setLieu(e.target.value)}
               />
               <Controls.DatePicker
-                label="Date de naissance"
+                label="تاريخ الميلاد"
                 value={selectedDate}
                 onChange={setSelectedDate}
               />
               <FormControl className={classes.formControl}>
                 <InputLabel id="demo-simple-select-label">
-                  Niveau scolaire
+                  المستوى الدراسي
                 </InputLabel>
                 <Select
                   labelId="demo-simple-select"
@@ -381,7 +341,7 @@ export default function Candidat(props) {
                 <FormLabel component="legend">Sexe</FormLabel>
                 <RadioGroup
                   row
-                  aria-label="Sexe"
+                  aria-label="الجنس"
                   name="gender1"
                   value={Sexe}
                   className={classes.group}
@@ -403,7 +363,7 @@ export default function Candidat(props) {
             <Grid item xs={6}>
               <TextField
                 variant="outlined"
-                label="N° du permis de conduire"
+                label="رقم رخسة السياقة"
                 value={NumPermis}
                 size="small"
                 onChange={(e) => {
@@ -413,12 +373,12 @@ export default function Candidat(props) {
                 ref={textField}
               />
               <Controls.DatePicker
-                label="Date de livraison"
+                label="تاريخ الإصدار"
                 value={LivPermis}
                 onChange={setLivPermis}
               />
               <Controls.DatePicker
-                label="Date d'expiration"
+                label="نهاية الصلاحية"
                 value={ExpPermis}
                 onChange={setExpPermis}
               />
@@ -427,79 +387,45 @@ export default function Candidat(props) {
                 <RadioGroup
                   row
                   className={classes.group}
-                  aria-label="TypePermis"
+                  aria-label="نوع رخصة السياقة"
                   name="Permis"
                   value={Typepermis}
                   onChange={handleTypePermisChange}
                 >
                   <FormControlLabel
-                    value="Biometrique"
+                    value="بيومتري"
                     control={<Radio />}
-                    label="Biometrique"
+                    label="بيومتري"
                   />
                   <FormControlLabel
-                    value="Normal"
+                    value="القديم"
                     control={<Radio />}
-                    label="Normal"
+                    label="القديم"
                   />
                 </RadioGroup>
               </FormControl>
-              <div className={classes.root}>
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
+
+              <FormGroup row>
+                <Typography color="textSecondary" variant="h6" paragraph={true}>
+                  الأصناف :
+                  <Typography color="textPrimary" variant="h6" paragraph={true}>
+                    {" "}
+                    {CategoriePermis}
+                  </Typography>
+                </Typography>
+                <IconButton
+                  style={{
+                    width: "40px",
+                  }}
+                  aria-label="Ajouter"
+                  onClick={() => {
+                    setOpenCategorie(true);
+                  }}
                 >
-                  <FormLabel component="legend">Catégories de permis</FormLabel>
-                  <FormGroup row>
-                    {Typepermis === "Normal"
-                      ? Normal.map((key) => {
-                          return (
-                            <FormControlLabel
-                              key={key}
-                              control={
-                                <Checkbox
-                                  value={key}
-                                  name={key}
-                                  checked={CatNormal.key}
-                                  onChange={(e) => {
-                                    handleCatNormalChange(e);
-                                  }}
-                                />
-                              }
-                              label={key}
-                            />
-                          );
-                        })
-                      : New.map((key) => {
-                          return (
-                            <FormControlLabel
-                              key={key}
-                              control={
-                                <Checkbox
-                                  value={key}
-                                  name={key}
-                                  checked={CatNew.key}
-                                  onChange={(e) => {
-                                    handleCatNewChange(e);
-                                  }}
-                                />
-                              }
-                              label={key}
-                            />
-                          );
-                        })}
-                  </FormGroup>
-                </FormControl>
-                <TextField
-                  variant="outlined"
-                  label="Liste des catégoriés"
-                  autoFocus={true}
-                  defaultValue=""
-                  value={CategoriePermis}
-                  size="small"
-                  inputProps={{ style: { fontSize: 18 }, readOnly: true }}
-                />
-              </div>
+                  <AddCircleIcon />
+                </IconButton>
+              </FormGroup>
+
               <Grid item xs={12}>
                 <Button
                   variant="contained"
@@ -515,7 +441,6 @@ export default function Candidat(props) {
                   size="small"
                   onClick={() => {
                     //  props.Close(false);
-                    console.log(NOM_OP);
                   }}
                 >
                   Annuler
@@ -554,7 +479,12 @@ export default function Candidat(props) {
               Typepermis
             );
             if (NOM_OP !== "") {
-              affecter_Op(numeroCandidat, convert(Date_ins), NumPermis, operateur);
+              affecter_Op(
+                numeroCandidat,
+                convert(Date_ins),
+                NumPermis,
+                operateur
+              );
             }
             props.setOpenWindows(false);
           }
@@ -565,7 +495,23 @@ export default function Candidat(props) {
         openPopup={OpenOperateur}
         setOpenPopup={setOpenOperateur}
       >
-        <Opérateur key="Opérateur" Close={setOpenOperateur} setOp={setOperateur} />
+        <Opérateur
+          key="Opérateur"
+          Close={setOpenOperateur}
+          setOp={setOperateur}
+        />
+      </Popup>
+      <Popup
+        title="إختيار الاصناف"
+        openPopup={Categorie}
+        setOpenPopup={setOpenCategorie}
+      >
+        <ListCategorie
+          key="CategoriePermis"
+          setOpenCategorie={setOpenCategorie}
+          Typepermis={Typepermis}
+          setCategoriePermis={setCategoriePermis}
+        />
       </Popup>
     </>
   );

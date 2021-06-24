@@ -74,55 +74,243 @@ export default function CandidatInfo(props) {
       <Paper className={classes.pageContent}>
         <Grid container className={classes.root} spacing={3}>
           <Grid item xs={6}>
-            <Typography  color ="textSecondary" variant="h6"  paragraph={true}>
-              N° inscription : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{NUM_INS}</Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              : رقم رخسة السياقة {" "}
+              <Typography color="textPrimary" variant="h6" paragraph={true}>
+                {NUM_PERMIS}
+              </Typography>
             </Typography>
-            <Typography  color ="textSecondary" variant="h6"  paragraph={true}>
-              Date d'inscription : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{convert(DATE_INS)}</Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+             : تاريخ الإصدار {" "}
+              <Typography color="textPrimary" variant="h6" paragraph={true}>
+                {convert(DATE_LIV_PERMIS)}
+              </Typography>
             </Typography>
-            <Typography  color ="textSecondary" variant="h6"  paragraph={true}>
-              Nom : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{NOM_CANDIDAT}</Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              : نهاية الصلاحية {" "}
+              <Typography color="textPrimary" variant="h6" paragraph={true}>
+                {convert(DATE_EXP_PERMIS)}
+              </Typography>
             </Typography>
-            <Typography color ="textSecondary" variant="h6" paragraph={true}>
-              Prénom : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{PRENOM_CANDIDAT}</Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              : الاصناف{" "}
+              <Typography
+                align="right"
+                color="textPrimary"
+                variant="h6"
+                paragraph={true}
+              >
+                {CATEGORIE_PERMIS}
+              </Typography>
             </Typography>
-            <Typography color ="textSecondary" variant="h6"  paragraph={true}>
-              Prénom du Père : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{PRENOM_PERE}</Typography>
-            </Typography>
-            <Typography color ="textSecondary" variant="h6"  paragraph={true}>
-              Date de Naissance :<Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{convert(DATE_NAIS_CANDIDAT)}</Typography>
-            </Typography>
-            <Typography color ="textSecondary" variant="h6"  paragraph={true}>
-              Lieu de Naissance :<Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{LIEU_NAIS_CANDIDAT}</Typography>
-            </Typography>
-            <Typography color ="textSecondary" variant="h6"   paragraph={true}>
-              Sexe : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{SEX_CONDIDAT}</Typography>
-            </Typography>
-            <Typography color ="textSecondary" variant="h6"   paragraph={true}>
-              Niveau: <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{NIVEAU_SCOL_CANDIDAT}</Typography>
-            </Typography>
-            <Typography color ="textSecondary" variant="h6"  paragraph={true}>
-              Adresse: <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{ADRESSE_CANDIDAT}</Typography>
-            </Typography>
-            <Typography color ="textSecondary" variant="h6"  paragraph={true}>
-              Type de candidat: <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{TYPE_CANDIDAT}</Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              : نوع الرخسة{" "}
+              <Typography color="textPrimary" variant="h6" paragraph={true}>
+                {TYPE_PERMIS}
+              </Typography>
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography color ="textSecondary" variant="h6"  paragraph={true}>
-              N° de Permis : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{NUM_PERMIS}</Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              رقم التسجيل :{" "}
+              <Typography
+                color="textPrimary"
+                variant="h6"
+                display="inline"
+                paragraph={true}
+              >
+                {NUM_INS}
+              </Typography>
             </Typography>
-            <Typography color ="textSecondary" variant="h6"   paragraph={true}>
-              Date de Livraison : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{convert(DATE_LIV_PERMIS)}</Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              تاريخ التسجيل:{" "}
+              <Typography
+                color="textPrimary"
+                variant="h6"
+                display="inline"
+                paragraph={true}
+              >
+                {convert(DATE_INS)}
+              </Typography>
             </Typography>
-            <Typography color ="textSecondary" variant="h6"  paragraph={true}>
-              Date d'expiration : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{convert(DATE_EXP_PERMIS)}</Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              اللقب:{" "}
+              <Typography
+                color="textPrimary"
+                variant="h6"
+                display="inline"
+                paragraph={true}
+              >
+                {NOM_CANDIDAT}
+              </Typography>
             </Typography>
-            <Typography color ="textSecondary" variant="h6" paragraph={true}>
-              Catégorie : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{CATEGORIE_PERMIS}</Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              الاسم:{" "}
+              <Typography
+                color="textPrimary"
+                variant="h6"
+                display="inline"
+                paragraph={true}
+              >
+                {PRENOM_CANDIDAT}
+              </Typography>
             </Typography>
-            <Typography color ="textSecondary" variant="h6" paragraph={true}>
-              Type : <Typography color="textPrimary"  variant="h6"  display="inline" paragraph={true}>{TYPE_PERMIS}</Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              إسم الأب:{" "}
+              <Typography
+                color="textPrimary"
+                variant="h6"
+                display="inline"
+                paragraph={true}
+              >
+                {PRENOM_PERE}
+              </Typography>
+            </Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              تاريخ الميلاد :
+              <Typography
+                color="textPrimary"
+                variant="h6"
+                display="inline"
+                paragraph={true}
+              >
+                {convert(DATE_NAIS_CANDIDAT)}
+              </Typography>
+            </Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              مكان الميلاد:
+              <Typography
+                color="textPrimary"
+                variant="h6"
+                display="inline"
+                paragraph={true}
+              >
+                {LIEU_NAIS_CANDIDAT}
+              </Typography>
+            </Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              الجنس :{" "}
+              <Typography
+                color="textPrimary"
+                variant="h6"
+                display="inline"
+                paragraph={true}
+              >
+                {SEX_CONDIDAT}
+              </Typography>
+            </Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              المستوى الدراسي:{" "}
+              <Typography
+                color="textPrimary"
+                variant="h6"
+                display="inline"
+                paragraph={true}
+              >
+                {NIVEAU_SCOL_CANDIDAT}
+              </Typography>
+            </Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              العنوان:{" "}
+              <Typography
+                color="textPrimary"
+                variant="h6"
+                display="inline"
+                paragraph={true}
+              >
+                {ADRESSE_CANDIDAT}
+              </Typography>
+            </Typography>
+            <Typography
+              align="right"
+              color="textSecondary"
+              variant="h6"
+              paragraph={true}
+            >
+              طبيعة المترشح:{" "}
+              <Typography
+                color="textPrimary"
+                variant="h6"
+                display="inline"
+                paragraph={true}
+              >
+                {TYPE_CANDIDAT}
+              </Typography>
             </Typography>
           </Grid>
         </Grid>

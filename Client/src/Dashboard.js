@@ -30,7 +30,7 @@ import GroupIcon from "@material-ui/icons/Group";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import AppBrevet from "./Brevet/Brevet.js";
 
-const drawerWidth = 250;
+const drawerWidth = 180;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -144,7 +144,7 @@ export default function Dashboard() {
   const { logout } = useAuth0();
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -182,10 +182,10 @@ export default function Dashboard() {
               noWrap
               className={classes.title}
             >
-              Centre de Formation
+              مركز التكوين
             </Typography>
             <Button color="inherit" onClick={() => logout()}>
-              Déconnexion
+            خروج
             </Button>
           </Toolbar>
         </AppBar>
@@ -251,7 +251,7 @@ export default function Dashboard() {
                 <ListItemIcon>
                   <LaptopChromebookIcon />
                 </ListItemIcon>
-                <ListItemText primary="Formations" />
+                <ListItemText primary="الدورات" />
               </ListItem>
             </Link>
             <Link to="/candidat" className={classes.link}>
@@ -259,7 +259,7 @@ export default function Dashboard() {
                 <ListItemIcon>
                   <GroupIcon />
                 </ListItemIcon>
-                <ListItemText primary="Candidats" />
+                <ListItemText primary="المنرشحين" />
               </ListItem>
             </Link>
             {/*        <Link to="/Vehicule" className={classes.link}>
@@ -275,7 +275,7 @@ export default function Dashboard() {
                 <ListItemIcon>
                   <LibraryBooksIcon />
                 </ListItemIcon>
-                <ListItemText primary="Diplômes" />
+                <ListItemText primary="الشهادات" />
               </ListItem>
             </Link>
           </List>
