@@ -15,12 +15,10 @@ import { makeStyles, TextField } from "@material-ui/core";
 import Button from "../components/controls/Button";
 import axios from "axios";
 
-
 export default function TableFormation(props) {
   const [data, setdata] = useState([]);
-  const {NUM_INS}=props.valeur;
-  const [groupe, setGroupe]=useState(); 
-
+  const { NUM_INS } = props.valeur;
+  const [groupe, setGroupe] = useState();
 
   const useStyles = makeStyles((theme) => ({
     container: {
@@ -32,7 +30,7 @@ export default function TableFormation(props) {
   }));
 
   const TableRef = useRef(null);
-  
+
   const classes = useStyles();
 
   const filter = {
@@ -44,7 +42,7 @@ export default function TableFormation(props) {
       .then((response) => response.json())
       .then((json) => setdata(json));
   }, [data]);
-  
+
   function rowSelected() {
     try {
       const selectedrecords = TableRef.current.getSelectedRecords();
@@ -56,7 +54,7 @@ export default function TableFormation(props) {
     }
   }
 
-  const values= rowSelected();
+  const values = rowSelected();
 
   const handleGroupeChange = (e) => {
     setGroupe(e.target.value);
@@ -69,16 +67,18 @@ export default function TableFormation(props) {
     remarque,
     note
   ) => {
-    axios.post("http://localhost:3001/Add_passe", {
-      numeroCandidat : numeroCandidat,
-      numeroFormation : numeroFormation,
-      groupe : groupe,
-      remarque: remarque,
-      note: note
-    }).then(() => {
-      alert("Formation affecter")
-      props.Close(false);
-    });
+    axios
+      .post("http://localhost:3001/Add_passe", {
+        numeroCandidat: numeroCandidat,
+        numeroFormation: numeroFormation,
+        groupe: groupe,
+        remarque: remarque,
+        note: note,
+      })
+      .then(() => {
+        alert("Formation affecter");
+        props.Close(false);
+      });
   };
 
   return (
@@ -125,14 +125,15 @@ export default function TableFormation(props) {
           <Inject services={[Page, Sort, Filter, Group, Resize]} />
         </GridComponent>
         <div className={classes.container}>
-        <TextField
-              variant="outlined"
-              label="Groupe"
-              size="small"
-              type="number"
-              value={groupe}
-              onChange={handleGroupeChange}
-            />
+          <TextField
+            variant="outlined"
+            label="Groupe"
+            size="small"
+            type="number"
+            inputProps={{ min: 1, max: 10 }}
+            value={groupe}
+            onChange={handleGroupeChange}
+          />
           <Button
             text="Affecter"
             variant="outlined"
@@ -140,7 +141,7 @@ export default function TableFormation(props) {
             className={classes.newButton}
             onClick={() => {
               if (values !== undefined) {
-              AffecteFormation(NUM_INS,values.NUMERO_FORMATION, groupe)
+                AffecteFormation(NUM_INS, values.NUMERO_FORMATION, groupe);
               } else {
                 alert("Merci de choisir une formation");
               }

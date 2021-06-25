@@ -1,6 +1,11 @@
 import React from "react";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import {
+  createMuiTheme,
+  makeStyles,
+  ThemeProvider,
+  useTheme,
+} from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
@@ -34,6 +39,9 @@ const drawerWidth = 180;
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    "& .MuiAppBar-colorPrimary": {
+      backgroundColor : "#1e81b0"
+    },
     display: "flex",
   },
   link: {
@@ -58,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -151,15 +160,16 @@ export default function Dashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  
+
   return (
     // the Appbar Starts from here
     <Router>
       <div className={classes.root}>
         <CssBaseline />
+
         <AppBar
           position="fixed"
-          color="primary"
+          color="Primary"
           className={clsx(classes.appBar, open && classes.appBarShift)}
         >
           <Toolbar className={classes.toolbar}>
@@ -177,7 +187,7 @@ export default function Dashboard() {
             </IconButton>
             <Typography
               component="h1"
-              variant="h6"
+              variant="h4"
               color="inherit"
               noWrap
               className={classes.title}
@@ -185,10 +195,11 @@ export default function Dashboard() {
               مركز التكوين
             </Typography>
             <Button color="inherit" onClick={() => logout()}>
-            خروج
+              خروج
             </Button>
           </Toolbar>
         </AppBar>
+
         {/* the side bar starts from here */}
         <Drawer
           className={classes.drawer}
@@ -308,7 +319,7 @@ export default function Dashboard() {
           <Container maxWidth="lg" className={classes.container}>
             <Grid item xs={12}>
               <Switch>
-              <Route
+                <Route
                   path="/"
                   exact
                   render={(props) => (

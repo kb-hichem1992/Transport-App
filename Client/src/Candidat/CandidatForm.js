@@ -86,7 +86,6 @@ export default function Candidat(props) {
     TYPE_PERMIS,
     DATE_INS,
     TYPE_CANDIDAT,
-    NOM_OP,
   } = props.values;
 
   const [selectedDate, setSelectedDate] = useState(DATE_NAIS_CANDIDAT);
@@ -108,7 +107,6 @@ export default function Candidat(props) {
   const [textChanged, setTextChanged] = useState(false);
   const [open, setOpen] = useState(false);
   const [OpenOperateur, setOpenOperateur] = useState(false);
-  const [operateur, setOperateur] = useState(NOM_OP);
   const [Categorie, setOpenCategorie] = useState(false);
 
   const handleClickOpen = () => {
@@ -119,6 +117,7 @@ export default function Candidat(props) {
   };
   const handleTypePermisChange = (event) => {
     setTypePermis(event.target.value);
+    setCategoriePermis("");
   };
 
   // convertir le format de la Date en yyyy-mm-dd
@@ -164,6 +163,9 @@ export default function Candidat(props) {
 
     if (
       Nom === "" ||
+      numeroCandidat === "" ||
+      Date_ins === "" ||
+      Type_candidat === "" ||
       Prenom === "" ||
       selectedDate === "" ||
       Lieu === "" ||
@@ -177,38 +179,25 @@ export default function Candidat(props) {
       CategoriePermis === "" ||
       Typepermis === ""
     ) {
-      alert("Champs vides ");
+      alert("يجب ملئ جميع البيانات ");
     } else if (convert(dt1) >= convert(dt0)) {
-      alert("Date de naissance erronée");
+      alert("تاريخ الميلاد خاطئ");
     } else if (convert(dt2) >= convert(dt3)) {
-      alert("Date de livraison erronée");
+      alert("تاريخ إصدار رخسة السياقة خاطئ");
     } else if (
       CandidatExists(NumPermis) === true &&
       props.onClick.name === "addCondidat"
     ) {
-      alert("Candidat existe déja");
+      alert("المترشح مسجل من قبل");
     } else if (
       CandidatExists(NUM_PERMIS) === true &&
       props.onClick.name === "updateCandidat" &&
       textChanged === true
     ) {
-      alert("Candidat existe déja");
+      alert("المترشح مسجل من قبل");
     } else {
       handleClickOpen();
     }
-  };
-
-  const affecter_Op = (numeroCandidat, Date_ins, Num_permis, operateur) => {
-    axios
-      .post("http://localhost:3001/add_travail", {
-        numeroCandidat: numeroCandidat,
-        Date_ins: Date_ins,
-        Num_permis: Num_permis,
-        Nom_OP: operateur,
-      })
-      .then(() => {
-        console.log("Ajouter avec succés");
-      });
   };
 
   const niveauScolaire = ["ابتدائي", "متوسط", "ثانوي", "جامعي"];
@@ -441,6 +430,7 @@ export default function Candidat(props) {
                   size="small"
                   onClick={() => {
                     //  props.Close(false);
+                    console.log(numeroCandidat+' '+convert(Date_ins) +' '+ NumPermis +' '+CategoriePermis.toString()+' '+ Typepermis)
                   }}
                 >
                   Annuler
@@ -452,55 +442,33 @@ export default function Candidat(props) {
       </Paper>
 
       <AlertDialog
-        title="Confirmation"
-        message="Voulez vous enregistrer ?"
+        title="تأكيد"
+        message="هل أنت متأكد من القيام بهذه العملية ؟"
         open={open}
         setOpen={setOpen}
         method={() => {
-          if (Type_candidat === "عامل" && NOM_OP === "") {
-            alert("يجب إختيار المتعامل");
-          } else {
-            props.onClick(
-              numeroCandidat,
-              convert(Date_ins),
-              Nom,
-              Prenom,
-              convert(selectedDate),
-              Lieu,
-              Niveau,
-              Adresse,
-              PrenomPere,
-              Sexe,
-              Type_candidat,
-              NumPermis,
-              convert(LivPermis),
-              convert(ExpPermis),
-              CategoriePermis.toString(),
-              Typepermis
-            );
-            if (NOM_OP !== "") {
-              affecter_Op(
-                numeroCandidat,
-                convert(Date_ins),
-                NumPermis,
-                operateur
-              );
-            }
-            props.setOpenWindows(false);
-          }
+          props.onClick(
+            numeroCandidat,
+            convert(Date_ins),
+            Nom,
+            Prenom,
+            convert(selectedDate),
+            Lieu,
+            Niveau,
+            Adresse,
+            PrenomPere,
+            Sexe,
+            Type_candidat,
+            NumPermis,
+            convert(LivPermis),
+            convert(ExpPermis),
+            CategoriePermis.toString(),
+            Typepermis
+          );
+          props.setOpenWindows(false);
         }}
       />
-      <Popup
-        title="إختيار المتعامل"
-        openPopup={OpenOperateur}
-        setOpenPopup={setOpenOperateur}
-      >
-        <Opérateur
-          key="Opérateur"
-          Close={setOpenOperateur}
-          setOp={setOperateur}
-        />
-      </Popup>
+
       <Popup
         title="إختيار الاصناف"
         openPopup={Categorie}

@@ -17,13 +17,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get("/api/getOp", (req, res) => {
-  const sqlquery =
-    "SELECT * FROM transport.operateur;";
+  const sqlquery = "SELECT * FROM transport.operateur;";
   db.query(sqlquery, (err, result) => {
     res.send(result);
   });
 });
-
 
 app.get("/api/get_form", (req, res) => {
   const sqlquery =
@@ -158,7 +156,7 @@ app.post("/Add_condidat", (req, res) => {
       date_liv,
       date_exp,
       type_permis,
-      categorie_permis
+      categorie_permis,
     ],
     (err, result) => {
       if (err) {
@@ -187,7 +185,7 @@ app.put("/update_candidat", (req, res) => {
   const type_permis = req.body.type_permis;
   const categorie_permis = req.body.categorie_permis;
   db.query(
-    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `TYPE_CANDIDAT`= ?, `DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ? WHERE  `NUM_PERMIS` = ? ;",
+    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `TYPE_CANDIDAT`= ?, `DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ? WHERE  `NUM_PERMIS` = ? and `DATE_INS` = ? and `NUM_INS` = ? ;",
     [
       Nom,
       Prénom,
@@ -203,6 +201,8 @@ app.put("/update_candidat", (req, res) => {
       categorie_permis,
       type_permis,
       Num_permis,
+      Date_ins,
+      numeroCandidat,
     ],
     (err, result) => {
       if (err) {
@@ -304,7 +304,7 @@ app.post("/add_travail", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
   const Date_ins = req.body.Date_ins;
   const Num_permis = req.body.Num_permis;
-  const Nom_OP = req.body.Nom_OP; 
+  const Nom_OP = req.body.Nom_OP;
   db.query(
     "INSERT INTO `travail` (`NUM_INS`, `DATE_INS`, `NUM_PERMIS`, `NOM_OP`) VALUES (?,?,?,?)",
     [numeroCandidat, Date_ins, Num_permis, Nom_OP],

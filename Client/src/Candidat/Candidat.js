@@ -185,6 +185,7 @@ export default function AppCand({ id }) {
   };
   const updateCandidat = (
     numeroCandidat,
+    Date_ins,
     Nom,
     Prénom,
     Date_naissance,
@@ -210,11 +211,13 @@ export default function AppCand({ id }) {
       Prénom_Pére: Prénom_Pére,
       Sexe: Sexe,
       Type_Candidat: Type_Candidat,
-      Num_permis: Num_permis,
       date_liv: date_liv,
       date_exp: date_exp,
       categorie_permis: categorie_permis,
       type_permis: type_permis,
+      Num_permis: Num_permis,
+      Date_ins: Date_ins,
+      numeroCandidat: numeroCandidat,
     }).then(() => {
       setEtat(!etat);
     });
@@ -285,14 +288,14 @@ export default function AppCand({ id }) {
   return (
     <>
       <PageHeader
-        title="Candidat"
-        subTitle="La liste des Candidat"
+        title="المترشحين"
+        subTitle="قائمة المترشحين"
         icon={<GroupIcon />}
       />
       <div className={classes.div}>
         <div className={classes.container}>
           <Button
-            text="Ajouter"
+            text="إضافة"
             variant="outlined"
             size="small"
             startIcon={<AddIcon />}
@@ -302,7 +305,7 @@ export default function AppCand({ id }) {
             }}
           />
           <Button
-            text="Modifier"
+            text="تعديل"
             variant="outlined"
             size="small"
             startIcon={<EditOutlinedIcon />}
@@ -317,7 +320,7 @@ export default function AppCand({ id }) {
             }}
           />
           <Button
-            text="Supprimer"
+            text="حذف"
             variant="outlined"
             size="small"
             color="secondary"
@@ -339,7 +342,7 @@ export default function AppCand({ id }) {
         </div>
         <div>
           <Button
-            text="Formation"
+            text="تكوين"
             variant="outlined"
             size="small"
             startIcon={<AddIcon />}
