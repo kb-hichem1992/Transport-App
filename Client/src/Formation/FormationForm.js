@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Button,
@@ -7,11 +7,10 @@ import {
   MenuItem,
   Paper,
   Select,
+  TextField,
 } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import Controls from "../components/controls/Controls";
-
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(0),
     padding: theme.spacing(2),
-    height: 300,
+    height: 400,
     width: 300,
   },
   formControl: {
@@ -47,13 +46,14 @@ const useStyles = makeStyles((theme) => ({
 export default function Form(props) {
   const classes = useStyles();
 
-  const { NUMERO_FORMATION, TYPE_FORMATION, DEBUT, FIN } = props.values;
+  const { NUMERO_FORMATION, NUMERO_AGREMENT, TYPE_FORMATION, DEBUT, FIN } =
+    props.values;
 
-  const [numeroFormation] = useState(NUMERO_FORMATION);
+  const [numeroFormation, setnumeroFormation] = useState(NUMERO_FORMATION);
+  const [numeroAgrement, setnumeroAgrement] = useState(NUMERO_AGREMENT);
   const [typeFormation, setTypeFormation] = useState(TYPE_FORMATION);
   const [debut, setDebut] = useState(DEBUT);
   const [fin, setFin] = useState(FIN);
-
 
   const handleTypeChange = (e) => {
     setTypeFormation(e.target.value);
@@ -88,23 +88,42 @@ export default function Form(props) {
     const dt2 = new Date(fin);
 
     if (typeFormation === "" || debut === "" || fin === "") {
-      alert("Merci de remplir tout les champs");
+      alert("يرجى ملئ جميع المعلومات");
     } else {
       if (dt1 >= dt2) {
-        alert("Date debut du formation est supèrieur au date fin ");
+        alert("تاريخ بداية الدورة خاطئ ");
       } else {
-        props.onClick(numeroFormation, typeFormation, convert(debut), convert(fin));
-        alert(numeroFormation + "" + typeFormation + "" + debut + "" + fin);
+        props.onClick(
+          numeroFormation,
+          numeroAgrement,
+          typeFormation,
+          convert(debut),
+          convert(fin)
+        );
         props.Close(false);
       }
     }
   };
 
   return (
-    <>
+    <Fragment>
       <Paper className={classes.pageContent}>
         <form className={classes.root} noValidate autoComplete="off">
           <Grid container spacing={2}>
+            <TextField
+              variant="outlined"
+              label="رقم الدورة"
+              value={numeroFormation}
+              size="small"
+              onChange={(e) => setnumeroFormation(e.target.value)}
+            />
+            <TextField
+              variant="outlined"
+              label="رقم المركز"
+              value={numeroAgrement}
+              size="small"
+              onChange={(e) => setnumeroAgrement(e.target.value)}
+            />
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-simple-select-label">
                 Type formation
@@ -153,6 +172,6 @@ export default function Form(props) {
           </Grid>
         </form>
       </Paper>
-    </>
+    </Fragment>
   );
 }

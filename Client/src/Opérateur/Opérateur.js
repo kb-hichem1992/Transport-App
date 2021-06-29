@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import "./Opérateur.css";
 import {
   GridComponent,
@@ -81,7 +81,7 @@ export default function Opérateur(props) {
   const values = rowSelected();
 
   return (
-    <>
+    <Fragment>
       <div id="cont">
         <GridComponent
           dataSource={data}
@@ -121,6 +121,6 @@ export default function Opérateur(props) {
           }}
         />
       </div>
-    </>
+    </Fragment>
   );
 }

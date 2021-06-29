@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* Nom de SGBD :  MySQL 5.0                                     */
-/* Date de création :  09/06/2021 11:51:00                      */
+/* Date de création :  29/06/2021 17:48:06                      */
 /*==============================================================*/
 
 
@@ -13,8 +13,6 @@ drop table if exists CONDUIRE;
 drop table if exists FORMATION;
 
 drop table if exists LIGNE;
-
-drop table if exists OFFRE;
 
 drop table if exists OPERATEUR;
 
@@ -43,6 +41,8 @@ create table CANDIDAT
    SEX_CONDIDAT         char(10),
    TYPE_CANDIDAT        varchar(20),
    NUM_PERMIS           varchar(45) not null,
+   DATE_LIV_PERMIS      date,
+   DATE_EXP_PERMIS      date,
    TYPE_PERMIS          varchar(50),
    CATEGORIE_PERMIS     varchar(50),
    primary key (NUM_INS, DATE_INS, NUM_PERMIS)
@@ -78,6 +78,7 @@ create table CONDUIRE
 create table FORMATION
 (
    NUMERO_FORMATION     int not null,
+   NUMERO_AGREMENT      varchar(50) not null,
    TYPE_FORMATION       varchar(50),
    DEBUT                date,
    FIN                  date,
@@ -96,17 +97,6 @@ create table LIGNE
    DATE_EXP_LIGNE       date,
    primary key (NUM_LIGNE),
    key FK_AVOIR2 (NOM_OP)
-);
-
-/*==============================================================*/
-/* Table : OFFRE                                                */
-/*==============================================================*/
-create table OFFRE
-(
-   NUMERO_FORMATION     int not null,
-   NUMERO_AGREMENT      varchar(50) not null,
-   primary key (NUMERO_FORMATION, NUMERO_AGREMENT),
-   key FK_OFFRE (NUMERO_AGREMENT)
 );
 
 /*==============================================================*/
@@ -145,7 +135,7 @@ create table PC
 (
    NUM_PC               varchar(100) not null,
    NOM_OP               char(50) not null,
-   DATE_EXP_PC          date,
+   ATTRIBUT_2           char(10),
    DATE_LIV_PC          date,
    primary key (NUM_PC),
    key FK_AVOIR_PERMIS (NOM_OP)
@@ -185,35 +175,32 @@ create table VEHICULE
 );
 
 alter table CONDUIRE add constraint FK_CONDUIRE foreign key (MATRECULE)
-      references VEHICULE (MATRECULE) on delete restrict on update restrict;
+      references VEHICULE (MATRECULE) on delete cascade on update cascade;
 
 alter table CONDUIRE add constraint FK_CONDUIRE2 foreign key (NUM_INS, DATE_INS, NUM_PERMIS)
-      references CANDIDAT (NUM_INS, DATE_INS, NUM_PERMIS) on delete restrict on update restrict;
+      references CANDIDAT (NUM_INS, DATE_INS, NUM_PERMIS) on delete cascade on update cascade;
+
+alter table FORMATION add constraint FK_OFFRE foreign key (NUMERO_AGREMENT)
+      references CENTRE (NUMERO_AGREMENT) on delete cascade on update cascade;
 
 alter table LIGNE add constraint FK_AVOIR2 foreign key (NOM_OP)
-      references OPERATEUR (NOM_OP) on delete restrict on update restrict;
-
-alter table OFFRE add constraint FK_OFFRE foreign key (NUMERO_AGREMENT)
-      references CENTRE (NUMERO_AGREMENT) on delete restrict on update restrict;
-
-alter table OFFRE add constraint FK_OFFRE2 foreign key (NUMERO_FORMATION)
-      references FORMATION (NUMERO_FORMATION) on delete restrict on update restrict;
+      references OPERATEUR (NOM_OP) on delete cascade on update cascade;
 
 alter table PASSE add constraint FK_PASSE foreign key (NUMERO_FORMATION)
-      references FORMATION (NUMERO_FORMATION) on delete restrict on update restrict;
+      references FORMATION (NUMERO_FORMATION) on delete cascade on update cascade;
 
 alter table PASSE add constraint FK_PASSE2 foreign key (NUM_INS, DATE_INS, NUM_PERMIS)
-      references CANDIDAT (NUM_INS, DATE_INS, NUM_PERMIS) on delete restrict on update restrict;
+      references CANDIDAT (NUM_INS, DATE_INS, NUM_PERMIS) on delete cascade on update cascade;
 
 alter table PC add constraint FK_AVOIR_PERMIS foreign key (NOM_OP)
-      references OPERATEUR (NOM_OP) on delete restrict on update restrict;
+      references OPERATEUR (NOM_OP) on delete cascade on update cascade;
 
 alter table TRAVAIL add constraint FK_TRAVAIL foreign key (NOM_OP)
-      references OPERATEUR (NOM_OP) on delete restrict on update restrict;
+      references OPERATEUR (NOM_OP) on delete cascade on update cascade;
 
 alter table TRAVAIL add constraint FK_TRAVAIL2 foreign key (NUM_INS, DATE_INS, NUM_PERMIS)
-      references CANDIDAT (NUM_INS, DATE_INS, NUM_PERMIS) on delete restrict on update restrict;
+      references CANDIDAT (NUM_INS, DATE_INS, NUM_PERMIS) on delete cascade on update cascade;
 
 alter table VEHICULE add constraint FK_APPARTIENT foreign key (NOM_OP)
-      references OPERATEUR (NOM_OP) on delete restrict on update restrict;
+      references OPERATEUR (NOM_OP) on delete cascade on update cascade;
 

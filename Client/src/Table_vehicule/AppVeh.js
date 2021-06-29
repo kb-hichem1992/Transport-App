@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./AppVeh.css";
 import TableVehM from "./TableVehM.js";
@@ -42,7 +42,7 @@ function AppVeh(id, id2) {
   }));
   const classes = useStyles();
   return (
-    <>
+    <Fragment>
       <div className={classes.root}> Liste des Formations</div>
       <div className={classes.container}>
         <TableVehM data={data} />
@@ -50,7 +50,7 @@ function AppVeh(id, id2) {
       <div className={classes.container}>
         <TableVehV data={data2} />
       </div>
-    </>
+    </Fragment>
   );
 }
 export default AppVeh;

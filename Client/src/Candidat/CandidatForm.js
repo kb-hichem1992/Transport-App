@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import {
@@ -21,8 +21,6 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Controls from "../components/controls/Controls";
 import AlertDialog from "../components/controls/Dialog";
 import Popup from "../components/Popup";
-import Opérateur from "../Opérateur/Opérateur";
-import axios from "axios";
 import ListCategorie from "./CategoriePermis";
 
 const useStyles = makeStyles((theme) => ({
@@ -106,7 +104,6 @@ export default function Candidat(props) {
   const [CategoriePermis, setCategoriePermis] = useState(CATEGORIE_PERMIS);
   const [textChanged, setTextChanged] = useState(false);
   const [open, setOpen] = useState(false);
-  const [OpenOperateur, setOpenOperateur] = useState(false);
   const [Categorie, setOpenCategorie] = useState(false);
 
   const handleClickOpen = () => {
@@ -190,7 +187,7 @@ export default function Candidat(props) {
     ) {
       alert("المترشح مسجل من قبل");
     } else if (
-      CandidatExists(NUM_PERMIS) === true &&
+      CandidatExists(NumPermis) === true &&
       props.onClick.name === "updateCandidat" &&
       textChanged === true
     ) {
@@ -204,7 +201,7 @@ export default function Candidat(props) {
   const Type = ["عامل", "حر"];
 
   return (
-    <>
+    <Fragment>
       <Paper className={classes.pageContent}>
         <form className={classes.root} noValidate autoComplete="on">
           <Grid container spacing={2}>
@@ -430,7 +427,7 @@ export default function Candidat(props) {
                   size="small"
                   onClick={() => {
                     //  props.Close(false);
-                    console.log(numeroCandidat+' '+convert(Date_ins) +' '+ NumPermis +' '+CategoriePermis.toString()+' '+ Typepermis)
+                    console.log(CandidatExists(NumPermis))
                   }}
                 >
                   Annuler
@@ -481,6 +478,6 @@ export default function Candidat(props) {
           setCategoriePermis={setCategoriePermis}
         />
       </Popup>
-    </>
+    </Fragment>
   );
 }

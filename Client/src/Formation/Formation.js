@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./Formation.css";
 import Form from "./FormationForm.js";
@@ -24,9 +24,36 @@ import { Paper } from "@material-ui/core";
 import TableCandForm from "../Candidat/TableCandForm";
 import LaptopChromebookIcon from "@material-ui/icons/LaptopChromebook";
 import { useAuth0 } from "@auth0/auth0-react";
+import { L10n } from "@syncfusion/ej2-base";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
+
+L10n.load({
+  "ar-AE": {
+    grid: {
+      EmptyDataSourceError:
+        "يجب أن يكون مصدر البيانات فارغة في التحميل الأولي منذ يتم إنشاء الأعمدة من مصدر البيانات في أوتوجينيراتد عمود الشبكة",
+      EmptyRecord: "لا سجلات لعرضها",
+      SelectAll: "أختر الكل",
+      FilterButton: "بحث ",
+      ClearButton: "مسح ",
+      Search: "بحث ",
+      GroupDropArea: "اسحب رأس العمود هنا لتجميع العمود الخاص به ",
+    },
+
+    pager: {
+      currentPageInfo: "{0} من {1} صفحة",
+      firstPageTooltip: "انتقل إلى الصفحة الأولى",
+      lastPageTooltip: "انتقل إلى الصفحة الأخيرة",
+      nextPageTooltip: "انتقل إلى الصفحة التالية",
+      nextPagerTooltip: "الذهاب إلى بيجر المقبل",
+      previousPageTooltip: "انتقل إلى الصفحة السابقة",
+      previousPagerTooltip: "الذهاب إلى بيجر السابقة",
+      totalItemsInfo: "({0} العناصر)",
+    },
+  },
+});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,10 +90,11 @@ function AppFor({ id }) {
       .then((json) => setdata(json));
   }, [id, data, etat]);
 
-  const addFormation = (numeroFormation, Type, Debut, Fin) => {
+  const addFormation = (numeroFormation, numeroAgrement, Type, Debut, Fin) => {
     axios
       .post("http://localhost:3001/Add_formation", {
-        numeroFormation,
+        numeroFormation: numeroFormation,
+        numeroAgrement: numeroAgrement,
         Type: Type,
         Debut: Debut,
         Fin: Fin,
@@ -75,12 +103,19 @@ function AppFor({ id }) {
         setEtat(!etat);
       });
   };
-  const updateFormation = (numeroFormation, Type, Debut, Fin) => {
+  const updateFormation = (
+    numeroFormation,
+    numeroAgrement,
+    Type,
+    Debut,
+    Fin
+  ) => {
     axios
       .put("http://localhost:3001/update_formation", {
         Type: Type,
         Debut: Debut,
         Fin: Fin,
+        numeroAgrement: numeroAgrement,
         numeroFormation: numeroFormation,
       })
       .then(() => {
@@ -103,7 +138,8 @@ function AppFor({ id }) {
   };
 
   const initialvalues = {
-    NUMERO_FORMATION: 0,
+    NUMERO_FORMATION: "",
+    NUMERO_AGREMENT: "",
     TYPE_FORMATION: "",
     DEBUT: new Date(),
     FIN: new Date(),
@@ -125,15 +161,15 @@ function AppFor({ id }) {
   const Values = rowSelected();
 
   return (
-    <>
+    <Fragment>
       <PageHeader
-        title="Formation"
-        subTitle="La liste des formation"
+        title="الدورات التكوينية"
+        subTitle="قائمة الدورات"
         icon={<LaptopChromebookIcon />}
       />
       <div className={classes.container}>
         <Button
-          text="Ajouter"
+          text="إضافة"
           variant="outlined"
           size="small"
           startIcon={<AddIcon />}
@@ -143,7 +179,7 @@ function AppFor({ id }) {
           }}
         />
         <Button
-          text="Modifier"
+          text="تعديل"
           variant="outlined"
           size="small"
           startIcon={<EditOutlinedIcon />}
@@ -158,7 +194,7 @@ function AppFor({ id }) {
           }}
         />
         <Button
-          text="Supprimer"
+          text="حذف"
           variant="outlined"
           size="small"
           color="secondary"
@@ -187,19 +223,21 @@ function AppFor({ id }) {
             allowSorting={true}
             height={180}
             ref={TableRef}
+            enableRtl={true}
+            locale="ar-AE"
           >
             <ColumnsDirective>
               <ColumnDirective
                 field="NUMERO_FORMATION"
-                headerText="N° Formation"
+                headerText="رقم الدورة"
               />
               <ColumnDirective
                 field="TYPE_FORMATION"
-                headerText="Type Formation"
+                headerText="نوع التكوين"
               />
               <ColumnDirective
                 field="DEBUT"
-                headerText="Date début"
+                headerText="تاريخ البداية"
                 type="date"
                 format="dd/MM/yyyy"
                 clipMode="EllipsisWithTooltip"
@@ -207,7 +245,7 @@ function AppFor({ id }) {
               />
               <ColumnDirective
                 field="FIN"
-                headerText="Date Fin"
+                headerText="تاريخ النهاية"
                 type="date"
                 format="dd/MM/yyyy"
                 clipMode="EllipsisWithTooltip"
@@ -219,8 +257,8 @@ function AppFor({ id }) {
         </div>
       </div>
       <PageHeader
-        title="Formation"
-        subTitle="La liste des candidats pour chaque formation "
+        title="الدورات التكوينية"
+        subTitle="ٌقائمة المترشحين لكل دورة "
         icon={<LaptopChromebookIcon />}
       />
       <Paper>
@@ -232,7 +270,7 @@ function AppFor({ id }) {
       </Paper>
 
       <Popup
-        title="Ajouter"
+        title="إضافة"
         openPopup={openAjouter}
         setOpenPopup={setOpenAjouter}
       >
@@ -244,7 +282,7 @@ function AppFor({ id }) {
       </Popup>
 
       <Popup
-        title="Modéfier"
+        title="تعديل"
         openPopup={openModifier}
         setOpenPopup={setOpenModifier}
       >
@@ -254,7 +292,7 @@ function AppFor({ id }) {
           values={Values}
         />
       </Popup>
-    </>
+    </Fragment>
   );
 }
 export default AppFor;

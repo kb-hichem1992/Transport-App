@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Button,
@@ -81,7 +81,7 @@ export default function PasseFrom(props) {
   };
 
   return (
-    <>
+    <Fragment>
       <Paper className={classes.pageContent}>
         <form className={classes.root} noValidate autoComplete="off">
           <Grid container spacing={2}>
@@ -135,6 +135,6 @@ export default function PasseFrom(props) {
           </Grid>
         </form>
       </Paper>
-    </>
+    </Fragment>
   );
 }

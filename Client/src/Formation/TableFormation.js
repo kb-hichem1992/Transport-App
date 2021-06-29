@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import "./Formation.css";
 import {
   GridComponent,
@@ -14,11 +14,14 @@ import {
 import { makeStyles, TextField } from "@material-ui/core";
 import Button from "../components/controls/Button";
 import axios from "axios";
+import { L10n } from "@syncfusion/ej2-base";
+import AlertDialog from "../components/controls/Dialog";
 
 export default function TableFormation(props) {
   const [data, setdata] = useState([]);
-  const { NUM_INS } = props.valeur;
-  const [groupe, setGroupe] = useState();
+  const { NUM_INS, DATE_INS, NUM_PERMIS } = props.valeur;
+  const [groupe, setGroupe] = useState("");
+  const [open, setOpen] = useState(false);
 
   const useStyles = makeStyles((theme) => ({
     container: {
@@ -36,6 +39,29 @@ export default function TableFormation(props) {
   const filter = {
     type: "CheckBox",
   };
+  function convert(date) {
+    const current_datetime = new Date(date);
+
+    const m = current_datetime.getMonth() + 1;
+    if (m > 9) {
+      return (
+        current_datetime.getFullYear() +
+        "-" +
+        m +
+        "-" +
+        current_datetime.getDate()
+      );
+    } else {
+      return (
+        current_datetime.getFullYear() +
+        "-" +
+        0 +
+        m +
+        "-" +
+        current_datetime.getDate()
+      );
+    }
+  }
 
   useEffect(() => {
     fetch("http://localhost:3001/api/get_form")
@@ -62,18 +88,18 @@ export default function TableFormation(props) {
 
   const AffecteFormation = (
     numeroCandidat,
+    Date_ins,
+    Num_permis,
     numeroFormation,
-    groupe,
-    remarque,
-    note
+    groupe
   ) => {
     axios
       .post("http://localhost:3001/Add_passe", {
         numeroCandidat: numeroCandidat,
+        Date_ins: Date_ins,
+        Num_permis: Num_permis,
         numeroFormation: numeroFormation,
         groupe: groupe,
-        remarque: remarque,
-        note: note,
       })
       .then(() => {
         alert("Formation affecter");
@@ -81,8 +107,48 @@ export default function TableFormation(props) {
       });
   };
 
+  function dejaInscrit(Num_permis, numeroCandidat, Date_ins, numeroFormation) {
+    return data.some(function (el) {
+      if (
+        el.NUM_PERMIS === Num_permis &&
+        el.NUM_INS === numeroCandidat &&
+        el.DATE_INS === Date_ins &&
+        el.NUMERO_FORMATION === numeroFormation
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
+  L10n.load({
+    "ar-AE": {
+      grid: {
+        EmptyDataSourceError:
+          "يجب أن يكون مصدر البيانات فارغة في التحميل الأولي منذ يتم إنشاء الأعمدة من مصدر البيانات في أوتوجينيراتد عمود الشبكة",
+        EmptyRecord: "لا سجلات لعرضها",
+        SelectAll: "أختر الكل",
+        FilterButton: "بحث ",
+        ClearButton: "مسح ",
+        Search: "بحث ",
+        GroupDropArea: "اسحب رأس العمود هنا لتجميع العمود الخاص به ",
+      },
+
+      pager: {
+        currentPageInfo: "{0} من {1} صفحة",
+        firstPageTooltip: "انتقل إلى الصفحة الأولى",
+        lastPageTooltip: "انتقل إلى الصفحة الأخيرة",
+        nextPageTooltip: "انتقل إلى الصفحة التالية",
+        nextPagerTooltip: "الذهاب إلى بيجر المقبل",
+        previousPageTooltip: "انتقل إلى الصفحة السابقة",
+        previousPagerTooltip: "الذهاب إلى بيجر السابقة",
+        totalItemsInfo: "({0} العناصر)",
+      },
+    },
+  });
   return (
-    <>
+    <Fragment>
       <div id="cont">
         <GridComponent
           dataSource={data}
@@ -95,19 +161,15 @@ export default function TableFormation(props) {
           allowSorting={true}
           height={100}
           ref={TableRef}
+          enableRtl={true}
+          locale="ar-AE"
         >
           <ColumnsDirective>
-            <ColumnDirective
-              field="NUMERO_FORMATION"
-              headerText="N° Formation"
-            />
-            <ColumnDirective
-              field="TYPE_FORMATION"
-              headerText="Type Formation"
-            />
+            <ColumnDirective field="NUMERO_FORMATION" headerText="رقم الدورة" />
+            <ColumnDirective field="TYPE_FORMATION" headerText="نوع التكوين" />
             <ColumnDirective
               field="DEBUT"
-              headerText="Date début"
+              headerText="تاريخ البداية"
               type="date"
               format="dd/MM/yyyy"
               clipMode="EllipsisWithTooltip"
@@ -115,7 +177,7 @@ export default function TableFormation(props) {
             />
             <ColumnDirective
               field="FIN"
-              headerText="Date Fin"
+              headerText="تاريخ النهاية"
               type="date"
               format="dd/MM/yyyy"
               clipMode="EllipsisWithTooltip"
@@ -127,7 +189,7 @@ export default function TableFormation(props) {
         <div className={classes.container}>
           <TextField
             variant="outlined"
-            label="Groupe"
+            label="الفوج"
             size="small"
             type="number"
             inputProps={{ min: 1, max: 10 }}
@@ -135,20 +197,49 @@ export default function TableFormation(props) {
             onChange={handleGroupeChange}
           />
           <Button
-            text="Affecter"
+            text="تسجيل"
             variant="outlined"
             size="small"
             className={classes.newButton}
+            disabled={values === undefined ? true : false}
             onClick={() => {
-              if (values !== undefined) {
-                AffecteFormation(NUM_INS, values.NUMERO_FORMATION, groupe);
+              if (groupe === "") {
+                alert("يرجى إختيار الفوج");
+              } else if (
+                dejaInscrit(
+                  NUM_PERMIS,
+                  NUM_INS,
+                  DATE_INS,
+                  values.NUMERO_FORMATION
+                ) === true
+              ) {
+                alert("مسجل من قبل");
               } else {
-                alert("Merci de choisir une formation");
+                setOpen(true);
               }
             }}
           />
         </div>
       </div>
-    </>
+
+      <AlertDialog
+        title="تأكيد"
+        message="هل أنت متأكد من القيام بهذه العملية ؟"
+        open={open}
+        setOpen={setOpen}
+        method={() => {
+          AffecteFormation(
+            NUM_INS,
+            convert(DATE_INS),
+            NUM_PERMIS,
+            values.NUMERO_FORMATION,
+            groupe
+          );
+
+          setOpen(false);
+          props.Close(false);
+        }}
+      />
+    </Fragment>
   );
 }

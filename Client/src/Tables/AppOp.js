@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./AppOp.css";
 import TableOp from "./TableOp.js";
@@ -35,12 +35,12 @@ function AppOp({id, Title}) {
   }));  
   const classes = useStyles();
   return (
-    <>
+    <Fragment>
      <div className = {classes.root}>{Title}</div>
       <div className={classes.container}>
         <TableOp data={data} />
       </div>
-    </>
+    </Fragment>
   );
 }
 export default AppOp;

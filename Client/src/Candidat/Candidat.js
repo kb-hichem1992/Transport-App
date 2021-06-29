@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./Candidat.css";
 import Candidat from "./CandidatForm.js";
@@ -286,7 +286,7 @@ export default function AppCand({ id }) {
   };
 
   return (
-    <>
+    <Fragment>
       <PageHeader
         title="المترشحين"
         subTitle="قائمة المترشحين"
@@ -475,6 +475,6 @@ export default function AppCand({ id }) {
           values={Values}
         />
       </Popup>
-    </>
+    </Fragment>
   );
 }

@@ -1,5 +1,5 @@
 import { Grid, Paper, Typography } from "@material-ui/core";
-import React from "react";
+import React, { Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -70,7 +70,7 @@ export default function CandidatInfo(props) {
   } = props.values;
 
   return (
-    <>
+    <Fragment>
       <Paper className={classes.pageContent}>
         <Grid container className={classes.root} spacing={3}>
           <Grid item xs={6}>
@@ -315,6 +315,6 @@ export default function CandidatInfo(props) {
           </Grid>
         </Grid>
       </Paper>
-    </>
+    </Fragment>
   );
 }

@@ -185,7 +185,7 @@ app.put("/update_candidat", (req, res) => {
   const type_permis = req.body.type_permis;
   const categorie_permis = req.body.categorie_permis;
   db.query(
-    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `TYPE_CANDIDAT`= ?, `DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ? WHERE  `NUM_PERMIS` = ? and `DATE_INS` = ? and `NUM_INS` = ? ;",
+    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `TYPE_CANDIDAT`= ?,`DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ? WHERE  `NUM_PERMIS` = ? and `DATE_INS` = ? and `NUM_INS` = ? ;",
     [
       Nom,
       Prénom,
@@ -231,12 +231,13 @@ app.post("/delete_candidat", (req, res) => {
 });
 app.post("/Add_formation", (req, res) => {
   const numeroFormation = req.body.numeroFormation;
+  const numeroAgrement = req.body.numeroAgrement;
   const Type = req.body.Type;
   const Debut = req.body.Debut;
   const Fin = req.body.Fin;
   db.query(
-    "INSERT INTO formation (`NUMERO_FORMATION`, `TYPE_FORMATION`, `DEBUT`, `FIN`) VALUES (?,?,?,?)",
-    [numeroFormation, Type, Debut, Fin],
+    "INSERT INTO formation (`NUMERO_FORMATION`, `NUMERO_AGREMENT` ,`TYPE_FORMATION`, `DEBUT`, `FIN`) VALUES (?,?,?,?,?)",
+    [numeroFormation,numeroAgrement, Type, Debut, Fin],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -284,13 +285,18 @@ app.get("/report", (req, res) => {
 
 app.post("/Add_passe", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
+  const Date_ins = req.body.Date_ins;
+  const Num_permis = req.body.Num_permis;
   const numeroFormation = req.body.numeroFormation;
   const remarque = req.body.remarque;
   const note = req.body.note;
   const groupe = req.body.groupe;
+  const NumeroBrevet = req.body.NumeroBrevet;
+  const LivBrevet = req.body.LivBrevet;
+  const ExpBrevet = req.body.ExpBrevet;
   db.query(
-    "INSERT INTO passe (`NUM_INS`, `NUMERO_FORMATION`, `GROUPE` , `REMARQUE`, `NOTE` ) VALUES (?,?,?,?,?)",
-    [numeroCandidat, numeroFormation, groupe, remarque, note],
+    "INSERT INTO passe  (`NUM_INS`, `DATE_INS`, `NUM_PERMIS`, `NUMERO_FORMATION`, `NOTE`, `REMARQUE`, `BREVET`, `LIV_BREVET`, `EXP_BREVET`, `GROUPE`) VALUES (?,?,?,?,?,?,?,?,?,?)",
+    [numeroCandidat,Date_ins,Num_permis, numeroFormation, note, remarque,NumeroBrevet,LivBrevet, ExpBrevet, groupe],
     (err, result) => {
       if (err) {
         console.log(err);

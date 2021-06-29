@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./Candidat.css";
 import {
@@ -20,6 +20,7 @@ import PasseFrom from "../Formation/PasseForm";
 import axios from "axios";
 import BrevetForm from "../Formation/BrevetForm";
 import { useAuth0 } from "@auth0/auth0-react";
+import { L10n } from "@syncfusion/ej2-base";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,6 +82,32 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
   const TableRef3 = useRef(null);
   const classes = useStyles();
 
+  L10n.load({
+    "ar-AE": {
+      grid: {
+        EmptyDataSourceError:
+          "يجب أن يكون مصدر البيانات فارغة في التحميل الأولي منذ يتم إنشاء الأعمدة من مصدر البيانات في أوتوجينيراتد عمود الشبكة",
+        EmptyRecord: "لا سجلات لعرضها",
+        SelectAll: "أختر الكل",
+        FilterButton: "بحث ",
+        ClearButton: "مسح ",
+        Search: "بحث ",
+        GroupDropArea: "اسحب رأس العمود هنا لتجميع العمود الخاص به ",
+      },
+
+      pager: {
+        currentPageInfo: "{0} من {1} صفحة",
+        firstPageTooltip: "انتقل إلى الصفحة الأولى",
+        lastPageTooltip: "انتقل إلى الصفحة الأخيرة",
+        nextPageTooltip: "انتقل إلى الصفحة التالية",
+        nextPagerTooltip: "الذهاب إلى بيجر المقبل",
+        previousPageTooltip: "انتقل إلى الصفحة السابقة",
+        previousPagerTooltip: "الذهاب إلى بيجر السابقة",
+        totalItemsInfo: "({0} العناصر)",
+      },
+    },
+  });
+
   const updatePasse = (
     remarque,
     note,
@@ -137,29 +164,35 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
 
   const Values = rowSelected();
   return (
-    <>
+    <Fragment>
       <div className={classes.container}>
         <Button
-          text="Modifier"
+          text="تعديل"
           variant="outlined"
           size="small"
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
           disabled={
-              Values === undefined || user.email !== "kb-hichem@hotmail.fr"
-                ? true
-                : false
-            }
+            Values === undefined || user.email !== "kb-hichem@hotmail.fr"
+              ? true
+              : false
+          }
           onClick={() => {
             setOpenModifier(true);
           }}
         />
         <Button
-          text="Imprimer"
+          text="طباعة"
           variant="outlined"
           size="small"
           color="primary"
-          disabled={Values === undefined || Values.NOTE < 10  || user.email !== "kb-hichem@hotmail.fr" ? true : false}
+          disabled={
+            Values === undefined ||
+            Values.NOTE < 10 ||
+            user.email !== "kb-hichem@hotmail.fr"
+              ? true
+              : false
+          }
           startIcon={<PrintIcon />}
           className={classes.newButton}
           onClick={() => {
@@ -179,36 +212,38 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
           allowSorting={true}
           height={200}
           ref={TableRef3}
+          enableRtl={true}
+          locale="ar-AE"
         >
           <ColumnsDirective>
             <ColumnDirective
               field="GROUPE"
-              headerText="Groupe"
+              headerText="الفوج"
               clipMode="EllipsisWithTooltip"
             />
             <ColumnDirective
               field="NOM_CANDIDAT"
-              headerText="Nom"
+              headerText="اللقب"
               clipMode="EllipsisWithTooltip"
             />
             <ColumnDirective
               field="PRENOM_CANDIDAT"
-              headerText="Prénom"
+              headerText="الإسم"
               clipMode="EllipsisWithTooltip"
             />
             <ColumnDirective
               field="PRENOM_PERE"
-              headerText="Prénom Père"
+              headerText="إسم الأب"
               clipMode="EllipsisWithTooltip"
             />
             <ColumnDirective
               field="REMARQUE"
-              headerText="Remarque"
+              headerText="الملاحظة"
               clipMode="EllipsisWithTooltip"
             />
             <ColumnDirective
               field="NOTE"
-              headerText="Note"
+              headerText="العلامة"
               clipMode="EllipsisWithTooltip"
             />
           </ColumnsDirective>
@@ -216,7 +251,7 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
         </GridComponent>
       </div>
       <Popup
-        title="Modéfier"
+        title="تعديل"
         openPopup={openModifier}
         setOpenPopup={setOpenModifier}
       >
@@ -227,7 +262,7 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
         />
       </Popup>
       <Popup
-        title="Brevet"
+        title="الشهادة"
         openPopup={openImprimer}
         setOpenPopup={setOpenImprimer}
       >
@@ -238,6 +273,6 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
           data={data}
         />
       </Popup>
-    </>
+    </Fragment>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Paper } from "@material-ui/core";
@@ -128,7 +128,7 @@ export default function AppBrevet({ id }) {
   const Values = rowSelected();
 
   return (
-    <>
+    <Fragment>
       <PageHeader
         title="Diplômes"
         subTitle="La liste des diplômes"
@@ -243,6 +243,6 @@ export default function AppBrevet({ id }) {
           data={data}
         />
       </Popup>
-    </>
+    </Fragment>
   );
 }
