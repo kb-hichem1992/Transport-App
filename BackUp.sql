@@ -42,11 +42,11 @@ CREATE TABLE `candidat` (
 -- Dumping data for table `candidat`
 --
 
-LOCK TABLES `candidat` WRITE;
+#LOCK TABLES `candidat` WRITE;
 /*!40000 ALTER TABLE `candidat` DISABLE KEYS */;
 INSERT INTO `candidat` VALUES (1,1,'أheus','houssem','1993-10-31','Chlef','Master','Chara-CHlef','Faycel'),(2,1,'kouadri','hicham','1992-10-26','chlef','master','Chettia','Ahmed');
 /*!40000 ALTER TABLE `candidat` ENABLE KEYS */;
-UNLOCK TABLES;
+#LOCK TABLES;
 
 --
 -- Table structure for table `centre`
@@ -67,11 +67,11 @@ CREATE TABLE `centre` (
 -- Dumping data for table `centre`
 --
 
-LOCK TABLES `centre` WRITE;
+#LOCK TABLES `centre` WRITE;
 /*!40000 ALTER TABLE `centre` DISABLE KEYS */;
 INSERT INTO `centre` VALUES ('13665','Centre 02 ','Chettia'),('23615','Centre 01','Ouled Fares'),('26516','Centre 03','Chorfa');
 /*!40000 ALTER TABLE `centre` ENABLE KEYS */;
-UNLOCK TABLES;
+#LOCK TABLES;
 
 --
 -- Table structure for table `conduire`
@@ -94,11 +94,11 @@ CREATE TABLE `conduire` (
 -- Dumping data for table `conduire`
 --
 
-LOCK TABLES `conduire` WRITE;
+#LOCK TABLES `conduire` WRITE;
 /*!40000 ALTER TABLE `conduire` DISABLE KEYS */;
 INSERT INTO `conduire` VALUES (2,'1111-102-02'),(1,'2222-222-22');
 /*!40000 ALTER TABLE `conduire` ENABLE KEYS */;
-UNLOCK TABLES;
+#LOCK TABLES;
 
 --
 -- Table structure for table `formation`
@@ -120,11 +120,11 @@ CREATE TABLE `formation` (
 -- Dumping data for table `formation`
 --
 
-LOCK TABLES `formation` WRITE;
+#LOCK TABLES `formation` WRITE;
 /*!40000 ALTER TABLE `formation` DISABLE KEYS */;
 INSERT INTO `formation` VALUES (1,'نقل البضائع','2021-10-01','2021-10-29'),(2,'نقل المسافرين','2021-11-11','2021-11-30'),(3,'نقل المواد الخطيرة','2020-01-01','2020-01-31');
 /*!40000 ALTER TABLE `formation` ENABLE KEYS */;
-UNLOCK TABLES;
+#LOCK TABLES;
 
 --
 -- Table structure for table `ligne`
@@ -149,11 +149,11 @@ CREATE TABLE `ligne` (
 -- Dumping data for table `ligne`
 --
 
-LOCK TABLES `ligne` WRITE;
+#LOCK TABLES `ligne` WRITE;
 /*!40000 ALTER TABLE `ligne` DISABLE KEYS */;
 INSERT INTO `ligne` VALUES ('0025',1,'2012-10-01','2013-10-01','PLUS 600');
 /*!40000 ALTER TABLE `ligne` ENABLE KEYS */;
-UNLOCK TABLES;
+#LOCK TABLES;
 
 --
 -- Table structure for table `offre`
@@ -176,11 +176,11 @@ CREATE TABLE `offre` (
 -- Dumping data for table `offre`
 --
 
-LOCK TABLES `offre` WRITE;
+#LOCK TABLES `offre` WRITE;
 /*!40000 ALTER TABLE `offre` DISABLE KEYS */;
 INSERT INTO `offre` VALUES (1,'13665'),(2,'13665'),(3,'13665'),(2,'23615'),(3,'26516');
 /*!40000 ALTER TABLE `offre` ENABLE KEYS */;
-UNLOCK TABLES;
+#LOCK TABLES;
 
 --
 -- Table structure for table `operateur`
@@ -209,11 +209,11 @@ CREATE TABLE `operateur` (
 -- Dumping data for table `operateur`
 --
 
-LOCK TABLES `operateur` WRITE;
+#LOCK TABLES `operateur` WRITE;
 /*!40000 ALTER TABLE `operateur` DISABLE KEYS */;
 INSERT INTO `operateur` VALUES (1,'kouadri','hicham','phisique',NULL,NULL,'chettia','1992-10-26','chlef','master','ahmed'),(2,'boudjelthia','nourddine','morale','Boudjelthia cars','Hay Es Salam','Chettia','1980-01-02','Chlef','Licence','Djilali');
 /*!40000 ALTER TABLE `operateur` ENABLE KEYS */;
-UNLOCK TABLES;
+#LOCK TABLES;
 
 --
 -- Table structure for table `passe`
@@ -237,11 +237,11 @@ CREATE TABLE `passe` (
 -- Dumping data for table `passe`
 --
 
-LOCK TABLES `passe` WRITE;
+#LOCK TABLES `passe` WRITE;
 /*!40000 ALTER TABLE `passe` DISABLE KEYS */;
 INSERT INTO `passe` VALUES (1,1,'bien'),(2,3,'pas bien');
 /*!40000 ALTER TABLE `passe` ENABLE KEYS */;
-UNLOCK TABLES;
+#LOCK TABLES;
 
 --
 -- Table structure for table `permis_circuler`
@@ -265,11 +265,11 @@ CREATE TABLE `permis_circuler` (
 -- Dumping data for table `permis_circuler`
 --
 
-LOCK TABLES `permis_circuler` WRITE;
+#LOCK TABLES `permis_circuler` WRITE;
 /*!40000 ALTER TABLE `permis_circuler` DISABLE KEYS */;
 INSERT INTO `permis_circuler` VALUES ('1032',1,'2020-01-01','2020-12-01'),('258',2,'2021-03-03','2022-12-05');
 /*!40000 ALTER TABLE `permis_circuler` ENABLE KEYS */;
-UNLOCK TABLES;
+#LOCK TABLES;
 
 --
 -- Table structure for table `vehicule`
@@ -297,11 +297,11 @@ CREATE TABLE `vehicule` (
 -- Dumping data for table `vehicule`
 --
 
-LOCK TABLES `vehicule` WRITE;
+#LOCK TABLES `vehicule` WRITE;
 /*!40000 ALTER TABLE `vehicule` DISABLE KEYS */;
 INSERT INTO `vehicule` VALUES ('1111-102-02',1,'voyageur','Hyundai',0.000,0.000,0.000,3),('2222-222-22',2,'Marchandise','Mercedes',88.000,26.000,25.000,30);
 /*!40000 ALTER TABLE `vehicule` ENABLE KEYS */;
-UNLOCK TABLES;
+#LOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
