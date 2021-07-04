@@ -3,14 +3,23 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mysql = require("mysql");
-const pdf = require("./report/pdfGenerator.js");
+
 
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "root",
   database: "transport",
+  dateStrings:true,
 });
+
+
+module.exports = db
+
+
+const pdf = require("./report/pdfGenerator.js");
+
+
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,6 +34,7 @@ app.get("/api/getCon", (req, res) => {
 app.get("/api/getOp", (req, res) => {
   const sqlquery = "SELECT * FROM transport.operateur;";
   db.query(sqlquery, (err, result) => {
+    
     res.send(result);
   });
 });
@@ -314,8 +324,17 @@ app.delete("/delete_formation/:numeroFormation", (req, res) => {
   );
 });
 
-app.get("/report", (req, res) => {
-  pdf.generatepdf();
+app.get("/report/FICH1/:ido", (req, res) => {
+
+var fullUrl = req.protocol + '://' + req.get('host');
+  
+  
+  const ido = req.params.ido;
+
+  pdf.generatepdf(ido,fullUrl);
+
+
+
 });
 
 app.post("/Add_passe", (req, res) => {
@@ -371,6 +390,12 @@ app.post("/add_travail", (req, res) => {
     }
   );
 });
+
+
+
+
+
 app.listen(3001, () => {
   console.log("it works");
 });
+
