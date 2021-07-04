@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import "./Formation.css";
 import {
   GridComponent,
@@ -16,12 +22,17 @@ import Button from "../components/controls/Button";
 import axios from "axios";
 import { L10n } from "@syncfusion/ej2-base";
 import AlertDialog from "../components/controls/Dialog";
+import { UserContext } from "../UserContext";
 
 export default function TableFormation(props) {
   const [data, setdata] = useState([]);
+  const [passdata, setpassdata] = useState([]);
   const { NUM_INS, DATE_INS, NUM_PERMIS } = props.valeur;
   const [groupe, setGroupe] = useState("");
   const [open, setOpen] = useState(false);
+  const { userData } = useContext(UserContext);
+
+  const numeroAgrement = userData[0].NUMERO_AGREMENT;
 
   const useStyles = makeStyles((theme) => ({
     container: {
@@ -67,7 +78,13 @@ export default function TableFormation(props) {
     fetch("http://localhost:3001/api/get_form")
       .then((response) => response.json())
       .then((json) => setdata(json));
-  }, [data]);
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/api/get_passe")
+      .then((response) => response.json())
+      .then((json) => setpassdata(json));
+  }, []);
 
   function rowSelected() {
     try {
@@ -91,6 +108,7 @@ export default function TableFormation(props) {
     Date_ins,
     Num_permis,
     numeroFormation,
+    numeroAgrement,
     groupe
   ) => {
     axios
@@ -99,21 +117,29 @@ export default function TableFormation(props) {
         Date_ins: Date_ins,
         Num_permis: Num_permis,
         numeroFormation: numeroFormation,
+        numeroAgrement: numeroAgrement,
         groupe: groupe,
       })
       .then(() => {
-        alert("Formation affecter");
+        alert("تمت العملية بنجاح");
         props.Close(false);
       });
   };
 
-  function dejaInscrit(Num_permis, numeroCandidat, Date_ins, numeroFormation) {
-    return data.some(function (el) {
+  function dejaInscrit(
+    Num_permis,
+    numeroCandidat,
+    Date_ins,
+    numeroFormation,
+    numeroAgrement
+  ) {
+    return passdata.some(function (el) {
       if (
         el.NUM_PERMIS === Num_permis &&
         el.NUM_INS === numeroCandidat &&
-        el.DATE_INS === Date_ins &&
-        el.NUMERO_FORMATION === numeroFormation
+        convert(el.DATE_INS) === convert(Date_ins) &&
+        el.NUMERO_FORMATION === numeroFormation &&
+        el.NUMERO_AGREMENT === numeroAgrement
       ) {
         return true;
       } else {
@@ -147,6 +173,7 @@ export default function TableFormation(props) {
       },
     },
   });
+
   return (
     <Fragment>
       <div id="cont">
@@ -210,7 +237,8 @@ export default function TableFormation(props) {
                   NUM_PERMIS,
                   NUM_INS,
                   DATE_INS,
-                  values.NUMERO_FORMATION
+                  values.NUMERO_FORMATION,
+                  numeroAgrement
                 ) === true
               ) {
                 alert("مسجل من قبل");
@@ -233,9 +261,9 @@ export default function TableFormation(props) {
             convert(DATE_INS),
             NUM_PERMIS,
             values.NUMERO_FORMATION,
+            numeroAgrement,
             groupe
           );
-
           setOpen(false);
           props.Close(false);
         }}

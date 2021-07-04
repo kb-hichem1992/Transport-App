@@ -1,11 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import clsx from "clsx";
-import {
-  createMuiTheme,
-  makeStyles,
-  ThemeProvider,
-  useTheme,
-} from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
@@ -26,21 +21,20 @@ import AppOp from "./Tables/AppOp.js";
 import AppFor from "./Formation/Formation.js";
 import AppCand from "./Candidat/Candidat.js";
 import AppVeh from "./Table_vehicule//AppVeh.js";
-import Button from "@material-ui/core/Button";
+import Button from "./components/controls/Button";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Welcome from "./welcome";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import { useAuth0 } from "@auth0/auth0-react";
 import GroupIcon from "@material-ui/icons/Group";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import AppBrevet from "./Brevet/Brevet.js";
-
+import { UserContext } from "./UserContext";
 const drawerWidth = 180;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiAppBar-colorPrimary": {
-      backgroundColor : "#1e81b0"
+      backgroundColor: "#1e81b0",
     },
     display: "flex",
   },
@@ -66,7 +60,6 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -150,7 +143,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard() {
-  const { logout } = useAuth0();
+  const { setstate, setuserData } = useContext(UserContext);
+
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -166,7 +160,6 @@ export default function Dashboard() {
     <Router>
       <div className={classes.root}>
         <CssBaseline />
-
         <AppBar
           position="fixed"
           color="Primary"
@@ -194,12 +187,18 @@ export default function Dashboard() {
             >
               مركز التكوين
             </Typography>
-            <Button color="inherit" onClick={() => logout()}>
-              خروج
-            </Button>
+            <Button
+              text="خروج"
+              color="inherit"
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setuserData([]);
+                setstate(false);
+              }}
+            />
           </Toolbar>
         </AppBar>
-
         {/* the side bar starts from here */}
         <Drawer
           className={classes.drawer}
@@ -220,51 +219,7 @@ export default function Dashboard() {
             </IconButton>
           </div>
           <Divider />
-
           <List>
-            {/*  <Link to="/" className={classes.link}>
-              <ListItem button>
-                <ListItemIcon>
-                  <DashboardIcon />
-                </ListItemIcon>
-                <ListItemText primary="Acceuil" />
-              </ListItem>
-            </Link>
-            <ListItem button onClick={handleClick}>
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Operateurs" />
-              {openSide ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={!openSide} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <Link to="/op/mor" className={classes.link}>
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <SubdirectoryArrowRightOutlinedIcon />
-                    </ListItemIcon>
-                    <ListItemText secondary="Personne Morale" />
-                  </ListItem>
-                </Link>
-                <Link to="/op/phy" className={classes.link}>
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <SubdirectoryArrowRightOutlinedIcon />
-                    </ListItemIcon>
-                    <ListItemText secondary="Personne physique" />
-                  </ListItem>
-                </Link>
-              </List>
-            </Collapse> */}
-            <Link to="/For" className={classes.link}>
-              <ListItem button>
-                <ListItemIcon>
-                  <LaptopChromebookIcon />
-                </ListItemIcon>
-                <ListItemText primary="الدورات" />
-              </ListItem>
-            </Link>
             <Link to="/candidat" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
@@ -273,14 +228,14 @@ export default function Dashboard() {
                 <ListItemText primary="المنرشحين" />
               </ListItem>
             </Link>
-            {/*        <Link to="/Vehicule" className={classes.link}>
+            <Link to="/For" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
                   <LaptopChromebookIcon />
                 </ListItemIcon>
-                <ListItemText primary="Véhicules" />
+                <ListItemText primary="الدورات" />
               </ListItem>
-            </Link> */}
+            </Link>
             <Link to="/Diplômes" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
@@ -290,25 +245,6 @@ export default function Dashboard() {
               </ListItem>
             </Link>
           </List>
-
-          {/*    <Divider />
-          <List>
-            <ListSubheader inset> Configuration </ListSubheader>
-            <ListItem button>
-              <ListItemIcon>
-                <GroupIcon />
-              </ListItemIcon>
-              <ListItemText primary="Utilisateurs" />
-            </ListItem>
-            <Link to="/About" className={classes.link}>
-              <ListItem button>
-                <ListItemIcon>
-                  <InfoIcon />
-                </ListItemIcon>
-                <ListItemText primary="A propos" />
-              </ListItem>
-            </Link>
-          </List> */}
         </Drawer>
         <main
           className={clsx(classes.content, {

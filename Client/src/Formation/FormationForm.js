@@ -50,7 +50,7 @@ export default function Form(props) {
     props.values;
 
   const [numeroFormation, setnumeroFormation] = useState(NUMERO_FORMATION);
-  const [numeroAgrement, setnumeroAgrement] = useState(NUMERO_AGREMENT);
+  const [numeroAgrement] = useState(NUMERO_AGREMENT);
   const [typeFormation, setTypeFormation] = useState(TYPE_FORMATION);
   const [debut, setDebut] = useState(DEBUT);
   const [fin, setFin] = useState(FIN);
@@ -122,11 +122,11 @@ export default function Form(props) {
               label="رقم المركز"
               value={numeroAgrement}
               size="small"
-              onChange={(e) => setnumeroAgrement(e.target.value)}
+              disabled
             />
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-simple-select-label">
-                Type formation
+                نوع الدورة
               </InputLabel>
               <Select
                 labelId="demo-simple-select"
@@ -142,12 +142,12 @@ export default function Form(props) {
               </Select>
             </FormControl>
             <Controls.DatePicker
-              label="Date debut"
+              label="تاريخ البداية"
               value={debut}
               onChange={setDebut}
             />
             <Controls.DatePicker
-              label="Date fin"
+              label="تاريخ النهاية"
               value={fin}
               onChange={setFin}
             />
@@ -157,7 +157,7 @@ export default function Form(props) {
               size="small"
               onClick={Enregister}
             >
-              Enregister
+              تأكيد
             </Button>
             <Button
               variant="contained"
@@ -167,7 +167,7 @@ export default function Form(props) {
                 props.Close(false);
               }}
             >
-              Annuler
+              إلغاء
             </Button>
           </Grid>
         </form>

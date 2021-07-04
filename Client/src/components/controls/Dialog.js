@@ -5,6 +5,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function AlertDialog(props) {
   const { open, setOpen, title, message, method } = props;
@@ -22,6 +27,8 @@ export default function AlertDialog(props) {
     <Dialog
       open={open}
       onClose={handleClose}
+      TransitionComponent={Transition}
+      keepMounted
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -33,10 +40,10 @@ export default function AlertDialog(props) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
-          ReFuser
+          لا أوافق
         </Button>
         <Button onClick={handleAgree} color="primary" autoFocus>
-          Accépter
+          موافق
         </Button>
       </DialogActions>
     </Dialog>

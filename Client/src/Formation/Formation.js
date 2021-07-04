@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Fragment } from "react";
+import React, { useState, useEffect, useRef, Fragment, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./Formation.css";
 import Form from "./FormationForm.js";
@@ -23,8 +23,8 @@ import PageHeader from "../PageHeader.js";
 import { Paper } from "@material-ui/core";
 import TableCandForm from "../Candidat/TableCandForm";
 import LaptopChromebookIcon from "@material-ui/icons/LaptopChromebook";
-import { useAuth0 } from "@auth0/auth0-react";
 import { L10n } from "@syncfusion/ej2-base";
+import { UserContext } from "../UserContext";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -78,11 +78,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AppFor({ id }) {
+
+
+  const { state, setstate, userData, setuserData } = useContext(UserContext);
   const [data, setdata] = useState([]);
   const [openAjouter, setOpenAjouter] = useState(false);
   const [openModifier, setOpenModifier] = useState(false);
   const [etat, setEtat] = useState(false);
-  const { user } = useAuth0();
+
 
   useEffect(() => {
     fetch(id)
@@ -139,7 +142,7 @@ function AppFor({ id }) {
 
   const initialvalues = {
     NUMERO_FORMATION: "",
-    NUMERO_AGREMENT: "",
+    NUMERO_AGREMENT: userData[0].NUMERO_AGREMENT,
     TYPE_FORMATION: "",
     DEBUT: new Date(),
     FIN: new Date(),
@@ -185,10 +188,10 @@ function AppFor({ id }) {
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
           disabled={
-            Values === undefined || user.email !== "kb-hichem@hotmail.fr"
-              ? true
-              : false
-          }
+              Values === undefined || userData[0].ADMIN !== "admin"
+                ? true
+                : false
+            }
           onClick={() => {
             setOpenModifier(true);
           }}
@@ -201,10 +204,10 @@ function AppFor({ id }) {
           startIcon={<DeleteIcon />}
           className={classes.newButton}
           disabled={
-            Values === undefined || user.email !== "kb-hichem@hotmail.fr"
-              ? true
-              : false
-          }
+              Values === undefined || userData[0].ADMIN !== "admin"
+                ? true
+                : false
+            }
           onClick={() => {
             deleteFormation(Values.NUMERO_FORMATION);
           }}

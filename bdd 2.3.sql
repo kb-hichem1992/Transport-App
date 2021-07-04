@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* Nom de SGBD :  MySQL 5.0                                     */
-/* Date de création :  29/06/2021 17:48:06                      */
+/* Date de création :  04/07/2021 19:08:46                      */
 /*==============================================================*/
 
 
@@ -21,6 +21,8 @@ drop table if exists PASSE;
 drop table if exists PC;
 
 drop table if exists TRAVAIL;
+
+drop table if exists USER;
 
 drop table if exists VEHICULE;
 
@@ -82,7 +84,7 @@ create table FORMATION
    TYPE_FORMATION       varchar(50),
    DEBUT                date,
    FIN                  date,
-   primary key (NUMERO_FORMATION)
+   primary key (NUMERO_FORMATION, NUMERO_AGREMENT)
 );
 
 /*==============================================================*/
@@ -118,13 +120,14 @@ create table PASSE
    DATE_INS             date not null,
    NUM_PERMIS           varchar(45) not null,
    NUMERO_FORMATION     int not null,
+   NUMERO_AGREMENT      varchar(50) not null,
    NOTE                 int,
    REMARQUE             varchar(50),
    BREVET               varchar(45),
    LIV_BREVET           date,
    EXP_BREVET           date,
    GROUPE               int not null,
-   primary key (NUM_INS, DATE_INS, NUM_PERMIS, NUMERO_FORMATION),
+   primary key (NUM_INS, DATE_INS, NUM_PERMIS, NUMERO_FORMATION, NUMERO_AGREMENT),
    key FK_PASSE (NUMERO_FORMATION)
 );
 
@@ -158,6 +161,18 @@ create table TRAVAIL
 );
 
 /*==============================================================*/
+/* Table : USER                                                 */
+/*==============================================================*/
+create table USER
+(
+   USERNAME             varchar(50) not null,
+   PASSWORD             varchar(50) not null,
+   USERTYPE             varchar(10) not null,
+   NUMERO_AGREMENT      varchar(50) not null,
+   primary key (USERNAME, PASSWORD, USERTYPE)
+);
+
+/*==============================================================*/
 /* Table : VEHICULE                                             */
 /*==============================================================*/
 create table VEHICULE
@@ -186,8 +201,8 @@ alter table FORMATION add constraint FK_OFFRE foreign key (NUMERO_AGREMENT)
 alter table LIGNE add constraint FK_AVOIR2 foreign key (NOM_OP)
       references OPERATEUR (NOM_OP) on delete cascade on update cascade;
 
-alter table PASSE add constraint FK_PASSE foreign key (NUMERO_FORMATION)
-      references FORMATION (NUMERO_FORMATION) on delete cascade on update cascade;
+alter table PASSE add constraint FK_PASSE foreign key (NUMERO_FORMATION, NUMERO_AGREMENT)
+      references FORMATION (NUMERO_FORMATION, NUMERO_AGREMENT) on delete cascade on update cascade;
 
 alter table PASSE add constraint FK_PASSE2 foreign key (NUM_INS, DATE_INS, NUM_PERMIS)
       references CANDIDAT (NUM_INS, DATE_INS, NUM_PERMIS) on delete cascade on update cascade;
@@ -200,6 +215,9 @@ alter table TRAVAIL add constraint FK_TRAVAIL foreign key (NOM_OP)
 
 alter table TRAVAIL add constraint FK_TRAVAIL2 foreign key (NUM_INS, DATE_INS, NUM_PERMIS)
       references CANDIDAT (NUM_INS, DATE_INS, NUM_PERMIS) on delete cascade on update cascade;
+
+alter table USER add constraint FK_CONTIENT foreign key (NUMERO_AGREMENT)
+      references CENTRE (NUMERO_AGREMENT) on delete restrict on update restrict;
 
 alter table VEHICULE add constraint FK_APPARTIENT foreign key (NOM_OP)
       references OPERATEUR (NOM_OP) on delete cascade on update cascade;

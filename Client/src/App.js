@@ -1,40 +1,30 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "./test";
+import React, { useState, useMemo, useEffect } from "react";
 
+import { UserContext } from "./UserContext";
+import LoginForm from "./Login_Form";
+import Dashboard from "./Dashboard.js";
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
-function App({id}) {
-  const [data, setdata] = useState([]);
-  useEffect(() => {
-    fetch(id)
-      .then((response) => response.json())
-      .then((json) => setdata(json));
-  }, [id, setdata ]);
-  const useStyles = makeStyles((theme) => ({
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-    formControl: {
-      display: "inline-flex",
-      margin: theme.spacing(2),
-      minWidth: 170,
-    },
-    container: {
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-      display: "flex",
-      justifyContent: "space-between",
-    },
-  }));  
-  const classes = useStyles();
-  return (
-    <>
-      <div className={classes.container}>
-        <Table data={data} />
-      </div>
-    </>
+
+function App() {
+  const [state, setstate] = useState(false);
+  const [userData, setuserData] = useState([]);
+
+  const value = useMemo(
+    () => ({ state, setstate, userData, setuserData }),
+    [state, setstate, userData, setuserData]
   );
+
+  if (state === false) {
+    return (
+      <LoginForm setstate={setstate} setUser={setuserData} user={userData} />
+    );
+  } else {
+    return (
+      <UserContext.Provider value={value}>
+        <Dashboard />
+      </UserContext.Provider>
+    );
+  }
 }
 export default App;

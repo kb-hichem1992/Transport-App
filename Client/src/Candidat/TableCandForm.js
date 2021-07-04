@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./Candidat.css";
 import {
@@ -11,6 +17,7 @@ import {
   Group,
   Resize,
   Sort,
+  GroupSettingsModel,
 } from "@syncfusion/ej2-react-grids";
 import Button from "../components/controls/Button";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
@@ -19,8 +26,8 @@ import Popup from "../components/Popup";
 import PasseFrom from "../Formation/PasseForm";
 import axios from "axios";
 import BrevetForm from "../Formation/BrevetForm";
-import { useAuth0 } from "@auth0/auth0-react";
 import { L10n } from "@syncfusion/ej2-base";
+import { UserContext } from "../UserContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,19 +75,22 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
   const [data, setdata] = useState([]);
   const [openModifier, setOpenModifier] = useState(false);
   const [openImprimer, setOpenImprimer] = useState(false);
-  const { user } = useAuth0();
+  const { userData } = useContext(UserContext);
+  const numeroAgrement = userData[0].NUMERO_AGREMENT;
 
   useEffect(() => {
-    fetch(`http://localhost:3001/api/get_candidat_form/${numeroFormation}`)
+    fetch(`http://localhost:3001/api/get_candidat_form/${numeroFormation}/${numeroAgrement}`)
       .then((response) => response.json())
       .then((json) => setdata(json));
-  }, [etat, numeroFormation]);
+  }, [etat, numeroFormation, numeroAgrement]);
 
   const filter = {
     type: "Excel",
   };
+
   const TableRef3 = useRef(null);
   const classes = useStyles();
+  const GroupSettingsModel = { columns: ["GROUPE"] };
 
   L10n.load({
     "ar-AE": {
@@ -135,7 +145,10 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
     LivBrevet,
     ExpBrevet,
     numeroCandidat,
+    Date_ins,
+    Num_permis,
     numeroFormation,
+    numeroAgrement,
     GROUPE
   ) => {
     axios
@@ -144,7 +157,10 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
         LivBrevet: LivBrevet,
         ExpBrevet: ExpBrevet,
         numeroCandidat: numeroCandidat,
+        Date_ins: Date_ins,
+        Num_permis: Num_permis,
         numeroFormation: numeroFormation,
+        numeroAgrement: numeroAgrement,
         GROUPE: GROUPE,
       })
       .then(() => {
@@ -173,9 +189,7 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
           disabled={
-            Values === undefined || user.email !== "kb-hichem@hotmail.fr"
-              ? true
-              : false
+            Values === undefined || userData[0].ADMIN !== "admin" ? true : false
           }
           onClick={() => {
             setOpenModifier(true);
@@ -189,7 +203,7 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
           disabled={
             Values === undefined ||
             Values.NOTE < 10 ||
-            user.email !== "kb-hichem@hotmail.fr"
+            userData[0].ADMIN !== "admin"
               ? true
               : false
           }
@@ -214,6 +228,7 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
           ref={TableRef3}
           enableRtl={true}
           locale="ar-AE"
+          groupSettings={GroupSettingsModel}
         >
           <ColumnsDirective>
             <ColumnDirective

@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef, Fragment } from "react";
+import React, { useState, useEffect, useRef, Fragment, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useAuth0 } from "@auth0/auth0-react";
 import { Paper } from "@material-ui/core";
 import {
   GridComponent,
@@ -22,12 +21,18 @@ import { ContextMenu } from "@syncfusion/ej2-react-grids";
 import BrevetForm from "../Formation/BrevetForm.js";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import axios from "axios";
+import { L10n } from "@syncfusion/ej2-base";
+import { UserContext } from "../UserContext.js";
+
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    "& .MuiButton-text": {
+      fontSize: "100px",
+    },
     ...theme.typography.button,
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(1),
@@ -78,7 +83,7 @@ export default function AppBrevet({ id }) {
   const [data, setdata] = useState([]);
   const [openModifier, setOpenModifier] = useState(false);
   const [etat, setEtat] = useState(false);
-  const { user } = useAuth0();
+
   useEffect(() => {
     fetch(id)
       .then((response) => response.json())
@@ -94,7 +99,10 @@ export default function AppBrevet({ id }) {
     LivBrevet,
     ExpBrevet,
     numeroCandidat,
+    Date_ins,
+    Num_permis,
     numeroFormation,
+    numeroAgrement,
     GROUPE
   ) => {
     axios
@@ -103,13 +111,42 @@ export default function AppBrevet({ id }) {
         LivBrevet: LivBrevet,
         ExpBrevet: ExpBrevet,
         numeroCandidat: numeroCandidat,
+        Date_ins: Date_ins,
+        Num_permis: Num_permis,
         numeroFormation: numeroFormation,
+        numeroAgrement: numeroAgrement,
         GROUPE: GROUPE,
       })
       .then(() => {
         setEtat(!etat);
       });
   };
+  
+  L10n.load({
+    "ar-AE": {
+      grid: {
+        EmptyDataSourceError:
+          "يجب أن يكون مصدر البيانات فارغة في التحميل الأولي منذ يتم إنشاء الأعمدة من مصدر البيانات في أوتوجينيراتد عمود الشبكة",
+        EmptyRecord: "لا سجلات لعرضها",
+        SelectAll: "أختر الكل",
+        FilterButton: "بحث ",
+        ClearButton: "مسح ",
+        Search: "بحث ",
+        GroupDropArea: "اسحب رأس العمود هنا لتجميع العمود الخاص به ",
+      },
+  
+      pager: {
+        currentPageInfo: "{0} من {1} صفحة",
+        firstPageTooltip: "انتقل إلى الصفحة الأولى",
+        lastPageTooltip: "انتقل إلى الصفحة الأخيرة",
+        nextPageTooltip: "انتقل إلى الصفحة التالية",
+        nextPagerTooltip: "الذهاب إلى بيجر المقبل",
+        previousPageTooltip: "انتقل إلى الصفحة السابقة",
+        previousPagerTooltip: "الذهاب إلى بيجر السابقة",
+        totalItemsInfo: "({0} العناصر)",
+      },
+    },
+  });
 
   const classes = useStyles();
 
@@ -126,24 +163,25 @@ export default function AppBrevet({ id }) {
     }
   }
   const Values = rowSelected();
+  const {  userData } = useContext(UserContext);
 
   return (
     <Fragment>
       <PageHeader
-        title="Diplômes"
-        subTitle="La liste des diplômes"
+        title="الشهادات"
+        subTitle="قائمة الشهادات المستخرجة"
         icon={<LibraryBooksIcon />}
       />
       <div className={classes.div}>
         <div className={classes.container}>
           <Button
-            text="Modifier"
+            text="تعدبل"
             variant="outlined"
             size="small"
             startIcon={<EditOutlinedIcon />}
             className={classes.newButton}
             disabled={
-              Values === undefined || user.email !== "kb-hichem@hotmail.fr"
+              Values === undefined || userData[0].ADMIN !== "admin"
                 ? true
                 : false
             }
@@ -152,14 +190,14 @@ export default function AppBrevet({ id }) {
             }}
           />
           <Button
-            text="Supprimer"
+            text="حذف"
             variant="outlined"
             size="small"
             color="secondary"
             startIcon={<DeleteIcon />}
             className={classes.newButton}
             disabled={
-              Values === undefined || user.email !== "kb-hichem@hotmail.fr"
+              Values === undefined || userData[0].ADMIN !== "admin"
                 ? true
                 : false
             }
@@ -171,7 +209,7 @@ export default function AppBrevet({ id }) {
           <GridComponent
             dataSource={data}
             allowPaging={true}
-            pageSettings={{ pageSize: 10 }}
+            pageSettings={{ pageSize: 100 }}
             allowFiltering={true}
             allowGrouping={true}
             filterSettings={filter}
@@ -179,32 +217,34 @@ export default function AppBrevet({ id }) {
             allowSorting={true}
             height={180}
             ref={TableRef2}
+            enableRtl={true}
+            locale="ar-AE"
           >
             <ColumnsDirective>
               <ColumnDirective
                 field="BREVET"
-                headerText="N° Diplôme"
+                headerText="رقم الشهادة"
                 clipMode="EllipsisWithTooltip"
               />
               <ColumnDirective
                 field="NOM_CANDIDAT"
-                headerText="Nom"
+                headerText="اللقب"
                 clipMode="EllipsisWithTooltip"
               />
 
               <ColumnDirective
                 field="PRENOM_CANDIDAT"
-                headerText="Prénom"
+                headerText="الإسم"
                 clipMode="EllipsisWithTooltip"
               />
               <ColumnDirective
                 field="PRENOM_PERE"
-                headerText="Prénom Père"
+                headerText="إسم الأب"
                 clipMode="EllipsisWithTooltip"
               />
               <ColumnDirective
                 field="LIV_BREVET"
-                headerText="Date de livraison"
+                headerText="تاريخ الإصدار"
                 type="date"
                 format="dd/MM/yyyy"
                 clipMode="EllipsisWithTooltip"
@@ -212,7 +252,7 @@ export default function AppBrevet({ id }) {
               />
               <ColumnDirective
                 field="EXP_BREVET"
-                headerText="Date d'expiration"
+                headerText="تاريخ نهاية الصلاحية"
                 type="date"
                 format="dd/MM/yyyy"
                 clipMode="EllipsisWithTooltip"
@@ -220,7 +260,7 @@ export default function AppBrevet({ id }) {
               />
               <ColumnDirective
                 field="TYPE_FORMATION"
-                headerText="Formation"
+                headerText="نوع الدورة"
                 clipMode="EllipsisWithTooltip"
               />
             </ColumnsDirective>
@@ -232,7 +272,7 @@ export default function AppBrevet({ id }) {
       </div>
 
       <Popup
-        title="Modéfier"
+        title="تعديل"
         openPopup={openModifier}
         setOpenPopup={setOpenModifier}
       >

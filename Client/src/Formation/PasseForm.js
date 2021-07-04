@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -49,10 +48,10 @@ export default function PasseFrom(props) {
   const { NUMERO_FORMATION, NUM_INS, GROUPE, NOTE, REMARQUE } = props.values;
 
   const [numeroFormation] = useState(NUMERO_FORMATION);
-  const [numeroCandidat ] = useState(NUM_INS);
+  const [numeroCandidat] = useState(NUM_INS);
   const [note, setNote] = useState(NOTE);
   const [remarque, setRemarque] = useState(REMARQUE);
-  const [groupe, setGroupe]=useState(GROUPE); 
+  const [groupe, setGroupe] = useState(GROUPE);
 
   const handleNoteChange = (e) => {
     setNote(e.target.value);
@@ -70,14 +69,20 @@ export default function PasseFrom(props) {
       if (note === "" || remarque === "") {
         alert("Merci de remplir tout les champs");
       } else {
-        props.onClick(remarque, note, groupe, numeroCandidat, numeroFormation, GROUPE);
-        alert("Modifié avec succés")
+        props.onClick(
+          remarque,
+          note,
+          groupe,
+          numeroCandidat,
+          numeroFormation,
+          GROUPE
+        );
+        alert("Modifié avec succés");
         props.Close(false);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
- 
   };
 
   return (
@@ -85,13 +90,14 @@ export default function PasseFrom(props) {
       <Paper className={classes.pageContent}>
         <form className={classes.root} noValidate autoComplete="off">
           <Grid container spacing={2}>
-          <TextField
+            <TextField
               variant="outlined"
-              label="Groupe"
+              label="الفوج"
               size="small"
               type="number"
               value={groupe}
               onChange={handleGroupeChange}
+              inputProps={{ min: 1, max: 10 }}
             />
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-simple-select-label">Remarque</InputLabel>
@@ -102,17 +108,19 @@ export default function PasseFrom(props) {
                 onChange={handleRemarqueChange}
               >
                 <MenuItem value={"ناجح"}>ناجح </MenuItem>
-                <MenuItem value={"مؤجل"}> مؤجل </MenuItem>
+                <MenuItem value={"مؤجل للإستدراك"}>مؤجل للإستدراك </MenuItem>
+                <MenuItem value={"مؤجل للإمتحان"}>مؤجل للإمتحان </MenuItem>
                 <MenuItem value={"راسب"}>راسب</MenuItem>
               </Select>
             </FormControl>
             <TextField
               variant="outlined"
-              label="Note"
+              label="العلامة"
               size="small"
               type="number"
               value={note}
               onChange={handleNoteChange}
+              inputProps={{ min: 0, max: 20 }}
             />
             <Button
               variant="contained"
@@ -120,7 +128,7 @@ export default function PasseFrom(props) {
               size="small"
               onClick={Enregister}
             >
-              Enregister
+              تأكيد
             </Button>
             <Button
               variant="contained"
@@ -130,7 +138,7 @@ export default function PasseFrom(props) {
                 props.Close(false);
               }}
             >
-              Annuler
+              إلغاء
             </Button>
           </Grid>
         </form>
