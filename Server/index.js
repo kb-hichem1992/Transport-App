@@ -8,7 +8,7 @@ const mysql = require("mysql");
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "",
   database: "transport",
   dateStrings:true,
 });
@@ -294,14 +294,14 @@ app.delete("/delete_formation/:numeroFormation", (req, res) => {
   );
 });
 
-app.get("/report/FICH1/:ido", (req, res) => {
+app.get("/report/DIPLOME/:idin/:idform", (req, res) => {
 
 var fullUrl = req.protocol + '://' + req.get('host');
   
   
-  const ido = req.params.ido;
-
-  pdf.generatepdf(ido,fullUrl);
+  const idin = req.params.idin;
+  const idform=req.params.idform;
+  pdf.generatepdf(idin,idform,fullUrl);
 
 
 

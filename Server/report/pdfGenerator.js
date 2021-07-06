@@ -43,30 +43,30 @@ async function run() {
 
 
 
-async function GenerationFich1(idi,uurl) {
+async function GenerationFich1(idin,idform,uurl) {
 
  
-  data.GetCondidatById(idi,async function(result){
+  data.GetDiplomeData(idin,idform,async function(result){
 	   
 	   
  
-  var FICH1={"DIRECTION":{"text":"الشلف","x":550,"y":1020},
-            "SERIE":{"text":"45656","x":90,"y":1020},
-			"DIRECTION2":{"text":"الشلف","x":534,"y":482},
-			"PERSONNE":{"text":result[0].NOM_CANDIDAT+" "+result[0].PRENOM_CANDIDAT,"x":542,"y":445},
-			"DATE_NAI":{"text":result[0].DATE_NAIS_CANDIDAT,"x":500,"y":410},
-			"LIEU_NAI":{"text":result[0].LIEU_NAIS_CANDIDAT,"x":430,"y":410},
-			"ADRESSE":{"text":result[0].ADRESSE_CANDIDAT,"x":445,"y":375},
-			"TYPE":{"text":"بضائع","x":445,"y":331},
-			"DE":{"text":"َ19-12-2020","x":225,"y":331},
-			"TO":{"text":"19-12-2022","x":80,"y":331},
-            "LIEU_EDIT":{"text":"الشلف","x":370,"y":248},  
-            "DATE_EDIT":{"text":"15-12-2020","x":150,"y":252},
+  var FICH1={"DIRECTION":{"text":"الشلف","x":275,"y":510},
+            "SERIE":{"text":"","x":45,"y":510},
+			"DIRECTION2":{"text":"الشلف","x":265,"y":241},
+			"PERSONNE":{"text":result[0].NOM_CANDIDAT+" "+result[0].PRENOM_CANDIDAT,"x":246,"y":222},
+			"DATE_NAI":{"text":result[0].DATE_NAIS_CANDIDAT,"x":240,"y":205},
+			"LIEU_NAI":{"text":result[0].LIEU_NAIS_CANDIDAT,"x":198,"y":205},
+			"ADRESSE":{"text":result[0].ADRESSE_CANDIDAT+"fefedffffffffffff","x":180,"y":186},
+			"TYPE":{"text":result[0].TYPE_FORMATION,"x":205,"y":164},
+			"DE":{"text":result[0].DATE_LIVRAI,"x":112,"y":164},
+			"TO":{"text":result[0].DATE_EXP,"x":40,"y":164},
+            "LIEU_EDIT":{"text":"الشلف","x":180,"y":124},  
+            "DATE_EDIT":{"text":"","x":70,"y":124},
            };
 
      
-		   
-  const url =uurl+'/DiplomeA3.pdf';
+	  
+  const url =uurl+'/vierge.pdf';
  
  const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
   
@@ -102,29 +102,32 @@ async function GenerationFich1(idi,uurl) {
 
 for (let ob in F1) {
      
-	        var textSize = 20
+	        var textSize = 10
             
-			 if(ob=="DE" || ob=="TO")
-				 textSize=15;
+			 if(ob=="DE" || ob=="TO" || ob=="TYPE")
+				 textSize=8;
+			 
+			 if(ob=="TYPE" && F1[ob]["text"].length>19)
+				  textSize=6;
+			    
 			 
 			 var textHeight = helveticaFont.heightAtSize(textSize)
             
 			
 			
       var textWidth = helveticaFont.widthOfTextAtSize(F1[ob]["text"], textSize)
-       if(ob=="ADRESSE")
-		    textWidth=182;
-	  
+     
+	  /*
       firstPage.drawRectangle({
         x: F1[ob]["x"],
         y: F1[ob]["y"],
         width: textWidth,
-        height: 10,
+        height: 5,
         borderColor: rgb(1, 1, 1),
         borderWidth:  textHeight,
      
       })
-  
+     */
   
 
   firstPage.drawText(F1[ob]["text"],{
@@ -159,10 +162,10 @@ for (let ob in F1) {
 
 
 
- module.exports.generatepdf = (ido,uurl)=>{
+ module.exports.generatepdf = (idin,idform,uurl)=>{
  
 
- GenerationFich1(ido,uurl).catch(err => console.log(err));
+ GenerationFich1(idin,idform,uurl).catch(err => console.log(err));
 
 }
 
