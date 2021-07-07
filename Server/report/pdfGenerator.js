@@ -26,30 +26,32 @@ const data=require('./data.js');
 
 
 
-async function GenerationFich1(idin,idform,uurl) {
+async function GenerationFich1(idin,idform,idPerm,uurl) {
 
  
-  data.GetDiplomeData(idin,idform,async function(result){
+  data.GetDiplomeData('00001',1,'032621',async function(result){
 	   
-	   
+  var NomPeren=result[0].NOM_CANDIDAT+" "+result[0].PRENOM_CANDIDAT;	   
+  
  
+  
   var FICH1={"DIRECTION":{"text":"الشلف","x":275,"y":510},
             "SERIE":{"text":"","x":45,"y":510},
 			"DIRECTION2":{"text":"الشلف","x":265,"y":241},
-			"PERSONNE":{"text":result[0].NOM_CANDIDAT+" "+result[0].PRENOM_CANDIDAT,"x":246,"y":222},
+			"PERSONNE":{"text":NomPeren,"x":220-(Math.max(0,NomPeren.length-23)*5),"y":222},
 			"DATE_NAI":{"text":result[0].DATE_NAIS_CANDIDAT,"x":240,"y":205},
-			"LIEU_NAI":{"text":result[0].LIEU_NAIS_CANDIDAT,"x":198,"y":205},
-			"ADRESSE":{"text":result[0].ADRESSE_CANDIDAT+"fefedffffffffffff","x":180,"y":186},
+			"LIEU_NAI":{"text":result[0].LIEU_NAIS_CANDIDAT,"x":198-(Math.max(0,result[0].LIEU_NAIS_CANDIDAT.length-8)*5),"y":205},
+		"ADRESSE":{"text":result[0].ADRESSE_CANDIDAT,"x":250-(Math.max(0,result[0].ADRESSE_CANDIDAT.length-16)*5),"y":186},
 			"TYPE":{"text":result[0].TYPE_FORMATION,"x":205,"y":164},
-			"DE":{"text":result[0].DATE_LIVRAI,"x":112,"y":164},
-			"TO":{"text":result[0].DATE_EXP,"x":40,"y":164},
+			"DE":{"text":result[0].LIV_BREVET,"x":112,"y":164},
+			"TO":{"text":result[0].EXP_BREVET,"x":40,"y":164},
             "LIEU_EDIT":{"text":"الشلف","x":180,"y":124},  
             "DATE_EDIT":{"text":"","x":70,"y":124},
            };
 
-     
+   
 	  
-  const url =uurl+'/vierge.pdf';
+  const url =uurl+'/DiplomeA5.pdf';
  
  const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
   
@@ -141,10 +143,10 @@ for (let ob in F1) {
 
 
 
- module.exports.generatepdf = (idin,idform,uurl)=>{
+ module.exports.generatepdf = (idin,idform,idPerm,uurl)=>{
  
 
- GenerationFich1(idin,idform,uurl).catch(err => console.log(err));
+ GenerationFich1(idin,idform,idPerm,uurl).catch(err => console.log(err));
 
 }
 

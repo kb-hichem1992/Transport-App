@@ -23,13 +23,13 @@ function GetCondidatById(idi,callback)
 
 }
 
-function GetDiplomeData(NumIns,NumForm,callback)
+function GetDiplomeData(NumIns,NumForm,NumPerm,callback)
 {
 
 
-mq.query( `SELECT NOM_CANDIDAT,PRENOM_CANDIDAT,DATE_NAIS_CANDIDAT,LIEU_NAIS_CANDIDAT,ADRESSE_CANDIDAT,TYPE_FORMATION,DATE_LIVRAI,DATE_EXP
- FROM candidat,passe,formation,permis_circuler WHERE passe.NUM_INS=? and passe.NUMERO_FORMATION=? 
- AND passe.NUM_INS=candidat.NUM_INS AND passe.NUMERO_FORMATION=formation.NUMERO_FORMATION AND candidat.NUMERO_OPERATEUR=permis_circuler.NUMERO_OPERATEUR  `,[NumIns,NumForm],
+mq.query( `SELECT NOM_CANDIDAT,PRENOM_CANDIDAT,DATE_NAIS_CANDIDAT,LIEU_NAIS_CANDIDAT,ADRESSE_CANDIDAT,TYPE_FORMATION,LIV_BREVET,EXP_BREVET
+ FROM candidat,passe,formation WHERE passe.NUM_INS=? and passe.NUMERO_FORMATION=? and passe.NUM_PERMIS=? 
+ AND passe.NUM_INS=candidat.NUM_INS AND passe.NUM_PERMIS=candidat.NUM_PERMIS AND passe.NUMERO_FORMATION=formation.NUMERO_FORMATION `,[NumIns,NumForm,NumPerm],
  (err, result) => {
     
     if (err) throw err;

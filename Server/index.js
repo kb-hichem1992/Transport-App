@@ -19,6 +19,8 @@ const pdf = require("./report/pdfGenerator.js");
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static('report/fichier'));
+
 
 app.get("/api/getCon", (req, res) => {
   const sqlquery = "SELECT etat FROM transport.connection where id ='1'";
@@ -337,26 +339,20 @@ app.delete("/delete_formation/:numeroFormation/:numeroAgrement", (req, res) => {
   );
 });
 
-<<<<<<< HEAD
-app.get("/report/FICH1/:ido", (req, res) => {
-  var fullUrl = req.protocol + "://" + req.get("host");
 
-  const ido = req.params.ido;
-
-  pdf.generatepdf(ido, fullUrl);
-=======
-app.get("/report/DIPLOME/:idin/:idform", (req, res) => {
+// DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS FROM PASSE TABLE
+app.get("/report/DIPLOME/:idin/:idform/:idperm", (req, res) => {
 
 var fullUrl = req.protocol + '://' + req.get('host');
   
   
   const idin = req.params.idin;
   const idform=req.params.idform;
-  pdf.generatepdf(idin,idform,fullUrl);
+  const idperm=req.params.idperm;
+  pdf.generatepdf(idin,idform,idperm,fullUrl);
 
 
 
->>>>>>> 12293579ca67b26576ff280d4c414782d9e20ded
 });
 
 app.post("/Add_passe", (req, res) => {
