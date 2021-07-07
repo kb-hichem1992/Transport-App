@@ -1,6 +1,7 @@
 import { Button, Grid, makeStyles, Paper, TextField } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Controls from "../components/controls/Controls";
+import { UserContext } from "../UserContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,13 +35,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function BrevetForm(props) {
   const classes = useStyles();
-  const { NUMERO_FORMATION, NUM_INS, GROUPE, BREVET, LIV_BREVET, EXP_BREVET } = props.values;
+  const {
+    NUMERO_FORMATION,
+    NUMERO_AGREMENT,
+    DATE_INS,
+    NUM_PERMIS,
+    NUM_INS,
+    GROUPE,
+    BREVET,
+  } = props.values;
 
   const [Brevet, setBrevet] = useState(BREVET);
-  const [LivBrevt, setLivBrevt] = useState(LIV_BREVET)
-  const [ExpBrevet, setExpBrevet] = useState(EXP_BREVET);
-  
-
+  const [LivBrevt, setLivBrevt] = useState(new Date());
+  const [ExpBrevet, setExpBrevet] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
   function convert(date) {
     const current_datetime = new Date(date);
@@ -75,67 +83,87 @@ export default function BrevetForm(props) {
       }
     });
   }
-  
+
   const Enregister = () => {
     try {
       if (Brevet === "" || LivBrevt === "" || ExpBrevet === "") {
-        alert("Merci de remplir tout les champs");
-      } else if (BrevetExist(Brevet) === true ) {
-        alert("Numéro du Diplôme existe déja ");
-      }else {
-        props.onClick(Brevet, convert(LivBrevt), convert(ExpBrevet), NUM_INS, NUMERO_FORMATION, GROUPE);
-        alert("Modifié avec succés")
-        props.Close(false);
+        alert("يجب ملئ كل المعلومات");
+      } else if (BrevetExist(Brevet) === true && Brevet !== "") {
+        alert("رقم الشهادة مسجل من قبل");
+      } else {
+        setOpen(true);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
- 
   };
   return (
-    <Paper className={classes.pageContent}>
-      <form className={classes.root} noValidate autoComplete="off">
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              label="Numéro du Brevet"
-              value={Brevet}
-              size="small"
-              className={classes.textField}
-              onChange={(e) => setBrevet(e.target.value)}
-            />
-            <Controls.DatePicker
-              label="Date de Livraison"
-              value={LivBrevt}
-              onChange={setLivBrevt}
-            />
-            <Controls.DatePicker
-              label="Date d'expiration"
-              value={ExpBrevet}
-              onChange={setExpBrevet}
-            />
-            <Button
-              variant="contained"
-              color="Primary"
-              size="small"
-              onClick={Enregister}
-            >
-              Enregister
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              size="small"
-              onClick={() => {
-                props.Close(false);
-              }}
-            >
-              Annuler
-            </Button>
+    <>
+      <Paper className={classes.pageContent}>
+        <form className={classes.root} noValidate autoComplete="off">
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                label="رقم الشهادة"
+                value={Brevet}
+                size="small"
+                className={classes.textField}
+                onChange={(e) => setBrevet(e.target.value)}
+              />
+              <Controls.DatePicker
+                label="تاريخ الإصدار"
+                value={LivBrevt}
+                onChange={setLivBrevt}
+              />
+              <Controls.DatePicker
+                label="تاريخ نهاية الصلاحية"
+                value={ExpBrevet}
+                onChange={setExpBrevet}
+              />
+              <Button
+                variant="contained"
+                color="Primary"
+                size="small"
+                onClick={Enregister}
+              >
+                تأكيد
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                size="small"
+                onClick={() => {
+                  props.Close(false);
+                }}
+              >
+                إلغاء
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
-    </Paper>
+        </form>
+      </Paper>
+      <Controls.AlertDialog
+        title="تأكيد"
+        message="هل أنت متأكد من القيام بهذه العملية ؟"
+        open={open}
+        setOpen={setOpen}
+        method={() => {
+          props.onClick(
+            Brevet,
+            convert(LivBrevt),
+            convert(ExpBrevet),
+            NUM_INS,
+            convert(DATE_INS),
+            NUM_PERMIS,
+            NUMERO_FORMATION,
+            NUMERO_AGREMENT,
+            GROUPE
+          );
+          props.Close(false);
+          alert("تمت العملية");
+        }}
+      />
+    </>
   );
 }

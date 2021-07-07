@@ -1,9 +1,14 @@
-import React, { useState, useEffect, useRef, Fragment } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  Fragment,
+  useContext,
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./Candidat.css";
 import Candidat from "./CandidatForm.js";
 import TableFormation from "../Formation/TableFormation.js";
-import { useAuth0 } from "@auth0/auth0-react";
 import { Paper } from "@material-ui/core";
 import {
   GridComponent,
@@ -27,6 +32,7 @@ import PageHeader from "../PageHeader";
 import CandidatInfo from "./CandidatInfo";
 import { ContextMenu } from "@syncfusion/ej2-react-grids";
 import GroupIcon from "@material-ui/icons/Group";
+import { UserContext } from "../UserContext";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -112,8 +118,8 @@ export default function AppCand({ id }) {
   const [openFormation, setOpenFormation] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
   const [etat, setEtat] = useState(false);
-  const { user } = useAuth0();
 
+  const {userData} = useContext(UserContext);
   useEffect(() => {
     fetch(id)
       .then((response) => response.json())
@@ -311,7 +317,7 @@ export default function AppCand({ id }) {
             startIcon={<EditOutlinedIcon />}
             className={classes.newButton}
             disabled={
-              Values === undefined || user.email !== "kb-hichem@hotmail.fr"
+              Values === undefined || userData[0].ADMIN !== "admin"
                 ? true
                 : false
             }
@@ -327,7 +333,7 @@ export default function AppCand({ id }) {
             startIcon={<DeleteIcon />}
             className={classes.newButton}
             disabled={
-              Values === undefined || user.email !== "kb-hichem@hotmail.fr"
+              Values === undefined || userData[0].ADMIN !== "admin"
                 ? true
                 : false
             }
