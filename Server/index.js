@@ -337,12 +337,26 @@ app.delete("/delete_formation/:numeroFormation/:numeroAgrement", (req, res) => {
   );
 });
 
+<<<<<<< HEAD
 app.get("/report/FICH1/:ido", (req, res) => {
   var fullUrl = req.protocol + "://" + req.get("host");
 
   const ido = req.params.ido;
 
   pdf.generatepdf(ido, fullUrl);
+=======
+app.get("/report/DIPLOME/:idin/:idform", (req, res) => {
+
+var fullUrl = req.protocol + '://' + req.get('host');
+  
+  
+  const idin = req.params.idin;
+  const idform=req.params.idform;
+  pdf.generatepdf(idin,idform,fullUrl);
+
+
+
+>>>>>>> 12293579ca67b26576ff280d4c414782d9e20ded
 });
 
 app.post("/Add_passe", (req, res) => {
