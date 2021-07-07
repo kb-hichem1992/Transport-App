@@ -29,7 +29,7 @@ const data=require('./data.js');
 async function GenerationFich1(idin,idform,idPerm,uurl) {
 
  
-  data.GetDiplomeData('00001',1,'032621',async function(result){
+  data.GetDiplomeData(idin,idform,idPerm,async function(result){
 	   
   var NomPeren=result[0].NOM_CANDIDAT+" "+result[0].PRENOM_CANDIDAT;	   
   
@@ -51,7 +51,7 @@ async function GenerationFich1(idin,idform,idPerm,uurl) {
 
    
 	  
-  const url =uurl+'/DiplomeA5.pdf';
+  const url =uurl+'/vierge.pdf';
  
  const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
   
