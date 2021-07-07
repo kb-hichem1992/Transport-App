@@ -149,11 +149,7 @@ for (let ob in F1) {
   const pdfBytes=await pdfDoc.save();
   fs.writeFileSync('./test4.pdf',pdfBytes);
   
-  //download(pdfBytes, "pdf-lib_modification_example.pdf", "application/pdf");
-	   
-	 // var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-     
-	  
+
   });
  
 
