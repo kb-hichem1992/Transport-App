@@ -21,23 +21,6 @@ const data=require('./data.js');
 
 
 
-/*
-async function run() {
-  // Create a new document and add a new page
-  const doc = await PDFDocument.create();
-  const page = doc.addPage();
-
-  page.drawText('You can create PDFs!')
-
-
-
-  // Write the PDF to a file
-  fs.writeFileSync('./test.pdf', await doc.save());
-}
-*/
-
-
-
 
 
 
