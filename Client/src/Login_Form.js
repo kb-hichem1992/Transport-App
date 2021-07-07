@@ -37,11 +37,15 @@ export default function LoginForm({ setstate, user, setUser }) {
   const [userName, setuserName] = useState("");
   const [password, setPassword] = useState("");
 
+
   useEffect(() => {
     fetch(`http://localhost:3001/api/getUser/${userName}/${password}`)
       .then((response) => response.json())
       .then((json) => setUser(json));
   }, [userName, password, setUser]);
+
+
+
 
   return (
     <Container component="main" maxWidth="xs">

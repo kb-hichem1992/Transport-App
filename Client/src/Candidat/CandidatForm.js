@@ -2,7 +2,6 @@ import React, { useState, useRef, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import {
-  Button,
   FormGroup,
   Grid,
   IconButton,
@@ -413,25 +412,22 @@ export default function Candidat(props) {
               </FormGroup>
 
               <Grid item xs={12}>
-                <Button
+                <Controls.Button
+                  text="موافق"
                   variant="contained"
                   color="primary"
                   size="small"
                   onClick={Enregister}
-                >
-                  Enregister
-                </Button>
-                <Button
+                />
+                <Controls.Button
+                  text="إلغاء"
                   variant="contained"
                   color="secondary"
                   size="small"
                   onClick={() => {
-                    //  props.Close(false);
-                    console.log(CandidatExists(NumPermis))
+                    props.Close(false);
                   }}
-                >
-                  Annuler
-                </Button>
+                />
               </Grid>
             </Grid>
           </Grid>

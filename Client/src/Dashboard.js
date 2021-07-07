@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -23,7 +23,6 @@ import AppCand from "./Candidat/Candidat.js";
 import AppVeh from "./Table_vehicule//AppVeh.js";
 import Button from "./components/controls/Button";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
-import Welcome from "./welcome";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import GroupIcon from "@material-ui/icons/Group";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
@@ -143,17 +142,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard() {
-  const { setstate, setuserData } = useContext(UserContext);
-
+  const { userData, setstate, setuserData } = useContext(UserContext);
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [centre, setCentre] = React.useState([]);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const numeroAgrement = userData[0].NUMERO_AGREMENT;
+
+  useEffect(() => {
+    fetch(`http://localhost:3001/api/getCentre/${numeroAgrement}`)
+      .then((response) => response.json())
+      .then((json) => setCentre(json));
+  }, [numeroAgrement]);
+
+
 
   return (
     // the Appbar Starts from here
@@ -185,7 +195,7 @@ export default function Dashboard() {
               noWrap
               className={classes.title}
             >
-              مركز التكوين
+                 مركز رقم  {numeroAgrement}
             </Typography>
             <Button
               text="خروج"
@@ -265,7 +275,7 @@ export default function Dashboard() {
                     />
                   )}
                 />
-                <Route path="/" component={Welcome} exact />
+                <Route path="/" render={<div> welcome </div>} exact />
                 <Route path="/op/mor">
                   <AppOp
                     id={"http://localhost:3001/api/get_op/mor"}

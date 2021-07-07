@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  Button,
   Grid,
   InputLabel,
   MenuItem,
@@ -11,6 +10,7 @@ import {
 } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import Controls from "../components/controls/Controls";
+import AlertDialog from "../components/controls/Dialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,6 +54,7 @@ export default function Form(props) {
   const [typeFormation, setTypeFormation] = useState(TYPE_FORMATION);
   const [debut, setDebut] = useState(DEBUT);
   const [fin, setFin] = useState(FIN);
+  const [open, setOpen] = useState(false);
 
   const handleTypeChange = (e) => {
     setTypeFormation(e.target.value);
@@ -125,9 +126,7 @@ export default function Form(props) {
               disabled
             />
             <FormControl className={classes.formControl}>
-              <InputLabel id="demo-simple-select-label">
-                نوع الدورة
-              </InputLabel>
+              <InputLabel id="demo-simple-select-label">نوع الدورة</InputLabel>
               <Select
                 labelId="demo-simple-select"
                 id="demo-simple-select"
@@ -151,27 +150,35 @@ export default function Form(props) {
               value={fin}
               onChange={setFin}
             />
-            <Button
+            <Controls.Button
+              text="تأكيد"
               variant="contained"
               color="primary"
               size="small"
-              onClick={Enregister}
-            >
-              تأكيد
-            </Button>
-            <Button
+              onClick={() => {
+                setOpen(true);
+              }}
+            />
+
+            <Controls.Button
+              text="إلغاء"
               variant="contained"
               color="secondary"
               size="small"
               onClick={() => {
                 props.Close(false);
               }}
-            >
-              إلغاء
-            </Button>
+            />
           </Grid>
         </form>
       </Paper>
+      <AlertDialog
+        title="تأكيد"
+        message=" هل انت متأكد ؟"
+        open={open}
+        setOpen={setOpen}
+        method={Enregister}
+      />
     </Fragment>
   );
 }

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, Fragment, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  Fragment,
+  useContext,
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper } from "@material-ui/core";
 import {
@@ -23,7 +29,6 @@ import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import axios from "axios";
 import { L10n } from "@syncfusion/ej2-base";
 import { UserContext } from "../UserContext.js";
-
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -121,7 +126,7 @@ export default function AppBrevet({ id }) {
         setEtat(!etat);
       });
   };
-  
+
   L10n.load({
     "ar-AE": {
       grid: {
@@ -134,7 +139,7 @@ export default function AppBrevet({ id }) {
         Search: "بحث ",
         GroupDropArea: "اسحب رأس العمود هنا لتجميع العمود الخاص به ",
       },
-  
+
       pager: {
         currentPageInfo: "{0} من {1} صفحة",
         firstPageTooltip: "انتقل إلى الصفحة الأولى",
@@ -163,7 +168,7 @@ export default function AppBrevet({ id }) {
     }
   }
   const Values = rowSelected();
-  const {  userData } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
 
   return (
     <Fragment>
@@ -172,7 +177,7 @@ export default function AppBrevet({ id }) {
         subTitle="قائمة الشهادات المستخرجة"
         icon={<LibraryBooksIcon />}
       />
-      <div className={classes.div}>
+      {/*  <div className={classes.div}>
         <div className={classes.container}>
           <Button
             text="تعدبل"
@@ -203,7 +208,7 @@ export default function AppBrevet({ id }) {
             }
           />
         </div>
-      </div>
+      </div> */}
       <div className={classes.container}>
         <Paper className={classes.paper}>
           <GridComponent

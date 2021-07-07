@@ -4,22 +4,17 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const mysql = require("mysql");
 
-
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "root",
   database: "transport",
-  dateStrings:true,
+  dateStrings: true,
 });
 
-
-module.exports = db
-
+module.exports = db;
 
 const pdf = require("./report/pdfGenerator.js");
-
-
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -34,7 +29,6 @@ app.get("/api/getCon", (req, res) => {
 app.get("/api/getOp", (req, res) => {
   const sqlquery = "SELECT * FROM transport.operateur;";
   db.query(sqlquery, (err, result) => {
-    
     res.send(result);
   });
 });
@@ -54,10 +48,24 @@ app.get("/api/getUser/:username/:password", (req, res) => {
     }
   );
 });
+app.get("/api/getCentre/:numeroAgrement", (req, res) => {
+  const numeroAgrement = req.params.numeroAgrement;
+  db.query(
+    "SELECT NOM_CENTRE FROM transport.centre where NUMERO_AGREMENT = ?",
+    [numeroAgrement],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
 
 app.get("/api/get_form", (req, res) => {
   const sqlquery =
-    "select formation.NUMERO_FORMATION, formation.TYPE_FORMATION, formation.DEBUT, formation.FIN from formation;";
+    "select formation.NUMERO_FORMATION, formation.NUMERO_AGREMENT,formation.TYPE_FORMATION, formation.DEBUT, formation.FIN from formation;";
   db.query(sqlquery, (err, result) => {
     res.send(result);
   });
@@ -75,17 +83,20 @@ app.get("/api/get_candidat_form", (req, res) => {
     res.send(result);
   });
 });
-app.get("/api/get_candidat_form/:numeroFormation/:numeroAgrement", (req, res) => {
-  const numeroFormation = req.params.numeroFormation;
-  const numeroAgrement = req.params.numeroAgrement;
-  db.query(
-    "SELECT passe.NUMERO_FORMATION, passe.NUMERO_AGREMENT, passe.NUM_PERMIS,passe.DATE_INS, candidat.NUM_INS, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, passe.GROUPE, formation.DEBUT, formation.FIN,passe.REMARQUE, passe.NOTE from ((passe inner join candidat on candidat.NUM_INS = passe.NUM_INS) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION and formation.NUMERO_AGREMENT = passe.NUMERO_AGREMENT ) where passe.NUMERO_FORMATION= ? and passe.NUMERO_AGREMENT= ?",
-   [ numeroFormation, numeroAgrement],
-    (err, result) => {
-      res.send(result);
-    }
-  );
-});
+app.get(
+  "/api/get_candidat_form/:numeroFormation/:numeroAgrement",
+  (req, res) => {
+    const numeroFormation = req.params.numeroFormation;
+    const numeroAgrement = req.params.numeroAgrement;
+    db.query(
+      "SELECT passe.NUMERO_FORMATION, passe.NUMERO_AGREMENT, passe.NUM_PERMIS,passe.DATE_INS, candidat.NUM_INS, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, passe.GROUPE, formation.DEBUT, formation.FIN,passe.REMARQUE, passe.NOTE from ((passe inner join candidat on candidat.NUM_INS = passe.NUM_INS) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION and formation.NUMERO_AGREMENT = passe.NUMERO_AGREMENT ) where passe.NUMERO_FORMATION= ? and passe.NUMERO_AGREMENT= ?",
+      [numeroFormation, numeroAgrement],
+      (err, result) => {
+        res.send(result);
+      }
+    );
+  }
+);
 app.put("/update_passe", (req, res) => {
   const remarque = req.body.remarque;
   const note = req.body.note;
@@ -297,9 +308,10 @@ app.put("/update_formation", (req, res) => {
   const Debut = req.body.Debut;
   const Fin = req.body.Fin;
   const numeroFormation = req.body.numeroFormation;
+  const numeroAgrement = req.body.numeroAgrement;
   db.query(
-    "UPDATE formation SET `TYPE_FORMATION`= ?, `DEBUT`= ?, `FIN`= ? WHERE `NUMERO_FORMATION`=?;",
-    [Type, Debut, Fin, numeroFormation],
+    "UPDATE formation SET `TYPE_FORMATION`= ?, `DEBUT`= ?, `FIN`= ? WHERE `NUMERO_FORMATION`=? and NUMERO_AGREMENT = ?;",
+    [Type, Debut, Fin, numeroFormation, numeroAgrement],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -309,11 +321,12 @@ app.put("/update_formation", (req, res) => {
     }
   );
 });
-app.delete("/delete_formation/:numeroFormation", (req, res) => {
+app.delete("/delete_formation/:numeroFormation/:numeroAgrement", (req, res) => {
   const numeroFormation = req.params.numeroFormation;
+  const numeroAgrement = req.params.numeroAgrement;
   db.query(
-    "delete from formation where NUMERO_FORMATION = ?",
-    numeroFormation,
+    "delete from formation where NUMERO_FORMATION = ? and NUMERO_AGREMENT = ?",
+    [numeroFormation, numeroAgrement],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -325,16 +338,11 @@ app.delete("/delete_formation/:numeroFormation", (req, res) => {
 });
 
 app.get("/report/FICH1/:ido", (req, res) => {
+  var fullUrl = req.protocol + "://" + req.get("host");
 
-var fullUrl = req.protocol + '://' + req.get('host');
-  
-  
   const ido = req.params.ido;
 
-  pdf.generatepdf(ido,fullUrl);
-
-
-
+  pdf.generatepdf(ido, fullUrl);
 });
 
 app.post("/Add_passe", (req, res) => {
@@ -391,11 +399,6 @@ app.post("/add_travail", (req, res) => {
   );
 });
 
-
-
-
-
 app.listen(3001, () => {
   console.log("it works");
 });
-

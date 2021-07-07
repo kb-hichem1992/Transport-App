@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, Fragment, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  Fragment,
+  useContext,
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./Formation.css";
 import Form from "./FormationForm.js";
@@ -78,14 +84,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AppFor({ id }) {
-
-
-  const { state, setstate, userData, setuserData } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
   const [data, setdata] = useState([]);
   const [openAjouter, setOpenAjouter] = useState(false);
   const [openModifier, setOpenModifier] = useState(false);
   const [etat, setEtat] = useState(false);
-
 
   useEffect(() => {
     fetch(id)
@@ -118,19 +121,21 @@ function AppFor({ id }) {
         Type: Type,
         Debut: Debut,
         Fin: Fin,
-        numeroAgrement: numeroAgrement,
         numeroFormation: numeroFormation,
+        numeroAgrement: numeroAgrement,
       })
       .then(() => {
         setEtat(!etat);
       });
   };
-  const deleteFormation = (numeroFormation) => {
+  const deleteFormation = (numeroFormation, numeroAgrement) => {
     axios
-      .delete(`http://localhost:3001/delete_formation/${numeroFormation}`, {})
+      .delete(
+        `http://localhost:3001/delete_formation/${numeroFormation}/${numeroAgrement}`,
+        {}
+      )
       .then(() => {
         setEtat(!etat);
-        alert("supprimer");
       });
   };
 
@@ -188,10 +193,8 @@ function AppFor({ id }) {
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
           disabled={
-              Values === undefined || userData[0].ADMIN !== "admin"
-                ? true
-                : false
-            }
+            Values === undefined || userData[0].ADMIN !== "admin" ? true : false
+          }
           onClick={() => {
             setOpenModifier(true);
           }}
@@ -204,12 +207,13 @@ function AppFor({ id }) {
           startIcon={<DeleteIcon />}
           className={classes.newButton}
           disabled={
-              Values === undefined || userData[0].ADMIN !== "admin"
-                ? true
-                : false
-            }
+            Values === undefined || userData[0].ADMIN !== "admin" ? true : false
+          }
           onClick={() => {
-            deleteFormation(Values.NUMERO_FORMATION);
+            deleteFormation(
+              Values.NUMERO_FORMATION,
+              userData[0].NUMERO_AGREMENT
+            );
           }}
         />
       </div>

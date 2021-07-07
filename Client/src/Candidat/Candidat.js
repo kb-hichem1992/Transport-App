@@ -33,6 +33,7 @@ import CandidatInfo from "./CandidatInfo";
 import { ContextMenu } from "@syncfusion/ej2-react-grids";
 import GroupIcon from "@material-ui/icons/Group";
 import { UserContext } from "../UserContext";
+import AlertDialog  from "../components/controls/Dialog";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -118,8 +119,9 @@ export default function AppCand({ id }) {
   const [openFormation, setOpenFormation] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
   const [etat, setEtat] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const {userData} = useContext(UserContext);
+  const { userData } = useContext(UserContext);
   useEffect(() => {
     fetch(id)
       .then((response) => response.json())
@@ -236,7 +238,6 @@ export default function AppCand({ id }) {
       numeroCandidat: numeroCandidat,
     }).then(() => {
       setEtat(!etat);
-      alert("supprimer");
     });
   };
 
@@ -338,11 +339,7 @@ export default function AppCand({ id }) {
                 : false
             }
             onClick={() => {
-              deleteCandidat(
-                Values.NUM_PERMIS,
-                convert(Values.DATE_INS),
-                Values.NUM_INS
-              );
+              setOpen(true);
             }}
           />
         </div>
@@ -481,6 +478,20 @@ export default function AppCand({ id }) {
           values={Values}
         />
       </Popup>
+
+      <AlertDialog
+        title="تحذير"
+        message="قيامك بهذه العملية سيحذف كل مايتعلق بهاذاالمترشح. هل انت متأكد ؟"
+        open={open}
+        setOpen={setOpen}
+        method={() => {
+          deleteCandidat(
+            Values.NUM_PERMIS,
+            convert(Values.DATE_INS),
+            Values.NUM_INS
+          );
+        }}
+      />
     </Fragment>
   );
 }
