@@ -26,10 +26,10 @@ const data=require('./data.js');
 
 
 
-async function GenerationFich1(idin,idform,idPerm,uurl) {
+async function GenerationFich1(idin,idform,idPerm,dateins,numagr,uurl) {
 
  
-  data.GetDiplomeData(idin,idform,idPerm,async function(result){
+  data.GetDiplomeData(idin,idform,idPerm,dateins,numagr,async function(result){
 	   
   var NomPeren=result[0].NOM_CANDIDAT+" "+result[0].PRENOM_CANDIDAT;	   
   
@@ -47,6 +47,7 @@ async function GenerationFich1(idin,idform,idPerm,uurl) {
 			"TO":{"text":result[0].EXP_BREVET,"x":40,"y":164},
             "LIEU_EDIT":{"text":"الشلف","x":180,"y":124},  
             "DATE_EDIT":{"text":"","x":70,"y":124},
+			"Wilaya":{"text":"الشلف","x":115,"y":88},
            };
 
    
@@ -135,6 +136,7 @@ for (let ob in F1) {
   fs.writeFileSync('./test4.pdf',pdfBytes);
   
 
+
   });
  
 
@@ -143,10 +145,10 @@ for (let ob in F1) {
 
 
 
- module.exports.generatepdf = (idin,idform,idPerm,uurl)=>{
+ module.exports.generatepdf = (idin,idform,idPerm,dateins,numagr,uurl)=>{
  
-
- GenerationFich1(idin,idform,idPerm,uurl).catch(err => console.log(err));
+ 
+ GenerationFich1(idin,idform,idPerm,dateins,numagr,uurl).catch(err => console.log(err));
 
 }
 
