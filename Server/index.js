@@ -19,6 +19,8 @@ const pdf = require("./report/pdfGenerator.js");
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static('report/fichier'));
+
 
 app.get("/api/getCon", (req, res) => {
   const sqlquery = "SELECT etat FROM transport.connection where id ='1'";
@@ -337,16 +339,25 @@ app.delete("/delete_formation/:numeroFormation/:numeroAgrement", (req, res) => {
   );
 });
 
+<<<<<<< HEAD
 app.get("/report/DIPLOME/:idin/:idform", (req, res) => {
+=======
+
+// DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
+app.get("/report/DIPLOME/:idin/:idform/:idperm/:dateins/:numagr", (req, res) => {
+>>>>>>> 46cf087b894eb3ed2168f77f3c5e1a9b36b8797e
 
 var fullUrl = req.protocol + '://' + req.get('host');
   
   
   const idin = req.params.idin;
   const idform=req.params.idform;
-  pdf.generatepdf(idin,idform,fullUrl);
+  const idperm=req.params.idperm;
+  const dateins=req.params.dateins;
+  const numagr=req.params.numagr;
+  pdf.generatepdf(idin,idform,idperm,dateins,numagr,fullUrl);
 
-
+   
 
 });
 
