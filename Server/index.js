@@ -339,13 +339,13 @@ app.delete("/delete_formation/:numeroFormation/:numeroAgrement", (req, res) => {
   );
 });
 
-<<<<<<< HEAD
-app.get("/report/DIPLOME/:idin/:idform", (req, res) => {
-=======
+//<<<<<<< HEAD
+//app.get("/report/DIPLOME/:idin/:idform", (req, res) => {
+//=======
 
 // DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get("/report/DIPLOME/:idin/:idform/:idperm/:dateins/:numagr", (req, res) => {
->>>>>>> 46cf087b894eb3ed2168f77f3c5e1a9b36b8797e
+//>>>>>>> 46cf087b894eb3ed2168f77f3c5e1a9b36b8797e
 
 var fullUrl = req.protocol + '://' + req.get('host');
   
@@ -355,11 +355,58 @@ var fullUrl = req.protocol + '://' + req.get('host');
   const idperm=req.params.idperm;
   const dateins=req.params.dateins;
   const numagr=req.params.numagr;
-  pdf.generatepdf(idin,idform,idperm,dateins,numagr,fullUrl);
 
+
+  pdf.generatepdf(idin,idform,idperm,dateins,numagr,fullUrl,function(dt){
+    //console.log(dt);
+    res.send(dt);
+  });
+
+ 
    
 
 });
+
+
+
+
+
+// EVALUATION GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
+app.get("/report/EVALUATION/:idin/:idform/:idperm/:dateins/:numagr", (req, res) => {
+//>>>>>>> 46cf087b894eb3ed2168f77f3c5e1a9b36b8797e
+
+var fullUrl = req.protocol + '://' + req.get('host');
+  
+  
+  const idin = req.params.idin;
+  const idform=req.params.idform;
+  const idperm=req.params.idperm;
+  const dateins=req.params.dateins;
+  const numagr=req.params.numagr;
+
+
+
+ pdf.generatepdf2(idin,idform,idperm,dateins,numagr,fullUrl,function(dt){
+    //console.log(dt);
+    res.send(dt);
+  });
+   
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.post("/Add_passe", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;

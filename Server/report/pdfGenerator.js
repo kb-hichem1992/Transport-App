@@ -26,7 +26,7 @@ const data=require('./data.js');
 
 
 
-async function GenerationFich1(idin,idform,idPerm,dateins,numagr,uurl) {
+async function generatepdf(idin,idform,idPerm,dateins,numagr,uurl,fn) {
 
  
   data.GetDiplomeData(idin,idform,idPerm,dateins,numagr,async function(result){
@@ -132,10 +132,12 @@ for (let ob in F1) {
   
  
 
+  const pdfBytesToSend=await pdfDoc.saveAsBase64({ dataUri: true });
+  
   const pdfBytes=await pdfDoc.save();
   fs.writeFileSync('./test4.pdf',pdfBytes);
   
-
+  fn(pdfBytesToSend);
 
   });
  
@@ -145,11 +147,144 @@ for (let ob in F1) {
 
 
 
- module.exports.generatepdf = (idin,idform,idPerm,dateins,numagr,uurl)=>{
+
+
+
+
+
+async function generatepdf2(idin,idform,idPerm,dateins,numagr,uurl,fn) {
+
+ 
+  data.GetEvaluationData(idin,idform,idPerm,dateins,numagr,async function(result){
+	   
+  /*
+  
+  var FICH1={"NOM":{"text":"اللقب:","x":520,"y":503},
+            "PRENOM":{"text":"الاسم:","x":520,"y":473},
+			"DATE_NAI":{"text":"تاريخ و مكان الازدياد :","x":436,"y":450},
+			"ARESSE":{"text":"العنوان:","x":510,"y":426},
+			"DATE_INS":{"text":"مسجل بتاريخ","x":480,"y":401},
+			"NUM_INS":{"text":"تحت رقم","x":210,"y":401},
+		
+           };
+
+    */
+ 
+  
+ 
+  
+
+ 
+   var FICH1={"NOM":{"text":result[0].NOM_CANDIDAT,"x":438-(Math.max(0,result[0].NOM_CANDIDAT.length-8)*7),"y":503},
+            "PRENOM":{"text":result[0].PRENOM_CANDIDAT,"x":438-(Math.max(0,result[0].PRENOM_CANDIDAT.length-8)*7),"y":473},
+			"DATE_NAI":{"text":result[0].DATE_NAIS_CANDIDAT,"x":330,"y":450},
+			"LIEU_NAI":{"text":result[0].LIEU_NAIS_CANDIDAT,"x":270-(Math.max(0,result[0].LIEU_NAIS_CANDIDAT.length-8)*8),"y":450},
+			"ARESSE":{"text":result[0].ADRESSE_CANDIDAT,"x":410-(Math.max(0,result[0].ADRESSE_CANDIDAT.length-10)*7),"y":426},
+			"DATE_INS":{"text":result[0].DATE_INS,"x":370,"y":401},
+			"NUM_INS":{"text":result[0].NUM_INS,"x":130-(Math.max(0,result[0].NUM_INS.length-5)*7),"y":401},
+		
+           };
+     
+   
+	  
+  const url =uurl+'/vierge2.pdf';
+ 
+ const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
+  
  
  
- GenerationFich1(idin,idform,idPerm,dateins,numagr,uurl).catch(err => console.log(err));
+   const ubuntuFontBytes = await fetch(
+    uurl+'/Cairo-Regular.ttf'
+    ).then((res) => res.arrayBuffer());
+ 
+  const pdfDoc = await PDFDocument.load(existingPdfBytes);
+  
+  
+   pdfDoc.registerFontkit(fontkit); 
+   
+
+  const helveticaFont = await pdfDoc.embedFont(ubuntuFontBytes)
+
+  const pages = pdfDoc.getPages()
+  const firstPage = pages[0]
+  const { width, height } = firstPage.getSize()
+     
+	 console.log(width);
+	  console.log(height);
+	 
+
+      
+	   
+	var F1 = JSON.parse(JSON.stringify(FICH1));
+	
+
+	
+
+for (let ob in F1) {
+     
+	        var textSize = 16
+            
+		
+			 
+			 var textHeight = helveticaFont.heightAtSize(textSize)
+            
+			
+			
+      var textWidth = helveticaFont.widthOfTextAtSize(F1[ob]["text"], textSize)
+     
+	
+ 
+
+  firstPage.drawText(F1[ob]["text"],{
+    x:F1[ob]["x"],
+    y:F1[ob]["y"],
+    size: textSize,
+    font: helveticaFont,
+    color: rgb(0, 0, 0),
+    rotate: degrees(-360),
+	
+  })
+  
+  
+  }
+  
+  
+ 
+
+  const pdfBytesToSend=await pdfDoc.saveAsBase64({ dataUri: true });
+  
+  const pdfBytes=await pdfDoc.save();
+  fs.writeFileSync('./test5.pdf',pdfBytes);
+  
+  fn(pdfBytesToSend);
+
+  });
+ 
 
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+ module.exports.generatepdf = (idin,idform,idPerm,dateins,numagr,uurl)=>{
+ 
+ 
+ GenerationFich1(idin,idform,idPerm,dateins,numagr,uurl);
+//.catch(err => console.log(err))
+}
+*/
+
+module.exports = {generatepdf:generatepdf,generatepdf2:generatepdf2};
