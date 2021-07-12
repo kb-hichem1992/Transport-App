@@ -341,7 +341,7 @@ app.delete("/delete_formation/:numeroFormation/:numeroAgrement", (req, res) => {
 
 //<<<<<<< HEAD
 //app.get("/report/DIPLOME/:idin/:idform", (req, res) => {
-//=======
+//============
 
 // DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get("/report/DIPLOME/:idin/:idform/:idperm/:dateins/:numagr", (req, res) => {
@@ -350,14 +350,14 @@ app.get("/report/DIPLOME/:idin/:idform/:idperm/:dateins/:numagr", (req, res) => 
 var fullUrl = req.protocol + '://' + req.get('host');
   
   
-  const idin = req.params.idin;
+  const idinn = req.params.idin;
   const idform=req.params.idform;
   const idperm=req.params.idperm;
   const dateins=req.params.dateins;
   const numagr=req.params.numagr;
 
 
-  pdf.generatepdf(idin,idform,idperm,dateins,numagr,fullUrl,function(dt){
+  pdf.generatepdf(idinn,idform,idperm,dateins,numagr,fullUrl,function(dt){
     //console.log(dt);
     res.send(dt);
   });
