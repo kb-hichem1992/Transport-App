@@ -67,7 +67,7 @@ export default function PasseFrom(props) {
   const Enregister = () => {
     try {
       if (note === "" || remarque === "") {
-        alert("Merci de remplir tout les champs");
+        alert("يجب ملئ كل المعلومات");
       } else {
         props.onClick(
           remarque,
@@ -77,7 +77,7 @@ export default function PasseFrom(props) {
           numeroFormation,
           GROUPE
         );
-        alert("Modifié avec succés");
+        alert("تمت العملية");
         props.Close(false);
       }
     } catch (error) {
@@ -88,13 +88,14 @@ export default function PasseFrom(props) {
   return (
     <Fragment>
       <Paper className={classes.pageContent}>
-        <form className={classes.root} noValidate autoComplete="off">
+        <form className={classes.root}  autoComplete="off">
           <Grid container spacing={2}>
             <TextField
               variant="outlined"
               label="الفوج"
               size="small"
               type="number"
+              disabled
               value={groupe}
               onChange={handleGroupeChange}
               inputProps={{ min: 1, max: 10 }}

@@ -19,8 +19,7 @@ const pdf = require("./report/pdfGenerator.js");
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('report/fichier'));
-
+app.use(express.static("report/fichier"));
 
 app.get("/api/getCon", (req, res) => {
   const sqlquery = "SELECT etat FROM transport.connection where id ='1'";
@@ -91,7 +90,7 @@ app.get(
     const numeroFormation = req.params.numeroFormation;
     const numeroAgrement = req.params.numeroAgrement;
     db.query(
-      "SELECT passe.NUMERO_FORMATION, passe.NUMERO_AGREMENT, passe.NUM_PERMIS,passe.DATE_INS, candidat.NUM_INS, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, passe.GROUPE, formation.DEBUT, formation.FIN,passe.REMARQUE, passe.NOTE from ((passe inner join candidat on candidat.NUM_INS = passe.NUM_INS) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION and formation.NUMERO_AGREMENT = passe.NUMERO_AGREMENT ) where passe.NUMERO_FORMATION= ? and passe.NUMERO_AGREMENT= ?",
+      "SELECT passe.NUMERO_FORMATION, passe.NUMERO_AGREMENT, passe.NUM_PERMIS,passe.DATE_INS, candidat.NUM_INS, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, passe.GROUPE, formation.DEBUT, formation.FIN,passe.REMARQUE, passe.NOTE, passe.BREVET from ((passe inner join candidat on candidat.NUM_INS = passe.NUM_INS) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION and formation.NUMERO_AGREMENT = passe.NUMERO_AGREMENT ) where passe.NUMERO_FORMATION= ? and passe.NUMERO_AGREMENT= ?",
       [numeroFormation, numeroAgrement],
       (err, result) => {
         res.send(result);
@@ -339,27 +338,20 @@ app.delete("/delete_formation/:numeroFormation/:numeroAgrement", (req, res) => {
   );
 });
 
-<<<<<<< HEAD
-app.get("/report/DIPLOME/:idin/:idform", (req, res) => {
-=======
-
 // DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
-app.get("/report/DIPLOME/:idin/:idform/:idperm/:dateins/:numagr", (req, res) => {
->>>>>>> 46cf087b894eb3ed2168f77f3c5e1a9b36b8797e
+app.get(
+  "/report/DIPLOME/:idin/:idform/:idperm/:dateins/:numagr",
+  (req, res) => {
+    var fullUrl = req.protocol + "://" + req.get("host");
 
-var fullUrl = req.protocol + '://' + req.get('host');
-  
-  
-  const idin = req.params.idin;
-  const idform=req.params.idform;
-  const idperm=req.params.idperm;
-  const dateins=req.params.dateins;
-  const numagr=req.params.numagr;
-  pdf.generatepdf(idin,idform,idperm,dateins,numagr,fullUrl);
-
-   
-
-});
+    const idin = req.params.idin;
+    const idform = req.params.idform;
+    const idperm = req.params.idperm;
+    const dateins = req.params.dateins;
+    const numagr = req.params.numagr;
+    pdf.generatepdf(idin, idform, idperm, dateins, numagr, fullUrl);
+  }
+);
 
 app.post("/Add_passe", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;

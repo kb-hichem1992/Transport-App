@@ -20,7 +20,11 @@ import {
   Group,
   Resize,
   Sort,
+  ContextMenu,
+  ExcelExport,
+  PdfExport
 } from "@syncfusion/ej2-react-grids";
+
 import { L10n } from "@syncfusion/ej2-base";
 import Axios from "axios";
 import Popup from "../components/Popup.js";
@@ -30,10 +34,9 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PageHeader from "../PageHeader";
 import CandidatInfo from "./CandidatInfo";
-import { ContextMenu } from "@syncfusion/ej2-react-grids";
 import GroupIcon from "@material-ui/icons/Group";
 import { UserContext } from "../UserContext";
-import AlertDialog  from "../components/controls/Dialog";
+import AlertDialog from "../components/controls/Dialog";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -97,6 +100,8 @@ L10n.load({
       ClearButton: "مسح ",
       Search: "بحث ",
       GroupDropArea: "اسحب رأس العمود هنا لتجميع العمود الخاص به ",
+      Excelexport: "تصدير Excel",
+      Copy : "نسخ" ,
     },
 
     pager: {
@@ -277,6 +282,7 @@ export default function AppCand({ id }) {
     } catch (error) {}
   }
   const Values = rowSelected();
+  const contextMenuItems = ['Copy', 'ExcelExport'] ;
 
   const ContextMenuItemModel = [
     { text: "معلومات إضافية", target: ".e-content", id: "Details" },
@@ -363,7 +369,7 @@ export default function AppCand({ id }) {
             dataSource={data}
             enableRtl={true}
             allowPaging={true}
-            pageSettings={{ pageSize: 10 }}
+            pageSettings={{ pageSize: 100 }}
             allowFiltering={true}
             allowGrouping={true}
             filterSettings={filter}
@@ -371,11 +377,13 @@ export default function AppCand({ id }) {
             allowSorting={true}
             height={180}
             ref={TableRef2}
-            recordDoubleClick={() => {
-              setOpenDetail(true);
-            }}
-            contextMenuItems={ContextMenuItemModel}
+            // recordDoubleClick={() => {
+            // setOpenDetail(true);
+            // }}
+            contextMenuItems={ [...ContextMenuItemModel, ...contextMenuItems]}
             contextMenuClick={contextMenuClick}
+            allowExcelExport={true}
+            allowPdfExport={true}
             locale="ar-AE"
           >
             <ColumnsDirective>
@@ -420,7 +428,16 @@ export default function AppCand({ id }) {
               />
             </ColumnsDirective>
             <Inject
-              services={[Page, Sort, Filter, Group, Resize, ContextMenu]}
+              services={[
+                Page,
+                Sort,
+                Filter,
+                Group,
+                Resize,
+                ContextMenu,
+                PdfExport,
+                ExcelExport,
+              ]}
             />
           </GridComponent>
         </Paper>

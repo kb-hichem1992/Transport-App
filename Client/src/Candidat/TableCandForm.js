@@ -28,6 +28,8 @@ import axios from "axios";
 import BrevetForm from "../Formation/BrevetForm";
 import { L10n } from "@syncfusion/ej2-base";
 import { UserContext } from "../UserContext";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import TableFormation from "../Formation/TableFormation.js";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,11 +77,14 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
   const [data, setdata] = useState([]);
   const [openModifier, setOpenModifier] = useState(false);
   const [openImprimer, setOpenImprimer] = useState(false);
+  const [openFormation, setOpenFormation] = useState(false);
   const { userData } = useContext(UserContext);
   const numeroAgrement = userData[0].NUMERO_AGREMENT;
 
   useEffect(() => {
-    fetch(`http://localhost:3001/api/get_candidat_form/${numeroFormation}/${numeroAgrement}`)
+    fetch(
+      `http://localhost:3001/api/get_candidat_form/${numeroFormation}/${numeroAgrement}`
+    )
       .then((response) => response.json())
       .then((json) => setdata(json));
   }, [etat, numeroFormation, numeroAgrement]);
@@ -183,20 +188,20 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
     <Fragment>
       <div className={classes.container}>
         <Button
-          text="تعديل"
+          text="قرار لجنة المداولة"
           variant="outlined"
           size="small"
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
           disabled={
-            Values === undefined || userData[0].ADMIN !== "admin" ? true : false
+            Values === undefined || userData[0].ADMIN !== "admin"  ? true : false
           }
           onClick={() => {
             setOpenModifier(true);
           }}
         />
         <Button
-          text="طباعة"
+          text="شهادة"
           variant="outlined"
           size="small"
           color="primary"
@@ -207,10 +212,23 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
               ? true
               : false
           }
-          startIcon={<PrintIcon />}
+          startIcon={<LibraryBooksIcon />}
           className={classes.newButton}
           onClick={() => {
             setOpenImprimer(true);
+          }}
+        />
+        <Button
+          text="تكوين"
+          variant="outlined"
+          size="small"
+          startIcon={<EditOutlinedIcon />}
+          className={classes.newButton}
+          disabled={
+            Values === undefined || Values.REMARQUE === "ناجح" ? true : false
+          }
+          onClick={() => {
+            setOpenFormation(true);
           }}
         />
       </div>
@@ -218,7 +236,7 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
         <GridComponent
           dataSource={data}
           allowPaging={true}
-          pageSettings={{ pageSize: 10 }}
+          pageSettings={{ pageSize: 100 }}
           allowFiltering={true}
           allowGrouping={true}
           filterSettings={filter}
@@ -286,6 +304,19 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
           Close={setOpenImprimer}
           values={Values}
           data={data}
+        />
+      </Popup>
+
+      <Popup
+        title="تحديد التكوين"
+        openPopup={openFormation}
+        setOpenPopup={setOpenFormation}
+      >
+        <TableFormation
+          key="TableFormation"
+          Close={setOpenFormation}
+          rowSelected={rowSelected}
+          valeur={Values}
         />
       </Popup>
     </Fragment>

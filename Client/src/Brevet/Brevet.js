@@ -17,18 +17,20 @@ import {
   Group,
   Resize,
   Sort,
+  ContextMenu,
+  ExcelExport
 } from "@syncfusion/ej2-react-grids";
 import Popup from "../components/Popup.js";
 import Button from "../components/controls/Button";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PageHeader from "../PageHeader";
-import { ContextMenu } from "@syncfusion/ej2-react-grids";
 import BrevetForm from "../Formation/BrevetForm.js";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import axios from "axios";
 import { L10n } from "@syncfusion/ej2-base";
 import { UserContext } from "../UserContext.js";
+import PrintIcon from "@material-ui/icons/Print";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -126,6 +128,19 @@ export default function AppBrevet({ id }) {
         setEtat(!etat);
       });
   };
+  const contextMenuItems = ['Copy', 'ExcelExport'] ;
+
+  async function imprimer(
+    numeroCandidat,
+    numeroFormation,
+    Num_permis,
+    dateins,
+    numeroAgrement
+  ) {
+    await axios.get(
+      `http://localhost:3001/report/DIPLOME/${numeroCandidat}/${numeroFormation}/${Num_permis}/${dateins}/${numeroAgrement}`
+    );
+  }
 
   L10n.load({
     "ar-AE": {
@@ -177,38 +192,22 @@ export default function AppBrevet({ id }) {
         subTitle="قائمة الشهادات المستخرجة"
         icon={<LibraryBooksIcon />}
       />
-      {/*  <div className={classes.div}>
-        <div className={classes.container}>
-          <Button
-            text="تعدبل"
-            variant="outlined"
-            size="small"
-            startIcon={<EditOutlinedIcon />}
-            className={classes.newButton}
-            disabled={
-              Values === undefined || userData[0].ADMIN !== "admin"
-                ? true
-                : false
-            }
-            onClick={() => {
-              setOpenModifier(true);
-            }}
-          />
-          <Button
-            text="حذف"
-            variant="outlined"
-            size="small"
-            color="secondary"
-            startIcon={<DeleteIcon />}
-            className={classes.newButton}
-            disabled={
-              Values === undefined || userData[0].ADMIN !== "admin"
-                ? true
-                : false
-            }
-          />
-        </div>
-      </div> */}
+
+      <div className={classes.container}>
+        <Button
+          text="طباعة"
+          variant="outlined"
+          size="small"
+          startIcon={<PrintIcon />}
+          className={classes.newButton}
+          disabled={
+            Values === undefined || userData[0].ADMIN !== "admin" ? true : false
+          }
+          onClick={() => {
+            imprimer("00001", "1", "032621", "2021-07-04", "2");
+          }}
+        />
+      </div>
       <div className={classes.container}>
         <Paper className={classes.paper}>
           <GridComponent
@@ -224,6 +223,8 @@ export default function AppBrevet({ id }) {
             ref={TableRef2}
             enableRtl={true}
             locale="ar-AE"
+            contextMenuItems={contextMenuItems}
+            allowExcelExport={true}
           >
             <ColumnsDirective>
               <ColumnDirective
@@ -270,7 +271,7 @@ export default function AppBrevet({ id }) {
               />
             </ColumnsDirective>
             <Inject
-              services={[Page, Sort, Filter, Group, Resize, ContextMenu]}
+              services={[Page, Sort, Filter, Group, Resize, ContextMenu, ExcelExport]}
             />
           </GridComponent>
         </Paper>
