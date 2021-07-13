@@ -89,17 +89,17 @@ async function generatepdf(idin,idform,idPerm,dateins,numagr,uurl,fn) {
 
      
 	
-	
+	console.log(result[0].TYPE_FORMATION.length);
 
 for (let ob in F1) {
      
 	        var textSize = 10
             
 			 if( ob=="TYPE")
-				 textSize=8;
+				 textSize=10;
 			 
-			 if(ob=="TYPE" && F1[ob]["text"].length>19)
-				  textSize=6;
+			 if(ob=="TYPE" && F1[ob]["text"].length>17)
+				  textSize=8;
 			    
 			 
 			 var textHeight = helveticaFont.heightAtSize(textSize)
