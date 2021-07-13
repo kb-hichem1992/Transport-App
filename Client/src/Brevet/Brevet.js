@@ -137,10 +137,10 @@ export default function AppBrevet({ id }) {
     dateins,
     numeroAgrement
   ) {
-    await axios.get(
+  const response =  await axios.get(
       `http://localhost:3001/report/DIPLOME/${numeroCandidat}/${numeroFormation}/${Num_permis}/${dateins}/${numeroAgrement}`
     );
-  }
+    return response.headers }
 
   L10n.load({
     "ar-AE": {
@@ -204,7 +204,8 @@ export default function AppBrevet({ id }) {
             Values === undefined || userData[0].ADMIN !== "admin" ? true : false
           }
           onClick={() => {
-            imprimer("00001", "1", "032621", "2021-07-04", "2");
+            console.log(imprimer("00001", "1", "032621", "2021-07-04", "2"));
+            // window.open(imprimer("00001", "1", "032621", "2021-07-04", "2"));
           }}
         />
       </div>
