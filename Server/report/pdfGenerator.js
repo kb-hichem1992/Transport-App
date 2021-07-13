@@ -33,18 +33,23 @@ async function generatepdf(idin,idform,idPerm,dateins,numagr,uurl,fn) {
 	   
   var NomPeren=result[0].NOM_CANDIDAT+" "+result[0].PRENOM_CANDIDAT;	   
   
- 
+  var DATE_DE="";
+  var DATE_TO="";
+  if(result[0].LIV_BREVET!=null)
+	  DATE_DE=result[0].LIV_BREVET;
+   if(result[0].EXP_BREVET!=null)
+	   DATE_TO=result[0].EXP_BREVET;
   
   var FICH1={"DIRECTION":{"text":"الشلف","x":275,"y":510},
             "SERIE":{"text":"","x":45,"y":510},
-			"DIRECTION2":{"text":"الشلف","x":265,"y":241},
-			"PERSONNE":{"text":NomPeren,"x":220-(Math.max(0,NomPeren.length-23)*5),"y":222},
+			"DIRECTION2":{"text":"الشلف","x":265,"y":243},
+			"PERSONNE":{"text":NomPeren,"x":220-(Math.max(0,NomPeren.length-23)*5),"y":224},
 			"DATE_NAI":{"text":result[0].DATE_NAIS_CANDIDAT,"x":240,"y":205},
 			"LIEU_NAI":{"text":result[0].LIEU_NAIS_CANDIDAT,"x":198-(Math.max(0,result[0].LIEU_NAIS_CANDIDAT.length-8)*5),"y":205},
 		"ADRESSE":{"text":result[0].ADRESSE_CANDIDAT,"x":250-(Math.max(0,result[0].ADRESSE_CANDIDAT.length-16)*5),"y":186},
 			"TYPE":{"text":result[0].TYPE_FORMATION,"x":205,"y":164},
-			"DE":{"text":result[0].LIV_BREVET,"x":112,"y":164},
-			"TO":{"text":result[0].EXP_BREVET,"x":40,"y":164},
+			"DE":{"text":DATE_DE,"x":110,"y":164},
+			"TO":{"text":DATE_TO,"x":37,"y":164},
             "LIEU_EDIT":{"text":"الشلف","x":180,"y":124},  
             "DATE_EDIT":{"text":"","x":70,"y":124},
 			"Wilaya":{"text":"الشلف","x":115,"y":88},
@@ -90,7 +95,7 @@ for (let ob in F1) {
      
 	        var textSize = 10
             
-			 if(ob=="DE" || ob=="TO" || ob=="TYPE")
+			 if( ob=="TYPE")
 				 textSize=8;
 			 
 			 if(ob=="TYPE" && F1[ob]["text"].length>19)

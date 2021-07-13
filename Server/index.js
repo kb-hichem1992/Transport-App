@@ -357,7 +357,7 @@ var fullUrl = req.protocol + '://' + req.get('host');
   const numagr=req.params.numagr;
 
 
-  pdf.generatepdf(idinn,idform,idperm,dateins,numagr,fullUrl,function(dt){
+  pdf.generatepdf(idinn,idformm,idperm,dateins,numagr,fullUrl,function(dt){
     //console.log(dt);
     res.send(dt);
   });
