@@ -18,7 +18,7 @@ import {
   Resize,
   Sort,
   ContextMenu,
-  ExcelExport
+  ExcelExport,
 } from "@syncfusion/ej2-react-grids";
 import Popup from "../components/Popup.js";
 import Button from "../components/controls/Button";
@@ -128,7 +128,32 @@ export default function AppBrevet({ id }) {
         setEtat(!etat);
       });
   };
-  const contextMenuItems = ['Copy', 'ExcelExport'] ;
+  const contextMenuItems = ["Copy", "ExcelExport"];
+
+  const getPDF = (
+    numeroCandidat,
+    numeroFormation,
+    Num_permis,
+    dateins,
+    numeroAgrement
+  ) => {
+    const apiURL = `http://localhost:3001/report/DIPLOME/${numeroCandidat}/${numeroFormation}/${Num_permis}/${dateins}/${numeroAgrement}`;
+    axios(apiURL, {
+      method: "GET",
+      responseType: "blob", //Force to receive data in a Blob Format
+    })
+      .then((response) => {
+        //Create a Blob from the PDF Stream
+        const file = new Blob([response.data], { type: "application/pdf" });
+        //Build a URL from the file
+        const fileURL = URL.createObjectURL(file);
+        //Open the URL on new Window
+        window.open(fileURL);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   async function imprimer(
     numeroCandidat,
@@ -137,10 +162,11 @@ export default function AppBrevet({ id }) {
     dateins,
     numeroAgrement
   ) {
-  const response =  await axios.get(
+    const response = await axios.get(
       `http://localhost:3001/report/DIPLOME/${numeroCandidat}/${numeroFormation}/${Num_permis}/${dateins}/${numeroAgrement}`
     );
-    return response.headers }
+    return response;
+  }
 
   L10n.load({
     "ar-AE": {
@@ -204,8 +230,17 @@ export default function AppBrevet({ id }) {
             Values === undefined || userData[0].ADMIN !== "admin" ? true : false
           }
           onClick={() => {
-            console.log(imprimer("00001", "1", "032621", "2021-07-04", "2"));
-            // window.open(imprimer("00001", "1", "032621", "2021-07-04", "2"));
+            getPDF(
+              Values.NUM_INS,
+              Values.NUMERO_FORMATION,
+              Values.NUM_PERMIS,
+              Values.DATE_INS,
+              Values.NUMERO_AGREMENT
+            );
+            // let a = document.createElement("a");
+            // a.href = response; // pdf encode
+            // a.download = "test4.pdf";
+            // a.click();
           }}
         />
       </div>
@@ -238,7 +273,6 @@ export default function AppBrevet({ id }) {
                 headerText="اللقب"
                 clipMode="EllipsisWithTooltip"
               />
-
               <ColumnDirective
                 field="PRENOM_CANDIDAT"
                 headerText="الإسم"
@@ -272,12 +306,19 @@ export default function AppBrevet({ id }) {
               />
             </ColumnsDirective>
             <Inject
-              services={[Page, Sort, Filter, Group, Resize, ContextMenu, ExcelExport]}
+              services={[
+                Page,
+                Sort,
+                Filter,
+                Group,
+                Resize,
+                ContextMenu,
+                ExcelExport,
+              ]}
             />
           </GridComponent>
         </Paper>
       </div>
-
       <Popup
         title="تعديل"
         openPopup={openModifier}

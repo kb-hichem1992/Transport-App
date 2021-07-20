@@ -45,13 +45,13 @@ const useStyles = makeStyles((theme) => ({
 export default function PasseFrom(props) {
   const classes = useStyles();
 
-  const { NUMERO_FORMATION, NUM_INS, GROUPE, NOTE, REMARQUE } = props.values;
+  const { NUMERO_FORMATION, NUMERO_AGREMENT, NUM_INS, GROUPE, NOTE, REMARQUE , DATE_INS, NUM_PERMIS } = props.values;
 
   const [numeroFormation] = useState(NUMERO_FORMATION);
   const [numeroCandidat] = useState(NUM_INS);
   const [note, setNote] = useState(NOTE);
   const [remarque, setRemarque] = useState(REMARQUE);
-  const [groupe, setGroupe] = useState(GROUPE);
+  const [groupe] = useState(GROUPE);
 
   const handleNoteChange = (e) => {
     setNote(e.target.value);
@@ -60,9 +60,7 @@ export default function PasseFrom(props) {
     setRemarque(e.target.value);
   };
 
-  const handleGroupeChange = (e) => {
-    setGroupe(e.target.value);
-  };
+
 
   const Enregister = () => {
     try {
@@ -72,10 +70,12 @@ export default function PasseFrom(props) {
         props.onClick(
           remarque,
           note,
-          groupe,
           numeroCandidat,
+          NUM_PERMIS,
+          DATE_INS,
           numeroFormation,
-          GROUPE
+          GROUPE,
+          NUMERO_AGREMENT
         );
         alert("تمت العملية");
         props.Close(false);
@@ -88,7 +88,7 @@ export default function PasseFrom(props) {
   return (
     <Fragment>
       <Paper className={classes.pageContent}>
-        <form className={classes.root}  autoComplete="off">
+        <form className={classes.root} autoComplete="off">
           <Grid container spacing={2}>
             <TextField
               variant="outlined"
@@ -97,8 +97,6 @@ export default function PasseFrom(props) {
               type="number"
               disabled
               value={groupe}
-              onChange={handleGroupeChange}
-              inputProps={{ min: 1, max: 10 }}
             />
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-simple-select-label">Remarque</InputLabel>

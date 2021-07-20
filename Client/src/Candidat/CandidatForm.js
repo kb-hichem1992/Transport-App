@@ -197,7 +197,7 @@ export default function Candidat(props) {
   };
 
   const niveauScolaire = ["ابتدائي", "متوسط", "ثانوي", "جامعي"];
-  const Type = ["عامل", "حر"];
+  const Type = ["متعاقد", "حر"];
 
   return (
     <Fragment>

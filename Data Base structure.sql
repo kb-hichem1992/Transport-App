@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.6.17, for Win32 (x86)
 --
--- Host: localhost    Database: transport
+-- Host: localhost    Database: bdd
 -- ------------------------------------------------------
 -- Server version	5.5.40-log
 
@@ -44,16 +44,6 @@ CREATE TABLE `candidat` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `candidat`
---
-
-LOCK TABLES `candidat` WRITE;
-/*!40000 ALTER TABLE `candidat` DISABLE KEYS */;
-INSERT INTO `candidat` VALUES ('00001','2021-07-04','قوادري بوجلطية','محمد هشام','أحمد','1992-10-26','الشلف','جامعي','الشطية','ذكر','حر','032621','2021-07-04','2030-07-04','القديم','B');
-/*!40000 ALTER TABLE `candidat` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `centre`
 --
 
@@ -69,44 +59,6 @@ CREATE TABLE `centre` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `centre`
---
-
-LOCK TABLES `centre` WRITE;
-/*!40000 ALTER TABLE `centre` DISABLE KEYS */;
-INSERT INTO `centre` VALUES ('1','مركز','الشلف'),('2','عاصم','الشطية');
-/*!40000 ALTER TABLE `centre` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `conduire`
---
-
-DROP TABLE IF EXISTS `conduire`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `conduire` (
-  `NUM_INS` varchar(20) NOT NULL,
-  `DATE_INS` date NOT NULL,
-  `NUM_PERMIS` varchar(45) NOT NULL,
-  `MATRECULE` varchar(10) NOT NULL,
-  PRIMARY KEY (`NUM_INS`,`DATE_INS`,`NUM_PERMIS`,`MATRECULE`),
-  KEY `FK_CONDUIRE` (`MATRECULE`),
-  CONSTRAINT `FK_CONDUIRE2` FOREIGN KEY (`NUM_INS`, `DATE_INS`, `NUM_PERMIS`) REFERENCES `candidat` (`NUM_INS`, `DATE_INS`, `NUM_PERMIS`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_CONDUIRE` FOREIGN KEY (`MATRECULE`) REFERENCES `vehicule` (`MATRECULE`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `conduire`
---
-
-LOCK TABLES `conduire` WRITE;
-/*!40000 ALTER TABLE `conduire` DISABLE KEYS */;
-/*!40000 ALTER TABLE `conduire` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `formation`
 --
 
@@ -115,25 +67,14 @@ DROP TABLE IF EXISTS `formation`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `formation` (
   `NUMERO_FORMATION` int(11) NOT NULL,
-  `NUMERO_AGREMENT` varchar(50) NOT NULL,
+  `GROUPE` int(11) NOT NULL,
+  `NUMERO_AGREMENT` int(11) NOT NULL,
   `TYPE_FORMATION` varchar(50) DEFAULT NULL,
   `DEBUT` date DEFAULT NULL,
   `FIN` date DEFAULT NULL,
-  PRIMARY KEY (`NUMERO_FORMATION`,`NUMERO_AGREMENT`),
-  KEY `FK_OFFRE` (`NUMERO_AGREMENT`),
-  CONSTRAINT `FK_OFFRE` FOREIGN KEY (`NUMERO_AGREMENT`) REFERENCES `centre` (`NUMERO_AGREMENT`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`NUMERO_FORMATION`,`GROUPE`,`NUMERO_AGREMENT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `formation`
---
-
-LOCK TABLES `formation` WRITE;
-/*!40000 ALTER TABLE `formation` DISABLE KEYS */;
-INSERT INTO `formation` VALUES (1,'2','نقل البضائع','2021-07-04','2021-08-31');
-/*!40000 ALTER TABLE `formation` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ligne`
@@ -143,25 +84,17 @@ DROP TABLE IF EXISTS `ligne`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ligne` (
+  `NUM_INS` varchar(20) NOT NULL,
+  `DATE_INS` date NOT NULL,
+  `NUM_PERMIS` varchar(45) NOT NULL,
+  `MATRECULE` varchar(10) NOT NULL,
   `NUM_LIGNE` varchar(100) NOT NULL,
-  `NOM_OP` char(50) NOT NULL,
   `TYPE_LIGNE` varchar(50) DEFAULT NULL,
   `DATE_LIV_LIGNE` date DEFAULT NULL,
   `DATE_EXP_LIGNE` date DEFAULT NULL,
-  PRIMARY KEY (`NUM_LIGNE`),
-  KEY `FK_AVOIR2` (`NOM_OP`),
-  CONSTRAINT `FK_AVOIR2` FOREIGN KEY (`NOM_OP`) REFERENCES `operateur` (`NOM_OP`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`NUM_INS`,`DATE_INS`,`NUM_PERMIS`,`MATRECULE`,`NUM_LIGNE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ligne`
---
-
-LOCK TABLES `ligne` WRITE;
-/*!40000 ALTER TABLE `ligne` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ligne` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `operateur`
@@ -178,15 +111,6 @@ CREATE TABLE `operateur` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `operateur`
---
-
-LOCK TABLES `operateur` WRITE;
-/*!40000 ALTER TABLE `operateur` DISABLE KEYS */;
-/*!40000 ALTER TABLE `operateur` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `passe`
 --
 
@@ -198,53 +122,36 @@ CREATE TABLE `passe` (
   `DATE_INS` date NOT NULL,
   `NUM_PERMIS` varchar(45) NOT NULL,
   `NUMERO_FORMATION` int(11) NOT NULL,
+  `GROUPE` int(11) NOT NULL,
   `NUMERO_AGREMENT` varchar(50) NOT NULL,
   `NOTE` int(11) DEFAULT NULL,
   `REMARQUE` varchar(50) DEFAULT NULL,
   `BREVET` varchar(45) DEFAULT NULL,
   `LIV_BREVET` date DEFAULT NULL,
   `EXP_BREVET` date DEFAULT NULL,
-  `GROUPE` int(2) NOT NULL,
-  PRIMARY KEY (`NUM_INS`,`DATE_INS`,`NUM_PERMIS`,`NUMERO_FORMATION`,`NUMERO_AGREMENT`),
+  PRIMARY KEY (`NUM_INS`,`DATE_INS`,`NUM_PERMIS`,`NUMERO_FORMATION`,`GROUPE`,`NUMERO_AGREMENT`),
   KEY `FK_PASSE` (`NUMERO_FORMATION`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `passe`
+-- Table structure for table `per_circule`
 --
 
-LOCK TABLES `passe` WRITE;
-/*!40000 ALTER TABLE `passe` DISABLE KEYS */;
-INSERT INTO `passe` VALUES ('00001','2021-07-04','032621',1,'2',10,'ناجح','0001','2021-07-05','2030-07-05',2);
-/*!40000 ALTER TABLE `passe` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `pc`
---
-
-DROP TABLE IF EXISTS `pc`;
+DROP TABLE IF EXISTS `per_circule`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `pc` (
-  `NUM_PC` varchar(100) NOT NULL,
-  `NOM_OP` char(50) NOT NULL,
-  `ATTRIBUT_2` char(10) DEFAULT NULL,
-  `DATE_LIV_PC` date DEFAULT NULL,
-  PRIMARY KEY (`NUM_PC`),
-  KEY `FK_AVOIR_PERMIS` (`NOM_OP`)
+CREATE TABLE `per_circule` (
+  `NUM_INS` varchar(20) NOT NULL,
+  `DATE_INS` date NOT NULL,
+  `NUM_PERMIS` varchar(45) NOT NULL,
+  `MATRECULE` varchar(10) NOT NULL,
+  `NUM_PER` varchar(40) NOT NULL,
+  `DATE_LIV_PER` date DEFAULT NULL,
+  `DATE_EXP_PER` date DEFAULT NULL,
+  PRIMARY KEY (`NUM_INS`,`DATE_INS`,`NUM_PERMIS`,`MATRECULE`,`NUM_PER`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `pc`
---
-
-LOCK TABLES `pc` WRITE;
-/*!40000 ALTER TABLE `pc` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pc` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `travail`
@@ -267,15 +174,6 @@ CREATE TABLE `travail` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `travail`
---
-
-LOCK TABLES `travail` WRITE;
-/*!40000 ALTER TABLE `travail` DISABLE KEYS */;
-/*!40000 ALTER TABLE `travail` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `user`
 --
 
@@ -290,16 +188,6 @@ CREATE TABLE `user` (
   PRIMARY KEY (`USERNAME`,`PASSWORD`,`ADMIN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('assim','assim','admin','2');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `vehicule`
@@ -321,15 +209,6 @@ CREATE TABLE `vehicule` (
   KEY `FK_APPARTIENT` (`NOM_OP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `vehicule`
---
-
-LOCK TABLES `vehicule` WRITE;
-/*!40000 ALTER TABLE `vehicule` DISABLE KEYS */;
-/*!40000 ALTER TABLE `vehicule` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -340,4 +219,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-07 11:31:08
+-- Dump completed on 2021-07-20 23:56:07

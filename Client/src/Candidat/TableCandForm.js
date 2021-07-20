@@ -21,7 +21,6 @@ import {
 } from "@syncfusion/ej2-react-grids";
 import Button from "../components/controls/Button";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import PrintIcon from "@material-ui/icons/Print";
 import Popup from "../components/Popup";
 import PasseFrom from "../Formation/PasseForm";
 import axios from "axios";
@@ -73,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TableCandForm({ setEtat, etat, numeroFormation }) {
+export default function TableCandForm({ setEtat, etat, numeroFormation, groupe }) {
   const [data, setdata] = useState([]);
   const [openModifier, setOpenModifier] = useState(false);
   const [openImprimer, setOpenImprimer] = useState(false);
@@ -83,14 +82,14 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
 
   useEffect(() => {
     fetch(
-      `http://localhost:3001/api/get_candidat_form/${numeroFormation}/${numeroAgrement}`
+      `http://localhost:3001/api/get_candidat_form/${numeroFormation}/${numeroAgrement}/${groupe}`
     )
       .then((response) => response.json())
       .then((json) => setdata(json));
-  }, [etat, numeroFormation, numeroAgrement]);
+  }, [etat, numeroFormation, numeroAgrement, groupe]);
 
   const filter = {
-    type: "Excel",
+    type: "CheckBox",
   };
 
   const TableRef3 = useRef(null);
@@ -126,19 +125,23 @@ export default function TableCandForm({ setEtat, etat, numeroFormation }) {
   const updatePasse = (
     remarque,
     note,
-    groupe,
     numeroCandidat,
+    Num_permis,
+    dateins,
     numeroFormation,
-    GROUPE
+    GROUPE,
+    numeroAgrement,
   ) => {
     axios
       .put("http://localhost:3001/update_passe", {
         remarque: remarque,
         note: note,
-        groupe: groupe,
         numeroCandidat: numeroCandidat,
+        Num_permis: Num_permis,
+        dateins: dateins,
         numeroFormation: numeroFormation,
         GROUPE: GROUPE,
+        numeroAgrement: numeroAgrement,
       })
       .then(() => {
         setEtat(!etat);

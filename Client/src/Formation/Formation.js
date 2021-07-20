@@ -31,6 +31,7 @@ import TableCandForm from "../Candidat/TableCandForm";
 import LaptopChromebookIcon from "@material-ui/icons/LaptopChromebook";
 import { L10n } from "@syncfusion/ej2-base";
 import { UserContext } from "../UserContext";
+import AlertDialog from "../components/controls/Dialog";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -89,18 +90,26 @@ function AppFor({ id }) {
   const [openAjouter, setOpenAjouter] = useState(false);
   const [openModifier, setOpenModifier] = useState(false);
   const [etat, setEtat] = useState(false);
-
+  const [open, setopen] = useState(false);
   useEffect(() => {
     fetch(id)
       .then((response) => response.json())
       .then((json) => setdata(json));
   }, [id, data, etat]);
 
-  const addFormation = (numeroFormation, numeroAgrement, Type, Debut, Fin) => {
+  const addFormation = (
+    numeroFormation,
+    numeroAgrement,
+    groupe,
+    Type,
+    Debut,
+    Fin
+  ) => {
     axios
       .post("http://localhost:3001/Add_formation", {
         numeroFormation: numeroFormation,
         numeroAgrement: numeroAgrement,
+        groupe: groupe,
         Type: Type,
         Debut: Debut,
         Fin: Fin,
@@ -112,6 +121,7 @@ function AppFor({ id }) {
   const updateFormation = (
     numeroFormation,
     numeroAgrement,
+    groupe,
     Type,
     Debut,
     Fin
@@ -123,15 +133,16 @@ function AppFor({ id }) {
         Fin: Fin,
         numeroFormation: numeroFormation,
         numeroAgrement: numeroAgrement,
+        groupe: groupe,
       })
       .then(() => {
         setEtat(!etat);
       });
   };
-  const deleteFormation = (numeroFormation, numeroAgrement) => {
+  const deleteFormation = (numeroFormation, numeroAgrement, groupe) => {
     axios
       .delete(
-        `http://localhost:3001/delete_formation/${numeroFormation}/${numeroAgrement}`,
+        `http://localhost:3001/delete_formation/${numeroFormation}/${numeroAgrement}/${groupe}`,
         {}
       )
       .then(() => {
@@ -148,6 +159,7 @@ function AppFor({ id }) {
   const initialvalues = {
     NUMERO_FORMATION: "",
     NUMERO_AGREMENT: userData[0].NUMERO_AGREMENT,
+    GROUPE: "",
     TYPE_FORMATION: "",
     DEBUT: new Date(),
     FIN: new Date(),
@@ -210,10 +222,7 @@ function AppFor({ id }) {
             Values === undefined || userData[0].ADMIN !== "admin" ? true : false
           }
           onClick={() => {
-            deleteFormation(
-              Values.NUMERO_FORMATION,
-              userData[0].NUMERO_AGREMENT
-            );
+            setopen(true);
           }}
         />
       </div>
@@ -238,6 +247,7 @@ function AppFor({ id }) {
                 field="NUMERO_FORMATION"
                 headerText="رقم الدورة"
               />
+              <ColumnDirective field="GROUPE" headerText="الفوج" />
               <ColumnDirective
                 field="TYPE_FORMATION"
                 headerText="نوع التكوين"
@@ -265,7 +275,7 @@ function AppFor({ id }) {
       </div>
       <PageHeader
         title="الدورات التكوينية"
-        subTitle="ٌقائمة المترشحين لكل دورة "
+        subTitle="ٌقائمة المترشحين لكل فوج "
         icon={<LaptopChromebookIcon />}
       />
       <Paper>
@@ -273,6 +283,7 @@ function AppFor({ id }) {
           setEtat={setEtat}
           etat={etat}
           numeroFormation={Values === undefined ? 0 : Values.NUMERO_FORMATION}
+          groupe={Values === undefined ? 0 : Values.GROUPE}
         />
       </Paper>
 
@@ -299,6 +310,20 @@ function AppFor({ id }) {
           values={Values}
         />
       </Popup>
+      <AlertDialog
+        title="تأكيد"
+        message=" هل تريد حذف هذا الفوج ؟"
+        open={open}
+        setOpen={setopen}
+        method={() => {
+          deleteFormation(
+            Values.NUMERO_FORMATION,
+            userData[0].NUMERO_AGREMENT,
+            Values.GROUPE
+          );
+          setopen(false);
+        }}
+      />
     </Fragment>
   );
 }

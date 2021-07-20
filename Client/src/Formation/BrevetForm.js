@@ -1,7 +1,7 @@
 import { Button, Grid, makeStyles, Paper, TextField } from "@material-ui/core";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Controls from "../components/controls/Controls";
-import { UserContext } from "../UserContext";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -161,7 +161,6 @@ export default function BrevetForm(props) {
             GROUPE
           );
           props.Close(false);
-          alert("تمت العملية");
         }}
       />
     </>

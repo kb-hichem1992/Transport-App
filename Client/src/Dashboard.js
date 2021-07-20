@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -146,7 +146,7 @@ export default function Dashboard() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [centre, setCentre] = React.useState([]);
+
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -156,12 +156,6 @@ export default function Dashboard() {
   };
 
   const numeroAgrement = userData[0].NUMERO_AGREMENT;
-
-  useEffect(() => {
-    fetch(`http://localhost:3001/api/getCentre/${numeroAgrement}`)
-      .then((response) => response.json())
-      .then((json) => setCentre(json));
-  }, [numeroAgrement]);
 
 
 

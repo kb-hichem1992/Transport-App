@@ -17,7 +17,7 @@ import {
   Resize,
   Sort,
 } from "@syncfusion/ej2-react-grids";
-import { makeStyles, TextField } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import Button from "../components/controls/Button";
 import axios from "axios";
 import { L10n } from "@syncfusion/ej2-base";
@@ -27,8 +27,8 @@ import { UserContext } from "../UserContext";
 export default function TableFormation(props) {
   const [data, setdata] = useState([]);
   const [passdata, setpassdata] = useState([]);
-  const { NUM_INS, DATE_INS, NUM_PERMIS } = props.valeur;
-  const [groupe, setGroupe] = useState("");
+  const { NUM_INS, DATE_INS, NUM_PERMIS, GROUPE } = props.valeur;
+
   const [open, setOpen] = useState(false);
   const { userData } = useContext(UserContext);
 
@@ -99,10 +99,6 @@ export default function TableFormation(props) {
 
   const values = rowSelected();
 
-  const handleGroupeChange = (e) => {
-    setGroupe(e.target.value);
-  };
-
   const AffecteFormation = (
     numeroCandidat,
     Date_ins,
@@ -131,15 +127,16 @@ export default function TableFormation(props) {
     numeroCandidat,
     Date_ins,
     numeroFormation,
-    numeroAgrement
+    numeroAgrement,
+    groupe
   ) {
     return passdata.some(function (el) {
       if (
         el.NUM_PERMIS === Num_permis &&
         el.NUM_INS === numeroCandidat &&
         convert(el.DATE_INS) === convert(Date_ins) &&
-        el.NUMERO_FORMATION === numeroFormation &&
-        el.NUMERO_AGREMENT === numeroAgrement
+        el.NUMERO_FORMATION === Number(numeroFormation) &&
+        el.NUMERO_AGREMENT === numeroAgrement 
       ) {
         return true;
       } else {
@@ -193,13 +190,13 @@ export default function TableFormation(props) {
         >
           <ColumnsDirective>
             <ColumnDirective field="NUMERO_FORMATION" headerText="رقم الدورة" />
-            <ColumnDirective field="TYPE_FORMATION" headerText="نوع التكوين" />
+            <ColumnDirective field="GROUPE" headerText="رقم الفوج" />
+            <ColumnDirective field="TYPE_FORMATION" headerText="الفوج " />
             <ColumnDirective
               field="DEBUT"
               headerText="تاريخ البداية"
               type="date"
               format="dd/MM/yyyy"
-              clipMode="EllipsisWithTooltip"
               allowFiltering={false}
             />
             <ColumnDirective
@@ -207,22 +204,12 @@ export default function TableFormation(props) {
               headerText="تاريخ النهاية"
               type="date"
               format="dd/MM/yyyy"
-              clipMode="EllipsisWithTooltip"
               allowFiltering={false}
             />
           </ColumnsDirective>
           <Inject services={[Page, Sort, Filter, Group, Resize]} />
         </GridComponent>
         <div className={classes.container}>
-          <TextField
-            variant="outlined"
-            label="الفوج"
-            size="small"
-            type="number"
-            inputProps={{ min: 1, max: 10 }}
-            value={groupe}
-            onChange={handleGroupeChange}
-          />
           <Button
             text="تسجيل"
             variant="outlined"
@@ -230,15 +217,15 @@ export default function TableFormation(props) {
             className={classes.newButton}
             disabled={values === undefined ? true : false}
             onClick={() => {
-              if (groupe === "") {
-                alert("يرجى إختيار الفوج");
-              } else if (
+
+              if (
                 dejaInscrit(
                   NUM_PERMIS,
                   NUM_INS,
                   DATE_INS,
                   values.NUMERO_FORMATION,
-                  numeroAgrement
+                  numeroAgrement,
+                  values.GROUPE
                 ) === true
               ) {
                 alert("مسجل من قبل");
@@ -249,7 +236,6 @@ export default function TableFormation(props) {
           />
         </div>
       </div>
-
       <AlertDialog
         title="تأكيد"
         message="هل أنت متأكد من القيام بهذه العملية ؟"
@@ -262,7 +248,7 @@ export default function TableFormation(props) {
             NUM_PERMIS,
             values.NUMERO_FORMATION,
             numeroAgrement,
-            groupe
+            values.GROUPE
           );
           setOpen(false);
           props.Close(false);
