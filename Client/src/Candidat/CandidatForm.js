@@ -440,24 +440,29 @@ export default function Candidat(props) {
         open={open}
         setOpen={setOpen}
         method={() => {
-          props.onClick(
-            numeroCandidat,
-            convert(Date_ins),
-            Nom,
-            Prenom,
-            convert(selectedDate),
-            Lieu,
-            Niveau,
-            Adresse,
-            PrenomPere,
-            Sexe,
-            Type_candidat,
-            NumPermis,
-            convert(LivPermis),
-            convert(ExpPermis),
-            CategoriePermis.toString(),
-            Typepermis
-          );
+          try {
+            props.onClick(
+              numeroCandidat,
+              convert(Date_ins),
+              Nom,
+              Prenom,
+              convert(selectedDate),
+              Lieu,
+              Niveau,
+              Adresse,
+              PrenomPere,
+              Sexe,
+              Type_candidat,
+              NumPermis,
+              convert(LivPermis),
+              convert(ExpPermis),
+              CategoriePermis.toString(),
+              Typepermis
+            );
+          } catch (err) {
+            console.log(err);
+          }
+
           props.setOpenWindows(false);
         }}
       />

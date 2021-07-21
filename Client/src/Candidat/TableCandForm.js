@@ -121,7 +121,6 @@ export default function TableCandForm({ setEtat, etat, numeroFormation, groupe }
       },
     },
   });
-
   const updatePasse = (
     remarque,
     note,
@@ -147,7 +146,6 @@ export default function TableCandForm({ setEtat, etat, numeroFormation, groupe }
         setEtat(!etat);
       });
   };
-
   const insertBrevet = (
     NumeroBrevet,
     LivBrevet,
@@ -185,8 +183,8 @@ export default function TableCandForm({ setEtat, etat, numeroFormation, groupe }
       console.log(error);
     }
   }
-
   const Values = rowSelected();
+  
   return (
     <Fragment>
       <div className={classes.container}>
