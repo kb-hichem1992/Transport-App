@@ -137,22 +137,26 @@ export default function AppBrevet({ id }) {
     dateins,
     numeroAgrement
   ) => {
-    const apiURL = `http://localhost:3001/report/DIPLOME/${numeroCandidat}/${numeroFormation}/${Num_permis}/${dateins}/${numeroAgrement}`;
-    axios(apiURL, {
-      method: "GET",
-      responseType: "blob", //Force to receive data in a Blob Format
-    })
-      .then((response) => {
-        //Create a Blob from the PDF Stream
-        const file = new Blob([response.data], { type: "application/pdf" });
-        //Build a URL from the file
-        const fileURL = URL.createObjectURL(file);
-        //Open the URL on new Window
-        window.open(fileURL);
+    const viewHandler = async () => {
+      const apiURL = `http://localhost:3001/report/DIPLOME/${numeroCandidat}/${numeroFormation}/${Num_permis}/${dateins}/${numeroAgrement}`;
+      axios(apiURL, {
+        method: "GET",
+        responseType: "blob", //Force to receive data in a Blob Format
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => {
+          //Create a Blob from the PDF Stream
+          const file = new Blob([response.data], { type: "application/pdf" });
+          console.log(response.data);
+          //Build a URL from the file
+          const fileURL = URL.createObjectURL(file);
+          //Open the URL on new Window
+          window.open(fileURL);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    viewHandler();
   };
 
   async function imprimer(
@@ -165,7 +169,7 @@ export default function AppBrevet({ id }) {
     const response = await axios.get(
       `http://localhost:3001/report/DIPLOME/${numeroCandidat}/${numeroFormation}/${Num_permis}/${dateins}/${numeroAgrement}`
     );
-    return response;
+    return response.data;
   }
 
   L10n.load({
