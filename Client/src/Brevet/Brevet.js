@@ -159,17 +159,20 @@ export default function AppBrevet({ id }) {
     viewHandler();
   };
 
-  async function imprimer(
+function imprimer(
     numeroCandidat,
     numeroFormation,
     Num_permis,
     dateins,
     numeroAgrement
   ) {
-    const response = await axios.get(
+   axios.get(
       `http://localhost:3001/report/DIPLOME/${numeroCandidat}/${numeroFormation}/${Num_permis}/${dateins}/${numeroAgrement}`
-    );
-    return response.data;
+    ).then ( response => {
+      console.log(response.data);
+    }).catch(err => {
+       alert(err)
+    })
   }
 
   L10n.load({
@@ -234,7 +237,7 @@ export default function AppBrevet({ id }) {
             Values === undefined || userData[0].ADMIN !== "admin" ? true : false
           }
           onClick={() => {
-            getPDF(
+            imprimer(
               Values.NUM_INS,
               Values.NUMERO_FORMATION,
               Values.NUM_PERMIS,
