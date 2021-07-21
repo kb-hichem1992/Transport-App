@@ -82,10 +82,11 @@ function convert(word)
 }
 
 
-async function generatepdf(idin,idform,idPerm,dateins,numagr,uurl,fn) {
+async function generatepdf(idin,idform,idPerm,dateins,numagr,grp,uurl,fn) {
 
  
-  data.GetDiplomeData(idin,idform,idPerm,dateins,numagr,async function(result){
+  data.GetDiplomeData(idin,idform,idPerm,dateins,numagr,grp,async function(result){
+	   
 	   
   var NomPeren=result[0].NOM_CANDIDAT+" "+result[0].PRENOM_CANDIDAT;	   
   
@@ -151,7 +152,7 @@ async function generatepdf(idin,idform,idPerm,dateins,numagr,uurl,fn) {
 
      
 	
-	console.log(result[0].TYPE_FORMATION.length);
+
 
 for (let ob in F1) {
      

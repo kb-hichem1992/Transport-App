@@ -7,13 +7,8 @@ const mysql = require("mysql");
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-<<<<<<< HEAD
   password: "root",
   database: "bdd",
-=======
-  password: "",
-  database: "transport",
->>>>>>> 10b33ebfab444f62d8b685b6d4f2ff8fe0e83b67
   dateStrings: true,
 });
 
@@ -362,7 +357,7 @@ app.delete(
 
 // DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get(
-  "/report/DIPLOME/:idinn/:idformm/:idperm/:dateins/:numagr",
+  "/report/DIPLOME/:idinn/:idformm/:idperm/:dateins/:numagr/:groupe",
   (req, res) => {
     var fullUrl = req.protocol + "://" + req.get("host");
     const idinn = req.params.idinn;
@@ -370,6 +365,7 @@ app.get(
     const idperm = req.params.idperm;
     const dateins = req.params.dateins;
     const numagr = req.params.numagr;
+    const groupe=req.params.groupe;
 
     pdf.generatepdf(
       idinn,
@@ -377,6 +373,7 @@ app.get(
       idperm,
       dateins,
       numagr,
+      groupe,
       fullUrl,
       function (dt) {
         //console.log(dt);
