@@ -7,8 +7,13 @@ const mysql = require("mysql");
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
+<<<<<<< HEAD
   password: "root",
   database: "bdd",
+=======
+  password: "",
+  database: "transport",
+>>>>>>> 10b33ebfab444f62d8b685b6d4f2ff8fe0e83b67
   dateStrings: true,
 });
 

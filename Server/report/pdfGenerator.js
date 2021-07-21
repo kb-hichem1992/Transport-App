@@ -20,10 +20,66 @@ const degrees=PD.degrees;
 const data=require('./data.js');
 
 
+String.prototype.replaceAt = function(index, replacement) {
+    return this.substr(0, index) + replacement + this.substr(index + replacement.length);
+}
 
+function reverseString(str) {
+    
+    var splitString = str.split(""); 
+    
+    var reverseArray = splitString.reverse(); 
+   
+ 
+   
+    var joinArray = reverseArray.join(""); 
+   
+    
+    
+    return joinArray; 
+}
 
-
-
+function convert(word)
+{
+	var ff=word;
+	if(isNaN(Number(ff))==true)
+	{	
+	
+  
+  var db=[];
+  var fin=[];
+  var j=0,ins=0;
+  for(var i=0;i<ff.length;++i)
+  {
+	  if(ff[i]>='0' && ff[i]<='9')
+	  {
+		  ins=1;
+		  if(db[j]==null)
+	          db[j]=i;
+		  
+		  fin[j]=i;
+	  } 
+	  else{ 
+            if(ins==1)		 
+			{  j++;ins=0;}
+	  
+	     }
+  }
+   
+   
+  
+  for(var t=0;t<db.length;++t)
+  {
+	
+	ff=ff.replaceAt(db[t], reverseString(ff.substring(db[t],fin[t]+1)));
+	
+  }
+   
+  
+	}
+	 return(ff);
+	
+}
 
 
 async function generatepdf(idin,idform,idPerm,dateins,numagr,uurl,fn) {
@@ -40,13 +96,19 @@ async function generatepdf(idin,idform,idPerm,dateins,numagr,uurl,fn) {
    if(result[0].EXP_BREVET!=null)
 	   DATE_TO=result[0].EXP_BREVET;
   
+  
+  var adr=result[0].ADRESSE_CANDIDAT;
+ 
+  
+  
+  
   var FICH1={"DIRECTION":{"text":"الشلف","x":275,"y":510},
             "SERIE":{"text":"","x":45,"y":510},
 			"DIRECTION2":{"text":"الشلف","x":265,"y":243},
 			"PERSONNE":{"text":NomPeren,"x":220-(Math.max(0,NomPeren.length-23)*5),"y":224},
 			"DATE_NAI":{"text":result[0].DATE_NAIS_CANDIDAT,"x":240,"y":205},
 			"LIEU_NAI":{"text":result[0].LIEU_NAIS_CANDIDAT,"x":198-(Math.max(0,result[0].LIEU_NAIS_CANDIDAT.length-8)*5),"y":205},
-		"ADRESSE":{"text":result[0].ADRESSE_CANDIDAT,"x":250-(Math.max(0,result[0].ADRESSE_CANDIDAT.length-16)*5),"y":186},
+		"ADRESSE":{"text":convert(adr),"x":250-(Math.max(0,result[0].ADRESSE_CANDIDAT.length-16)*5),"y":186},
 			"TYPE":{"text":result[0].TYPE_FORMATION,"x":205,"y":164},
 			"DE":{"text":DATE_DE,"x":110,"y":164},
 			"TO":{"text":DATE_TO,"x":37,"y":164},
@@ -95,8 +157,6 @@ for (let ob in F1) {
      
 	        var textSize = 10
             
-			 if( ob=="TYPE")
-				 textSize=10;
 			 
 			 if(ob=="TYPE" && F1[ob]["text"].length>17)
 				  textSize=8;
