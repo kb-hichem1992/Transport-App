@@ -351,6 +351,7 @@ app.delete(
           res.send(result);
         }
       }
+<<<<<<< HEAD
     );
   }
 );
@@ -382,6 +383,15 @@ app.get(
     );
   }
 );
+=======
+    }
+  );
+});
+
+
+// DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
+app.get("/report/DIPLOME/:idin/:idform/:idperm/:dateins/:numagr", (req, res) => {
+>>>>>>> d9a33c8 (comit)
 
 // EVALUATION GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get(

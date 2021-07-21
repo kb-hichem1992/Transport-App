@@ -6,6 +6,7 @@
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@material-ui/pickers": "^3.3.10",
     "date-fns": "^2.22.1",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "typescript": "^4.3.5"
   }
 }
