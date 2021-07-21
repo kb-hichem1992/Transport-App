@@ -3,6 +3,10 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mysql = require("mysql");
+// files 
+const fs = require('fs');
+const path = require('path');
+
 
 const db = mysql.createPool({
   host: "localhost",
@@ -15,6 +19,7 @@ const db = mysql.createPool({
 module.exports = db;
 
 const pdf = require("./report/pdfGenerator.js");
+const filesPath = '';
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -235,6 +240,7 @@ app.post("/Add_condidat", (req, res) => {
     }
   );
 });
+
 app.put("/update_candidat", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
   const Date_ins = req.body.Date_ins;
@@ -316,6 +322,7 @@ app.post("/Add_formation", (req, res) => {
     }
   );
 });
+
 app.put("/update_formation", (req, res) => {
   const Type = req.body.Type;
   const Debut = req.body.Debut;
@@ -335,6 +342,7 @@ app.put("/update_formation", (req, res) => {
     }
   );
 });
+
 app.delete(
   "/delete_formation/:numeroFormation/:numeroAgrement/:groupe",
   (req, res) => {
@@ -357,7 +365,7 @@ app.delete(
 
 // DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get(
-  "/report/DIPLOME/:idinn/:idformm/:idperm/:dateins/:numagr",
+  "/report/DIPLOME/:idinn/:idformm/:idperm/:dateins/:numagr/:groupe",
   (req, res) => {
     var fullUrl = req.protocol + "://" + req.get("host");
     const idinn = req.params.idinn;
@@ -365,6 +373,7 @@ app.get(
     const idperm = req.params.idperm;
     const dateins = req.params.dateins;
     const numagr = req.params.numagr;
+    const groupe=req.params.groupe;
 
     pdf.generatepdf(
       idinn,
@@ -372,10 +381,11 @@ app.get(
       idperm,
       dateins,
       numagr,
+      groupe,
       fullUrl,
       function (dt) {
         //console.log(dt);
-        res.send(dt);
+       displayPDF("test4.pdf" , res)
       }
     );
   }
@@ -444,6 +454,7 @@ app.post("/Add_passe", (req, res) => {
     }
   );
 });
+
 app.post("/add_travail", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
   const Date_ins = req.body.Date_ins;
@@ -462,6 +473,27 @@ app.post("/add_travail", (req, res) => {
   );
 });
 
+//show  pdf file  in browser 
+app.get("/file" ,  (req,res)=>{
+  displayPDF("test4.pdf",res) ; 
+}); 
+
 app.listen(3001, () => {
   console.log("it works");
 });
+
+
+const displayPDF = (filename  , res) => {
+  const inputPath = path.resolve(__dirname, filesPath, filename);
+  fs.readFile(inputPath, function (err, data) {
+    if (err) {
+      res.statusCode = 500;
+      res.end(`Error getting the file: ${err}.`);
+    } else {
+      const ext = path.parse(inputPath).ext;
+      res.setHeader('Content-type','application/pdf');
+      res.end(data);
+    }
+  });
+};
+
