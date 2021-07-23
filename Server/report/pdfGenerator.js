@@ -202,12 +202,12 @@ for (let ob in F1) {
   );
 }
 
-async function generatepdf2(idin,idPerm, dateins, numagr, uurl, fn) {
+async function generatepdf2(idin,idPerm, dateins,uurl, fn) {
   data.GetEvaluationData(
     idin,
     idPerm,
     dateins,
-    numagr,
+    
     async function (result) {
       /*
   
@@ -301,7 +301,7 @@ async function generatepdf2(idin,idPerm, dateins, numagr, uurl, fn) {
 
       const pdfBytes = await pdfDoc.save();
 	  //idin,idPerm, dateins, numagr
-	  var filename="./"+idin+idPerm+dateins+numagr+".pdf";
+	  var filename="./"+idin+idPerm+dateins+".pdf";
       fs.writeFileSync(filename, pdfBytes);
 
       fn(pdfBytesToSend);

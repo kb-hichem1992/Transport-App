@@ -11,7 +11,7 @@ const path = require('path');
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "",
   database: "bdd",
   dateStrings: true,
 });
@@ -415,7 +415,7 @@ app.get(
 
 // EVALUATION GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get(
-  "/report/EVALUATION/:idin/:idperm/:dateins/:numagr",
+  "/report/EVALUATION/:idin/:idperm/:dateins",
   (req, res) => {
     var fullUrl = req.protocol + "://" + req.get("host");
 
@@ -423,17 +423,16 @@ app.get(
     
     const idperm = req.params.idperm;
     const dateins = req.params.dateins;
-    const numagr = req.params.numagr;
+    
 
     pdf.generatepdf2(
       idin,
       idperm,
       dateins,
-      numagr,
       fullUrl,
       function (dt) {
         //console.log(dt);
-        var filen=idin+idperm+dateins+numagr+".pdf";
+        var filen=idin+idperm+dateins+".pdf";
         displayPDF(filen , res)
       }
     );
