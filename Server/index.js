@@ -412,7 +412,7 @@ app.get(
       fullUrl,
       function (dt) {
         //console.log(dt);
-        res.send(dt);
+        displayPDF("test5.pdf" , res)
       }
     );
   }
