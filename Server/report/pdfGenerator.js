@@ -194,17 +194,17 @@ for (let ob in F1) {
       const pdfBytesToSend = await pdfDoc.saveAsBase64({ dataUri: true });
 
       const pdfBytes = await pdfDoc.save();
-      fs.writeFileSync("./test4.pdf", pdfBytes);
+	  var fileN="./"+idin+idform+idPerm+dateins+numagr+grp+".pdf";
+      fs.writeFileSync(fileN, pdfBytes);
 
       fn(pdfBytesToSend);
     }
   );
 }
 
-async function generatepdf2(idin, idform, idPerm, dateins, numagr, uurl, fn) {
+async function generatepdf2(idin,idPerm, dateins, numagr, uurl, fn) {
   data.GetEvaluationData(
     idin,
-    idform,
     idPerm,
     dateins,
     numagr,
@@ -240,7 +240,7 @@ async function generatepdf2(idin, idform, idPerm, dateins, numagr, uurl, fn) {
           y: 450,
         },
         ARESSE: {
-          text: result[0].ADRESSE_CANDIDAT,
+          text: convert(result[0].ADRESSE_CANDIDAT),
           x: 410 - Math.max(0, result[0].ADRESSE_CANDIDAT.length - 10) * 7,
           y: 426,
         },
@@ -300,7 +300,9 @@ async function generatepdf2(idin, idform, idPerm, dateins, numagr, uurl, fn) {
       const pdfBytesToSend = await pdfDoc.saveAsBase64({ dataUri: true });
 
       const pdfBytes = await pdfDoc.save();
-      fs.writeFileSync("./test5.pdf", pdfBytes);
+	  //idin,idPerm, dateins, numagr
+	  var filename="./"+idin+idPerm+dateins+numagr+".pdf";
+      fs.writeFileSync(filename, pdfBytes);
 
       fn(pdfBytesToSend);
     }
