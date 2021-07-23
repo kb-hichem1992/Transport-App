@@ -11,7 +11,7 @@ const path = require('path');
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "roor",
   database: "bdd",
   dateStrings: true,
 });
@@ -385,7 +385,8 @@ app.get(
       fullUrl,
       function (dt) {
         //console.log(dt);
-       displayPDF("test4.pdf" , res)
+         var filen=idinn+idformm+idperm+dateins+numagr+groupe+".pdf";
+       displayPDF(filen , res)
       }
     );
   }
@@ -393,26 +394,26 @@ app.get(
 
 // EVALUATION GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get(
-  "/report/EVALUATION/:idin/:idform/:idperm/:dateins/:numagr",
+  "/report/EVALUATION/:idin/:idperm/:dateins/:numagr",
   (req, res) => {
     var fullUrl = req.protocol + "://" + req.get("host");
 
     const idin = req.params.idin;
-    const idform = req.params.idform;
+    
     const idperm = req.params.idperm;
     const dateins = req.params.dateins;
     const numagr = req.params.numagr;
 
     pdf.generatepdf2(
       idin,
-      idform,
       idperm,
       dateins,
       numagr,
       fullUrl,
       function (dt) {
         //console.log(dt);
-        displayPDF("test5.pdf" , res)
+        var filen=idin+idperm+dateins+numagr+".pdf";
+        displayPDF(filen , res)
       }
     );
   }
@@ -485,6 +486,8 @@ app.listen(3001, () => {
 
 const displayPDF = (filename  , res) => {
   const inputPath = path.resolve(__dirname, filesPath, filename);
+  console.log(inputPath);
+
   fs.readFile(inputPath, function (err, data) {
     if (err) {
       res.statusCode = 500;
