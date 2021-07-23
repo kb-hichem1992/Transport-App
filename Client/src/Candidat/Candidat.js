@@ -354,7 +354,7 @@ export default function AppCand({ id }) {
           <form
             action={
               Values !== undefined
-                ? "http://localhost:3001/report/EVALUATION/"+Values.NUM_INS+"/"+ Values.NUM_PERMIS +"/"+Values.DATE_INS +"/"+userData[0].NUMERO_AGREMENT+""
+                ? "http://localhost:3001/report/EVALUATION/"+Values.NUM_INS+"/"+ Values.NUM_PERMIS +"/"+Values.DATE_INS +"/"
                 : "error"
             }
             method="get"
