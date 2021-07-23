@@ -22,7 +22,7 @@ import {
   Sort,
   ContextMenu,
   ExcelExport,
-  PdfExport
+  PdfExport,
 } from "@syncfusion/ej2-react-grids";
 
 import { L10n } from "@syncfusion/ej2-base";
@@ -37,7 +37,7 @@ import CandidatInfo from "./CandidatInfo";
 import GroupIcon from "@material-ui/icons/Group";
 import { UserContext } from "../UserContext";
 import AlertDialog from "../components/controls/Dialog";
-
+import PrintIcon from "@material-ui/icons/Print";
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
@@ -101,7 +101,7 @@ L10n.load({
       Search: "بحث ",
       GroupDropArea: "اسحب رأس العمود هنا لتجميع العمود الخاص به ",
       Excelexport: "تصدير Excel",
-      Copy : "نسخ" ,
+      Copy: "نسخ",
     },
 
     pager: {
@@ -282,10 +282,11 @@ export default function AppCand({ id }) {
     } catch (error) {}
   }
   const Values = rowSelected();
-  const contextMenuItems = ['Copy', 'ExcelExport'] ;
+  const contextMenuItems = ["Copy", "ExcelExport"];
 
   const ContextMenuItemModel = [
     { text: "معلومات إضافية", target: ".e-content", id: "Details" },
+    { text: "شهادة التسجيل", target: ".e-content", id: "fiche" },
   ];
 
   const contextMenuClick = (MenuEventArgs) => {
@@ -350,17 +351,47 @@ export default function AppCand({ id }) {
           />
         </div>
         <div>
-          <Button
-            text="تكوين"
-            variant="outlined"
-            size="small"
-            startIcon={<AddIcon />}
-            className={classes.newButton}
-            disabled={Values === undefined ? true : false}
-            onClick={() => {
-              setOpenFormation(true);
-            }}
-          />
+          <form
+            action={
+              Values !== undefined
+                ? "http://localhost:3001/report/EVALUATION/" +
+                  Values.NUM_INS +
+                  "/1/" +
+                  Values.NUM_PERMIS +
+                  "/" +
+                  Values.DATE_INS +
+                  "/2"
+                : "error"
+            }
+            method="get"
+            target="_blank"
+          >
+            <Button
+              text="تكوين"
+              variant="outlined"
+              size="small"
+              startIcon={<AddIcon />}
+              className={classes.newButton}
+              disabled={Values === undefined ? true : false}
+              onClick={() => {
+                setOpenFormation(true);
+              }}
+            />
+
+            <Button
+              type="submit"
+              text="شهادة التسجيل"
+              variant="outlined"
+              size="small"
+              startIcon={<PrintIcon />}
+              className={classes.newButton}
+              disabled={
+                Values === undefined || userData[0].ADMIN !== "admin"
+                  ? true
+                  : false
+              }
+            />
+          </form>
         </div>
       </div>
       <div className={classes.container}>
@@ -377,10 +408,7 @@ export default function AppCand({ id }) {
             allowSorting={true}
             height={180}
             ref={TableRef2}
-            // recordDoubleClick={() => {
-            // setOpenDetail(true);
-            // }}
-            contextMenuItems={ [...ContextMenuItemModel, ...contextMenuItems]}
+            contextMenuItems={[...ContextMenuItemModel, ...contextMenuItems]}
             contextMenuClick={contextMenuClick}
             allowExcelExport={true}
             allowPdfExport={true}

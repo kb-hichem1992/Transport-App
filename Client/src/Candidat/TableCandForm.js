@@ -29,6 +29,8 @@ import { L10n } from "@syncfusion/ej2-base";
 import { UserContext } from "../UserContext";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import TableFormation from "../Formation/TableFormation.js";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AlertDialog from "../components/controls/Dialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,14 +74,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TableCandForm({ setEtat, etat, numeroFormation, groupe }) {
+export default function TableCandForm({
+  setEtat,
+  etat,
+  numeroFormation,
+  groupe,
+}) {
   const [data, setdata] = useState([]);
   const [openModifier, setOpenModifier] = useState(false);
   const [openImprimer, setOpenImprimer] = useState(false);
   const [openFormation, setOpenFormation] = useState(false);
   const { userData } = useContext(UserContext);
   const numeroAgrement = userData[0].NUMERO_AGREMENT;
-
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     fetch(
       `http://localhost:3001/api/get_candidat_form/${numeroFormation}/${numeroAgrement}/${groupe}`
@@ -129,7 +136,7 @@ export default function TableCandForm({ setEtat, etat, numeroFormation, groupe }
     dateins,
     numeroFormation,
     GROUPE,
-    numeroAgrement,
+    numeroAgrement
   ) => {
     axios
       .put("http://localhost:3001/update_passe", {
@@ -173,6 +180,28 @@ export default function TableCandForm({ setEtat, etat, numeroFormation, groupe }
         setEtat(!etat);
       });
   };
+
+  const deletePasse = (
+    numeroCandidat,
+    Date_ins,
+    Num_permis,
+    numeroFormation,
+    groupe,
+    numeroAgrement
+  ) => {
+    axios
+      .post(`http://localhost:3001/delete_passe`, {
+        numeroCandidat: numeroCandidat,
+        Date_ins: Date_ins,
+        Num_permis: Num_permis,
+        numeroFormation: numeroFormation,
+        groupe: groupe,
+        numeroAgrement: numeroAgrement,
+      })
+      .then(() => {
+        setEtat(!etat);
+      });
+  };
   function rowSelected() {
     try {
       const selectedrecords = TableRef3.current.getSelectedRecords();
@@ -184,7 +213,7 @@ export default function TableCandForm({ setEtat, etat, numeroFormation, groupe }
     }
   }
   const Values = rowSelected();
-  
+
   return (
     <Fragment>
       <div className={classes.container}>
@@ -195,7 +224,7 @@ export default function TableCandForm({ setEtat, etat, numeroFormation, groupe }
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
           disabled={
-            Values === undefined || userData[0].ADMIN !== "admin"  ? true : false
+            Values === undefined || userData[0].ADMIN !== "admin" ? true : false
           }
           onClick={() => {
             setOpenModifier(true);
@@ -223,13 +252,27 @@ export default function TableCandForm({ setEtat, etat, numeroFormation, groupe }
           text="تكوين"
           variant="outlined"
           size="small"
-          startIcon={<EditOutlinedIcon />}
+          startIcon={<DeleteIcon />}
           className={classes.newButton}
           disabled={
             Values === undefined || Values.REMARQUE === "ناجح" ? true : false
           }
           onClick={() => {
             setOpenFormation(true);
+          }}
+        />
+        <Button
+          text="حذف"
+          variant="outlined"
+          size="small"
+          color="secondary"
+          startIcon={<EditOutlinedIcon />}
+          className={classes.newButton}
+          disabled={
+            Values === undefined || userData[0].ADMIN !== "admin" || Values.REMARQUE === "ناجح"  ? true : false
+          }
+          onClick={() => {
+            setOpen(true);
           }}
         />
       </div>
@@ -320,6 +363,22 @@ export default function TableCandForm({ setEtat, etat, numeroFormation, groupe }
           valeur={Values}
         />
       </Popup>
+      <AlertDialog
+        title="تحذير"
+        message="هل انت متأكد ؟"
+        open={open}
+        setOpen={setOpen}
+        method={() => {
+          deletePasse(
+            Values.NUM_INS,
+            Values.DATE_INS,
+            Values.NUM_PERMIS,
+            Values.NUMERO_FORMATION,
+            Values.GROUPE,
+            Values.NUMERO_AGREMENT
+          );
+        }}
+      />
     </Fragment>
   );
 }

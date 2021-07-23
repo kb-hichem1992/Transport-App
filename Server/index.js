@@ -362,6 +362,27 @@ app.delete(
     );
   }
 );
+app.post( "/delete_passe",
+  (req, res) => {
+    const numeroCandidat = req.body.numeroCandidat;
+    const Date_ins = req.body.Date_ins;
+    const Num_permis = req.body.Num_permis;
+    const numeroFormation = req.body.numeroFormation;
+    const groupe = req.body.groupe;
+    const numeroAgrement = req.body.numeroAgrement;
+    db.query(
+      "DELETE FROM passe WHERE `NUM_INS`= ? and `DATE_INS`= ? and `NUM_PERMIS`= ? and `NUMERO_FORMATION`= ? and`GROUPE`= ? and`NUMERO_AGREMENT`= ?;",
+      [numeroCandidat,Date_ins,Num_permis,numeroFormation,groupe, numeroAgrement],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(result);
+        }
+      }
+    );
+  }
+);
 
 // DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get(
