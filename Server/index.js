@@ -11,7 +11,7 @@ const path = require('path');
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "root",
   database: "bdd",
   dateStrings: true,
 });
@@ -506,7 +506,7 @@ app.listen(3001, () => {
 
 const displayPDF = (filename  , res) => {
   const inputPath = path.resolve(__dirname, filesPath, filename);
-  console.log(inputPath);
+  
 
   fs.readFile(inputPath, function (err, data) {
     if (err) {
