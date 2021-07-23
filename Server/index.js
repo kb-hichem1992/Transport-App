@@ -11,7 +11,7 @@ const path = require('path');
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "roor",
+  password: "root",
   database: "bdd",
   dateStrings: true,
 });

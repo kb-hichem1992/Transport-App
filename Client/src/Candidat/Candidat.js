@@ -354,19 +354,13 @@ export default function AppCand({ id }) {
           <form
             action={
               Values !== undefined
-                ? "http://localhost:3001/report/EVALUATION/" +
-                  Values.NUM_INS +
-                  "/1/" +
-                  Values.NUM_PERMIS +
-                  "/" +
-                  Values.DATE_INS +
-                  "/2"
+                ? "http://localhost:3001/report/EVALUATION/"+Values.NUM_INS+"/"+ Values.NUM_PERMIS +"/"+Values.DATE_INS +"/"+userData[0].NUMERO_AGREMENT+""
                 : "error"
             }
             method="get"
             target="_blank"
           >
-            <Button
+            {/* <Button
               text="تكوين"
               variant="outlined"
               size="small"
@@ -376,7 +370,7 @@ export default function AppCand({ id }) {
               onClick={() => {
                 setOpenFormation(true);
               }}
-            />
+            /> */}
 
             <Button
               type="submit"
