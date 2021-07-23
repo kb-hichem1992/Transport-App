@@ -129,52 +129,6 @@ export default function AppBrevet({ id }) {
       });
   };
   const contextMenuItems = ["Copy", "ExcelExport"];
-
-  const getPDF = (
-    numeroCandidat,
-    numeroFormation,
-    Num_permis,
-    dateins,
-    numeroAgrement
-  ) => {
-    const viewHandler = async () => {
-      const apiURL = `http://localhost:3001/report/DIPLOME/${numeroCandidat}/${numeroFormation}/${Num_permis}/${dateins}/${numeroAgrement}`;
-      axios(apiURL, {
-        method: "GET",
-        responseType: "blob", //Force to receive data in a Blob Format
-      })
-        .then((response) => {
-          //Create a Blob from the PDF Stream
-          const file = new Blob([response.data], { type: "application/pdf" });
-          console.log(response.data);
-          //Build a URL from the file
-          const fileURL = URL.createObjectURL(file);
-          //Open the URL on new Window
-          window.open(fileURL);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-    viewHandler();
-  };
-
-function imprimer(
-    numeroCandidat,
-    numeroFormation,
-    Num_permis,
-    dateins,
-    numeroAgrement
-  ) {
-   axios.get(
-      `http://localhost:3001/report/DIPLOME/${numeroCandidat}/${numeroFormation}/${Num_permis}/${dateins}/${numeroAgrement}`
-    ).then ( response => {
-      console.log(response.data);
-    }).catch(err => {
-       alert(err)
-    })
-  }
-
   L10n.load({
     "ar-AE": {
       grid: {
@@ -217,7 +171,7 @@ function imprimer(
   }
   const Values = rowSelected();
   const { userData } = useContext(UserContext);
-
+   
   return (
     <Fragment>
       <PageHeader
@@ -225,31 +179,22 @@ function imprimer(
         subTitle="قائمة الشهادات المستخرجة"
         icon={<LibraryBooksIcon />}
       />
-
       <div className={classes.container}>
-        <Button
-          text="طباعة"
-          variant="outlined"
-          size="small"
-          startIcon={<PrintIcon />}
-          className={classes.newButton}
-          disabled={
-            Values === undefined || userData[0].ADMIN !== "admin" ? true : false
-          }
-          onClick={() => {
-            imprimer(
-              Values.NUM_INS,
-              Values.NUMERO_FORMATION,
-              Values.NUM_PERMIS,
-              Values.DATE_INS,
-              Values.NUMERO_AGREMENT
-            );
-            // let a = document.createElement("a");
-            // a.href = response; // pdf encode
-            // a.download = "test4.pdf";
-            // a.click();
-          }}
-        />
+        <form action={Values !== undefined ? "http://localhost:3001/report/DIPLOME/"+Values.NUM_INS+"/"+Values.NUMERO_FORMATION+"/"+Values.NUM_PERMIS+"/"+Values.DATE_INS+"/"+Values.NUMERO_AGREMENT+"/"+Values.GROUPE+"" : "error"} method="get" target="_blank">
+          <Button
+            type="submit"
+            text="طباعة"
+            variant="outlined"
+            size="small"
+            startIcon={<PrintIcon />}
+            className={classes.newButton}
+            disabled={
+              Values === undefined || userData[0].ADMIN !== "admin"
+                ? true
+                : false
+            }
+          />
+        </form>
       </div>
       <div className={classes.container}>
         <Paper className={classes.paper}>
