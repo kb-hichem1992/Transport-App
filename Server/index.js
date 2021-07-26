@@ -11,7 +11,7 @@ const path = require('path');
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "",
   database: "bdd",
   dateStrings: true,
 });
@@ -323,7 +323,7 @@ app.put("/update_candidat", (req, res) => {
       Type_Candidat,
       date_liv,
       date_exp,
-      categorie_permis,get
+      categorie_permis,
       type_permis,
       newDate_ins,
       Num_permis,
@@ -465,31 +465,9 @@ app.get(
   }
 );
 
-// EVALUATION GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
-app.get(
-  "/report/EVALUATION/:idin/:idperm/:dateins",
-  (req, res) => {
-    var fullUrl = req.protocol + "://" + req.get("host");
-
-    const idin = req.params.idin;
-    
-    const idperm = req.params.idperm;
-    const dateins = req.params.dateins;
-    
-
-    pdf.generatepdf2(
-      idin,
-      idperm,
-      dateins,
-      fullUrl,
-      function (dt) {
-        //console.log(dt);
-        var filen=idin+idperm+dateins+".pdf";
-        displayPDF(filen , res)
-      }
-    );
-  }
-);
+app.get("/report", (req,res) => {
+   
+}) ;  
 
 app.post("/Add_passe", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
@@ -553,6 +531,7 @@ app.get("/file" ,  (req,res)=>{
 
 app.listen(3001, () => {
   console.log("it works");
+  pdf.generatepdf() ; 
 });
 
 

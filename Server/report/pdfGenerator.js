@@ -219,7 +219,6 @@ async function generatepdf2(idin,idPerm, dateins,uurl, fn) {
 			"NUM_INS":{"text":"تحت رقم","x":210,"y":401},
 		
            };
-
     */
 
       var FICH1 = {
@@ -310,7 +309,6 @@ async function generatepdf2(idin,idPerm, dateins,uurl, fn) {
 }
 
 /*
-
  module.exports.generatepdf = (idin,idform,idPerm,dateins,numagr,uurl)=>{
  
  
