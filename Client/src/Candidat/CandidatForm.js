@@ -210,14 +210,15 @@ export default function Candidat(props) {
                 label=" رقم التسجيل"
                 value={numeroCandidat}
                 size="small"
+                disabled={ props.onClick.name === "updateCandidat" ? true : false}
                 onChange={(e) => setNumeroCandidat(e.target.value)}
               />
               <Controls.DatePicker
                 label="تاريخ التسجيل"
                 value={Date_ins}
                 onChange={setDate_ins}
+               
               />
-
               <FormControl>
                 <InputLabel id="demo-simple-select-label">
                   نوع المترشح
@@ -238,30 +239,6 @@ export default function Candidat(props) {
                   })}
                 </Select>
               </FormControl>
-
-              {/*               <Button
-                variant="outlined"
-                color="primary"
-                endIcon={<AddIcon />}
-                disabled={
-                  Type_candidat === "حر" || Type_candidat === "" ? true : false
-                }
-                onClick={() => {
-                  setOpenOperateur(true);
-                }}
-                style={{ width: 123, height: 42 }}
-              >
-                Opérateur
-              </Button>
-              <TextField
-                variant="outlined"
-                label="Opérateur"
-                value={operateur}
-                size="small"
-                style={{ width: 193 }}
-                inputProps={{ style: { fontSize: 18 }, readOnly: true }}
-              />
- */}
               <TextField
                 variant="outlined"
                 label="اللقب"
@@ -349,6 +326,7 @@ export default function Candidat(props) {
               <TextField
                 variant="outlined"
                 label="رقم رخسة السياقة"
+                disabled={ props.onClick.name === "updateCandidat" ? true : false}
                 value={NumPermis}
                 size="small"
                 onChange={(e) => {
@@ -443,7 +421,7 @@ export default function Candidat(props) {
           try {
             props.onClick(
               numeroCandidat,
-              convert(Date_ins),
+              convert(DATE_INS),
               Nom,
               Prenom,
               convert(selectedDate),
@@ -457,7 +435,8 @@ export default function Candidat(props) {
               convert(LivPermis),
               convert(ExpPermis),
               CategoriePermis.toString(),
-              Typepermis
+              Typepermis,
+              convert(Date_ins),
             );
           } catch (err) {
             console.log(err);

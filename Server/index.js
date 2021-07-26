@@ -32,6 +32,30 @@ app.get("/api/getCon", (req, res) => {
     res.send(result);
   });
 });
+
+app.put("/update_password", (req, res) => {
+  const password = req.body.password;
+  const username = req.body.username;
+  const admin = req.body.admin;
+  const numeroAgrement = req.body.numeroAgrement;
+  db.query(
+    "UPDATE user SET `PASSWORD`= ? WHERE `USERNAME`= ? and `ADMIN`= ? and `NUMERO_AGREMENT`= ?;",
+    [
+      password,
+      username,
+      admin,
+      numeroAgrement,
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Values updated");
+      }
+    }
+  );
+});
+
 app.get("/api/getOp", (req, res) => {
   const sqlquery = "SELECT * FROM operateur;";
   db.query(sqlquery, (err, result) => {
@@ -133,9 +157,35 @@ app.put("/update_passe", (req, res) => {
     }
   );
 });
+app.put("/Printed", (req, res) => {
+  const numeroCandidat = req.body.numeroCandidat;
+  const numeroFormation = req.body.numeroFormation;
+  const GROUPE = req.body.GROUPE;
+  const numeroAgrement = req.body.numeroAgrement;
+  const Num_permis = req.body.Num_permis;
+  const dateins = req.body.dateins;
+  db.query(
+    "UPDATE passe SET `PRINT`= 1 WHERE `NUM_INS`= ? and NUM_PERMIS = ? and DATE_INS = ? and `NUMERO_FORMATION`= ? and `GROUPE`= ? and `NUMERO_AGREMENT` = ?  ;",
+    [
+      numeroCandidat,
+      Num_permis,
+      dateins,
+      numeroFormation,
+      GROUPE,
+      numeroAgrement,
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Values updated");
+      }
+    }
+  );
+});
 app.get("/api/get_brevet", (req, res) => {
   const sqlquery =
-    "SELECT passe.BREVET, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, passe.LIV_BREVET, passe.EXP_BREVET, formation.TYPE_FORMATION, passe.GROUPE,passe.NUMERO_FORMATION, passe.NUM_INS, passe.NUM_PERMIS, passe.DATE_INS, passe.NUMERO_AGREMENT, passe.GROUPE FROM ((passe INNER JOIN candidat ON candidat.NUM_INS = passe.NUM_INS AND candidat.DATE_INS = passe.DATE_INS AND candidat.NUM_PERMIS = passe.NUM_PERMIS) INNER JOIN formation ON formation.NUMERO_FORMATION = passe.NUMERO_FORMATION  AND formation.NUMERO_AGREMENT = passe.NUMERO_AGREMENT AND formation.GROUPE = passe.GROUPE) where passe.BREVET != '';";
+    "SELECT passe.PRINT, passe.BREVET, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, passe.LIV_BREVET, passe.EXP_BREVET, formation.TYPE_FORMATION, passe.GROUPE,passe.NUMERO_FORMATION, passe.NUM_INS, passe.NUM_PERMIS, passe.DATE_INS, passe.NUMERO_AGREMENT, passe.GROUPE FROM ((passe INNER JOIN candidat ON candidat.NUM_INS = passe.NUM_INS AND candidat.DATE_INS = passe.DATE_INS AND candidat.NUM_PERMIS = passe.NUM_PERMIS) INNER JOIN formation ON formation.NUMERO_FORMATION = passe.NUMERO_FORMATION  AND formation.NUMERO_AGREMENT = passe.NUMERO_AGREMENT AND formation.GROUPE = passe.GROUPE) where passe.BREVET != '';";
   db.query(sqlquery, (err, result) => {
     res.send(result);
   });
@@ -258,8 +308,9 @@ app.put("/update_candidat", (req, res) => {
   const date_exp = req.body.date_exp;
   const type_permis = req.body.type_permis;
   const categorie_permis = req.body.categorie_permis;
+  const newDate_ins = req.body.newDate_ins;
   db.query(
-    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `TYPE_CANDIDAT`= ?,`DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ? WHERE  `NUM_PERMIS` = ? and `DATE_INS` = ? and `NUM_INS` = ? ;",
+    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `TYPE_CANDIDAT`= ?,`DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ?, `DATE_INS` = ?   WHERE  `NUM_PERMIS` = ? and `DATE_INS` = ? and `NUM_INS` = ? ;",
     [
       Nom,
       Prénom,
@@ -272,8 +323,9 @@ app.put("/update_candidat", (req, res) => {
       Type_Candidat,
       date_liv,
       date_exp,
-      categorie_permis,
+      categorie_permis,get
       type_permis,
+      newDate_ins,
       Num_permis,
       Date_ins,
       numeroCandidat,

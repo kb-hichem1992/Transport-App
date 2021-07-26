@@ -22,8 +22,6 @@ import {
 } from "@syncfusion/ej2-react-grids";
 import Popup from "../components/Popup.js";
 import Button from "../components/controls/Button";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteIcon from "@material-ui/icons/Delete";
 import PageHeader from "../PageHeader";
 import BrevetForm from "../Formation/BrevetForm.js";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
@@ -31,14 +29,27 @@ import axios from "axios";
 import { L10n } from "@syncfusion/ej2-base";
 import { UserContext } from "../UserContext.js";
 import PrintIcon from "@material-ui/icons/Print";
+import AlertDialog from "../components/controls/Dialog";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiButton-text": {
       fontSize: "100px",
+    },
+    "& .MuiAlert-message": {
+      fontSize: "20px",
+    },
+    width: "100%",
+    "& > * + *": {
+      marginTop: theme.spacing(2),
     },
     ...theme.typography.button,
     backgroundColor: theme.palette.background.paper,
@@ -90,6 +101,8 @@ export default function AppBrevet({ id }) {
   const [data, setdata] = useState([]);
   const [openModifier, setOpenModifier] = useState(false);
   const [etat, setEtat] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [openSnack, setOpenSnack] = useState(false);
 
   useEffect(() => {
     fetch(id)
@@ -128,6 +141,29 @@ export default function AppBrevet({ id }) {
         setEtat(!etat);
       });
   };
+
+  const setPrinted = (
+    numeroCandidat,
+    Num_permis,
+    dateins,
+    numeroFormation,
+    GROUPE,
+    numeroAgrement
+  ) => {
+    axios
+      .put("http://localhost:3001/Printed", {
+        numeroCandidat: numeroCandidat,
+        Num_permis: Num_permis,
+        dateins: dateins,
+        numeroFormation: numeroFormation,
+        GROUPE: GROUPE,
+        numeroAgrement: numeroAgrement,
+      })
+      .then(() => {
+        console.log("");
+      });
+  };
+
   const contextMenuItems = ["Copy", "ExcelExport"];
   L10n.load({
     "ar-AE": {
@@ -171,7 +207,50 @@ export default function AppBrevet({ id }) {
   }
   const Values = rowSelected();
   const { userData } = useContext(UserContext);
-   
+  const handleClick = () => {
+    setOpenSnack(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
+
+  const showPdf = (e) => {
+    e.preventDefault();
+    if (Values.PRINT === 1) {
+      setOpen(true)
+    } else {
+      setPrinted(
+        Values.NUM_INS,
+        Values.NUM_PERMIS,
+        Values.DATE_INS,
+        Values.NUMERO_FORMATION,
+        Values.GROUPE,
+        Values.NUMERO_AGREMENT
+      );
+      handleClick();
+      window.open(
+        "http://localhost:3001/report/DIPLOME/" +
+          Values.NUM_INS +
+          "/" +
+          Values.NUMERO_FORMATION +
+          "/" +
+          Values.NUM_PERMIS +
+          "/" +
+          Values.DATE_INS +
+          "/" +
+          Values.NUMERO_AGREMENT +
+          "/" +
+          Values.GROUPE +
+          ""
+      );
+    }
+  };
+
   return (
     <Fragment>
       <PageHeader
@@ -180,7 +259,7 @@ export default function AppBrevet({ id }) {
         icon={<LibraryBooksIcon />}
       />
       <div className={classes.container}>
-        <form action={Values !== undefined ? "http://localhost:3001/report/DIPLOME/"+Values.NUM_INS+"/"+Values.NUMERO_FORMATION+"/"+Values.NUM_PERMIS+"/"+Values.DATE_INS+"/"+Values.NUMERO_AGREMENT+"/"+Values.GROUPE+"" : "error"} method="get" target="_blank">
+        <form onSubmit={showPdf}>
           <Button
             type="submit"
             text="طباعة"
@@ -283,6 +362,40 @@ export default function AppBrevet({ id }) {
           data={data}
         />
       </Popup>
+      <AlertDialog
+        title="تنبيه"
+        message="هذه الشهادة قد طبعت من قبل. هل تود طباعتها من جديد؟"
+        open={open}
+        setOpen={setOpen}
+        method={() => {
+          window.open(
+            "http://localhost:3001/report/DIPLOME/" +
+              Values.NUM_INS +
+              "/" +
+              Values.NUMERO_FORMATION +
+              "/" +
+              Values.NUM_PERMIS +
+              "/" +
+              Values.DATE_INS +
+              "/" +
+              Values.NUMERO_AGREMENT +
+              "/" +
+              Values.GROUPE +
+              ""
+          );
+        }}
+      />
+      <div className={classes.root}>
+        <Snackbar
+          open={openSnack}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="info">
+            طبعت لأول مرة
+          </Alert>
+        </Snackbar>
+      </div>
     </Fragment>
   );
 }

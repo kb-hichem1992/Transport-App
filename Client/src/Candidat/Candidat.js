@@ -24,7 +24,6 @@ import {
   ExcelExport,
   PdfExport,
 } from "@syncfusion/ej2-react-grids";
-
 import { L10n } from "@syncfusion/ej2-base";
 import Axios from "axios";
 import Popup from "../components/Popup.js";
@@ -212,7 +211,8 @@ export default function AppCand({ id }) {
     date_liv,
     date_exp,
     categorie_permis,
-    type_permis
+    type_permis,
+    newDate_ins
   ) => {
     Axios.put("http://localhost:3001/update_candidat", {
       Nom: Nom,
@@ -228,6 +228,7 @@ export default function AppCand({ id }) {
       date_exp: date_exp,
       categorie_permis: categorie_permis,
       type_permis: type_permis,
+      newDate_ins: newDate_ins,
       Num_permis: Num_permis,
       Date_ins: Date_ins,
       numeroCandidat: numeroCandidat,
@@ -354,13 +355,19 @@ export default function AppCand({ id }) {
           <form
             action={
               Values !== undefined
-                ? "http://localhost:3001/report/EVALUATION/"+Values.NUM_INS+"/"+ Values.NUM_PERMIS +"/"+Values.DATE_INS +"/"
+                ? "http://localhost:3001/report/EVALUATION/" +
+                  Values.NUM_INS +
+                  "/" +
+                  Values.NUM_PERMIS +
+                  "/" +
+                  Values.DATE_INS +
+                  "/"
                 : "error"
             }
             method="get"
             target="_blank"
           >
-            {/* <Button
+            <Button
               text="تكوين"
               variant="outlined"
               size="small"
@@ -370,7 +377,7 @@ export default function AppCand({ id }) {
               onClick={() => {
                 setOpenFormation(true);
               }}
-            /> */}
+            />
 
             <Button
               type="submit"

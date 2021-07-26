@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -45,7 +46,8 @@ const useStyles = makeStyles((theme) => ({
 export default function PasseFrom(props) {
   const classes = useStyles();
 
-  const { NUMERO_FORMATION, NUMERO_AGREMENT, NUM_INS, GROUPE, NOTE, REMARQUE , DATE_INS, NUM_PERMIS } = props.values;
+
+  const { NUMERO_FORMATION, NUMERO_AGREMENT, NUM_INS, GROUPE, NOTE, REMARQUE , DATE_INS, NUM_PERMIS } = props.values || "";
 
   const [numeroFormation] = useState(NUMERO_FORMATION);
   const [numeroCandidat] = useState(NUM_INS);
@@ -64,7 +66,7 @@ export default function PasseFrom(props) {
 
   const Enregister = () => {
     try {
-      if (note === "" || remarque === "") {
+      if (note === null || remarque === null) {
         alert("يجب ملئ كل المعلومات");
       } else {
         props.onClick(
@@ -77,7 +79,6 @@ export default function PasseFrom(props) {
           GROUPE,
           NUMERO_AGREMENT
         );
-        alert("تمت العملية");
         props.Close(false);
       }
     } catch (error) {

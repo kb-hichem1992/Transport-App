@@ -28,6 +28,9 @@ import GroupIcon from "@material-ui/icons/Group";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import AppBrevet from "./Brevet/Brevet.js";
 import { UserContext } from "./UserContext";
+import Profil from "./Profil";
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+
 const drawerWidth = 180;
 
 const useStyles = makeStyles((theme) => ({
@@ -147,7 +150,6 @@ export default function Dashboard() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -156,8 +158,6 @@ export default function Dashboard() {
   };
 
   const numeroAgrement = userData[0].NUMERO_AGREMENT;
-
-
 
   return (
     // the Appbar Starts from here
@@ -189,7 +189,7 @@ export default function Dashboard() {
               noWrap
               className={classes.title}
             >
-                 مركز رقم  {numeroAgrement}
+              مركز رقم {numeroAgrement}
             </Typography>
             <Button
               text="خروج"
@@ -249,6 +249,15 @@ export default function Dashboard() {
               </ListItem>
             </Link>
           </List>
+          <Divider />
+          <Link to="/Profile" className={classes.link}>
+            <ListItem button>
+              <ListItemIcon>
+                <AccountCircleIcon />
+              </ListItemIcon>
+              <ListItemText primary="الحساب" />
+            </ListItem>
+          </Link>
         </Drawer>
         <main
           className={clsx(classes.content, {
@@ -323,6 +332,7 @@ export default function Dashboard() {
                     />
                   )}
                 />
+                <Route path="/Profile" render={(props) => <Profil/>} />
               </Switch>
             </Grid>
           </Container>
