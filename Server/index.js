@@ -323,7 +323,7 @@ app.put("/update_candidat", (req, res) => {
       Type_Candidat,
       date_liv,
       date_exp,
-      categorie_permis,get
+      categorie_permis,
       type_permis,
       newDate_ins,
       Num_permis,
@@ -438,12 +438,12 @@ app.post( "/delete_passe",
 
 // DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get(
-  "/report/DIPLOME/:idinn/:idformm/:idperm/:dateins/:numagr/:groupe",
+  "/report/DIPLOME/:idinn/:idformm/:dateins/:numagr/:groupe",
   (req, res) => {
     var fullUrl = req.protocol + "://" + req.get("host");
     const idinn = req.params.idinn;
     const idformm = req.params.idformm;
-    const idperm = req.params.idperm;
+    
     const dateins = req.params.dateins;
     const numagr = req.params.numagr;
     const groupe=req.params.groupe;
@@ -451,14 +451,13 @@ app.get(
     pdf.generatepdf(
       idinn,
       idformm,
-      idperm,
       dateins,
       numagr,
       groupe,
       fullUrl,
       function (dt) {
         //console.log(dt);
-         var filen=idinn+idformm+idperm+dateins+numagr+groupe+".pdf";
+         var filen=idinn+idformm+dateins+numagr+groupe+".pdf";
        displayPDF(filen , res)
       }
     );
@@ -467,24 +466,23 @@ app.get(
 
 // EVALUATION GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get(
-  "/report/EVALUATION/:idin/:idperm/:dateins",
+  "/report/EVALUATION/:idin/:dateins",
   (req, res) => {
     var fullUrl = req.protocol + "://" + req.get("host");
 
     const idin = req.params.idin;
     
-    const idperm = req.params.idperm;
+    
     const dateins = req.params.dateins;
     
 
     pdf.generatepdf2(
       idin,
-      idperm,
       dateins,
       fullUrl,
       function (dt) {
         //console.log(dt);
-        var filen=idin+idperm+dateins+".pdf";
+        var filen=idin+dateins+".pdf";
         displayPDF(filen , res)
       }
     );
