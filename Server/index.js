@@ -3,10 +3,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mysql = require("mysql");
-// files 
-const fs = require('fs');
-const path = require('path');
-
+// files
+const fs = require("fs");
+const path = require("path");
 
 const db = mysql.createPool({
   host: "localhost",
@@ -19,7 +18,7 @@ const db = mysql.createPool({
 module.exports = db;
 
 const pdf = require("./report/pdfGenerator.js");
-const filesPath = '';
+const filesPath = "";
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,12 +39,7 @@ app.put("/update_password", (req, res) => {
   const numeroAgrement = req.body.numeroAgrement;
   db.query(
     "UPDATE user SET `PASSWORD`= ? WHERE `USERNAME`= ? and `ADMIN`= ? and `NUMERO_AGREMENT`= ?;",
-    [
-      password,
-      username,
-      admin,
-      numeroAgrement,
-    ],
+    [password, username, admin, numeroAgrement],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -113,7 +107,8 @@ app.get("/api/get_candidat", (req, res) => {
     res.send(result);
   });
 }); */
-app.get( "/api/get_candidat_form/:numeroFormation/:numeroAgrement/:groupe",
+app.get(
+  "/api/get_candidat_form/:numeroFormation/:numeroAgrement/:groupe",
   (req, res) => {
     const numeroFormation = req.params.numeroFormation;
     const numeroAgrement = req.params.numeroAgrement;
@@ -190,6 +185,15 @@ app.get("/api/get_brevet", (req, res) => {
     res.send(result);
   });
 });
+app.get("/api/Passing_List/:numeroAgrement", (req, res) => {
+  const numeroAgrement = req.params.numeroAgrement;
+  const sqlquery =
+    "SELECT passe.NOTE, passe.REMARQUE ,candidat.DATE_NAIS_CANDIDAT,passe.BREVET, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, passe.LIV_BREVET, passe.EXP_BREVET, formation.TYPE_FORMATION, passe.GROUPE,passe.NUMERO_FORMATION, passe.NUM_INS, passe.NUM_PERMIS, passe.DATE_INS, passe.NUMERO_AGREMENT, passe.GROUPE FROM ((passe INNER JOIN candidat ON candidat.NUM_INS = passe.NUM_INS AND candidat.DATE_INS = passe.DATE_INS AND candidat.NUM_PERMIS = passe.NUM_PERMIS) INNER JOIN formation ON formation.NUMERO_FORMATION = passe.NUMERO_FORMATION  AND formation.NUMERO_AGREMENT = passe.NUMERO_AGREMENT AND formation.GROUPE = passe.GROUPE) where passe.NUMERO_AGREMENT = ?;";
+  db.query(sqlquery, [numeroAgrement], (err, result) => {
+    res.send(result);
+  });
+});
+
 app.get("/api/get_passe", (req, res) => {
   const sqlquery = "SELECT * FROM passe";
   db.query(sqlquery, (err, result) => {
@@ -198,8 +202,6 @@ app.get("/api/get_passe", (req, res) => {
 });
 app.put("/insert_brevet", (req, res) => {
   const NumeroBrevet = req.body.NumeroBrevet;
-  const LivBrevet = req.body.LivBrevet;
-  const ExpBrevet = req.body.ExpBrevet;
   const numeroCandidat = req.body.numeroCandidat;
   const Date_ins = req.body.Date_ins;
   const Num_permis = req.body.Num_permis;
@@ -208,10 +210,40 @@ app.put("/insert_brevet", (req, res) => {
   const GROUPE = req.body.GROUPE;
 
   db.query(
-    "UPDATE passe SET `BREVET`= ?, `LIV_BREVET`= ? , `EXP_BREVET` = ? WHERE `NUM_INS`= ? and `DATE_INS` = ? and `NUM_PERMIS` =? and `NUMERO_FORMATION`= ? and `NUMERO_AGREMENT`= ? and `GROUPE`= ? ;",
+    "UPDATE passe SET `BREVET`= ? WHERE `NUM_INS`= ? and `DATE_INS` = ? and `NUM_PERMIS` =? and `NUMERO_FORMATION`= ? and `NUMERO_AGREMENT`= ? and `GROUPE`= ? ;",
     [
       NumeroBrevet,
-      LivBrevet,
+      numeroCandidat,
+      Date_ins,
+      Num_permis,
+      numeroFormation,
+      numeroAgrement,
+      GROUPE,
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Values updated");
+      }
+    }
+  );
+});
+app.put("/insert_Date_brevet", (req, res) => {
+  const NumeroBrevet = req.body.NumeroBrevet;
+  const numeroCandidat = req.body.numeroCandidat;
+  const Date_ins = req.body.Date_ins;
+  const Num_permis = req.body.Num_permis;
+  const numeroFormation = req.body.numeroFormation;
+  const numeroAgrement = req.body.numeroAgrement;
+  const GROUPE = req.body.GROUPE;
+  const LivBrevt = req.body.LivBrevt;
+  const ExpBrevet = req.body.ExpBrevet;
+
+  db.query(
+    "UPDATE passe SET LIV_BREVET = ?, EXP_BREVET= ? WHERE `NUM_INS`= ? and `DATE_INS` = ? and `NUM_PERMIS` =? and `NUMERO_FORMATION`= ? and `NUMERO_AGREMENT`= ? and `GROUPE`= ?  and BREVET =?;",
+    [
+      LivBrevt,
       ExpBrevet,
       numeroCandidat,
       Date_ins,
@@ -219,6 +251,7 @@ app.put("/insert_brevet", (req, res) => {
       numeroFormation,
       numeroAgrement,
       GROUPE,
+      NumeroBrevet,
     ],
     (err, result) => {
       if (err) {
@@ -323,7 +356,7 @@ app.put("/update_candidat", (req, res) => {
       Type_Candidat,
       date_liv,
       date_exp,
-      categorie_permis,get
+      categorie_permis,
       type_permis,
       newDate_ins,
       Num_permis,
@@ -414,27 +447,32 @@ app.delete(
     );
   }
 );
-app.post( "/delete_passe",
-  (req, res) => {
-    const numeroCandidat = req.body.numeroCandidat;
-    const Date_ins = req.body.Date_ins;
-    const Num_permis = req.body.Num_permis;
-    const numeroFormation = req.body.numeroFormation;
-    const groupe = req.body.groupe;
-    const numeroAgrement = req.body.numeroAgrement;
-    db.query(
-      "DELETE FROM passe WHERE `NUM_INS`= ? and `DATE_INS`= ? and `NUM_PERMIS`= ? and `NUMERO_FORMATION`= ? and`GROUPE`= ? and`NUMERO_AGREMENT`= ?;",
-      [numeroCandidat,Date_ins,Num_permis,numeroFormation,groupe, numeroAgrement],
-      (err, result) => {
-        if (err) {
-          console.log(err);
-        } else {
-          res.send(result);
-        }
+app.post("/delete_passe", (req, res) => {
+  const numeroCandidat = req.body.numeroCandidat;
+  const Date_ins = req.body.Date_ins;
+  const Num_permis = req.body.Num_permis;
+  const numeroFormation = req.body.numeroFormation;
+  const groupe = req.body.groupe;
+  const numeroAgrement = req.body.numeroAgrement;
+  db.query(
+    "DELETE FROM passe WHERE `NUM_INS`= ? and `DATE_INS`= ? and `NUM_PERMIS`= ? and `NUMERO_FORMATION`= ? and`GROUPE`= ? and`NUMERO_AGREMENT`= ?;",
+    [
+      numeroCandidat,
+      Date_ins,
+      Num_permis,
+      numeroFormation,
+      groupe,
+      numeroAgrement,
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
       }
-    );
-  }
-);
+    }
+  );
+});
 
 // DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get(
@@ -446,7 +484,7 @@ app.get(
     const idperm = req.params.idperm;
     const dateins = req.params.dateins;
     const numagr = req.params.numagr;
-    const groupe=req.params.groupe;
+    const groupe = req.params.groupe;
 
     pdf.generatepdf(
       idinn,
@@ -458,38 +496,29 @@ app.get(
       fullUrl,
       function (dt) {
         //console.log(dt);
-         var filen=idinn+idformm+idperm+dateins+numagr+groupe+".pdf";
-       displayPDF(filen , res)
+        var filen =
+          idinn + idformm + idperm + dateins + numagr + groupe + ".pdf";
+        displayPDF(filen, res);
       }
     );
   }
 );
 
 // EVALUATION GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
-app.get(
-  "/report/EVALUATION/:idin/:idperm/:dateins",
-  (req, res) => {
-    var fullUrl = req.protocol + "://" + req.get("host");
+app.get("/report/EVALUATION/:idin/:idperm/:dateins", (req, res) => {
+  var fullUrl = req.protocol + "://" + req.get("host");
 
-    const idin = req.params.idin;
-    
-    const idperm = req.params.idperm;
-    const dateins = req.params.dateins;
-    
+  const idin = req.params.idin;
 
-    pdf.generatepdf2(
-      idin,
-      idperm,
-      dateins,
-      fullUrl,
-      function (dt) {
-        //console.log(dt);
-        var filen=idin+idperm+dateins+".pdf";
-        displayPDF(filen , res)
-      }
-    );
-  }
-);
+  const idperm = req.params.idperm;
+  const dateins = req.params.dateins;
+
+  pdf.generatepdf2(idin, idperm, dateins, fullUrl, function (dt) {
+    //console.log(dt);
+    var filen = idin + idperm + dateins + ".pdf";
+    displayPDF(filen, res);
+  });
+});
 
 app.post("/Add_passe", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
@@ -546,19 +575,17 @@ app.post("/add_travail", (req, res) => {
   );
 });
 
-//show  pdf file  in browser 
-app.get("/file" ,  (req,res)=>{
-  displayPDF("test4.pdf",res) ; 
-}); 
+//show  pdf file  in browser
+app.get("/file", (req, res) => {
+  displayPDF("test4.pdf", res);
+});
 
 app.listen(3001, () => {
   console.log("it works");
 });
 
-
-const displayPDF = (filename  , res) => {
+const displayPDF = (filename, res) => {
   const inputPath = path.resolve(__dirname, filesPath, filename);
-  
 
   fs.readFile(inputPath, function (err, data) {
     if (err) {
@@ -566,9 +593,8 @@ const displayPDF = (filename  , res) => {
       res.end(`Error getting the file: ${err}.`);
     } else {
       const ext = path.parse(inputPath).ext;
-      res.setHeader('Content-type','application/pdf');
+      res.setHeader("Content-type", "application/pdf");
       res.end(data);
     }
   });
 };
-

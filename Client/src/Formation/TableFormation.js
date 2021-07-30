@@ -27,7 +27,7 @@ import { UserContext } from "../UserContext";
 export default function TableFormation(props) {
   const [data, setdata] = useState([]);
   const [passdata, setpassdata] = useState([]);
-  const { NUM_INS, DATE_INS, NUM_PERMIS, GROUPE } = props.valeur;
+  const { NUM_INS, DATE_INS, NUM_PERMIS } = props.valeur;
 
   const [open, setOpen] = useState(false);
   const { userData } = useContext(UserContext);
@@ -136,7 +136,7 @@ export default function TableFormation(props) {
         el.NUM_INS === numeroCandidat &&
         convert(el.DATE_INS) === convert(Date_ins) &&
         el.NUMERO_FORMATION === Number(numeroFormation) &&
-        el.NUMERO_AGREMENT === numeroAgrement 
+        el.NUMERO_AGREMENT === numeroAgrement
       ) {
         return true;
       } else {
@@ -177,13 +177,13 @@ export default function TableFormation(props) {
         <GridComponent
           dataSource={data}
           allowPaging={true}
-          pageSettings={{ pageSize: 5 }}
+          pageSettings={{ pageSize: 50 }}
           allowFiltering={true}
-          allowGrouping={true}
+          allowGrouping={true}       
           filterSettings={filter}
           allowResizing={true}
           allowSorting={true}
-          height={100}
+          height={250}
           ref={TableRef}
           enableRtl={true}
           locale="ar-AE"
@@ -217,7 +217,6 @@ export default function TableFormation(props) {
             className={classes.newButton}
             disabled={values === undefined ? true : false}
             onClick={() => {
-
               if (
                 dejaInscrit(
                   NUM_PERMIS,

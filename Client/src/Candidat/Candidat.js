@@ -134,7 +134,6 @@ export default function AppCand({ id }) {
 
   function convert(date) {
     const current_datetime = new Date(date);
-
     const m = current_datetime.getMonth() + 1;
     if (m > 9) {
       return (
@@ -287,7 +286,6 @@ export default function AppCand({ id }) {
 
   const ContextMenuItemModel = [
     { text: "معلومات إضافية", target: ".e-content", id: "Details" },
-    { text: "شهادة التسجيل", target: ".e-content", id: "fiche" },
   ];
 
   const contextMenuClick = (MenuEventArgs) => {
@@ -417,8 +415,13 @@ export default function AppCand({ id }) {
           >
             <ColumnsDirective>
               <ColumnDirective
-                field="NUM_PERMIS"
-                headerText="رقم رخسة السياقة"
+                field="NUM_INS"
+                headerText="رقم التسجيل"
+                clipMode="EllipsisWithTooltip"
+              />
+              <ColumnDirective
+                field="DATE_INS"
+                headerText="تاريخ التسجيل"
                 clipMode="EllipsisWithTooltip"
               />
               <ColumnDirective

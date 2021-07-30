@@ -87,6 +87,7 @@ export default function TableCandForm({
   const { userData } = useContext(UserContext);
   const numeroAgrement = userData[0].NUMERO_AGREMENT;
   const [open, setOpen] = useState(false);
+  
   useEffect(() => {
     fetch(
       `http://localhost:3001/api/get_candidat_form/${numeroFormation}/${numeroAgrement}/${groupe}`
@@ -155,8 +156,6 @@ export default function TableCandForm({
   };
   const insertBrevet = (
     NumeroBrevet,
-    LivBrevet,
-    ExpBrevet,
     numeroCandidat,
     Date_ins,
     Num_permis,
@@ -167,8 +166,6 @@ export default function TableCandForm({
     axios
       .put("http://localhost:3001/insert_brevet", {
         NumeroBrevet: NumeroBrevet,
-        LivBrevet: LivBrevet,
-        ExpBrevet: ExpBrevet,
         numeroCandidat: numeroCandidat,
         Date_ins: Date_ins,
         Num_permis: Num_permis,
@@ -269,7 +266,7 @@ export default function TableCandForm({
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
           disabled={
-            Values === undefined || userData[0].ADMIN !== "admin" || Values.REMARQUE === "ناجح"  ? true : false
+            Values === undefined || userData[0].ADMIN !== "admin" || Values.REMARQUE === "ناجح"  || Values.NOTE > 0 ? true : false
           }
           onClick={() => {
             setOpen(true);

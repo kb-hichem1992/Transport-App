@@ -231,7 +231,7 @@ function AppFor({ id }) {
           <GridComponent
             dataSource={data}
             allowPaging={true}
-            pageSettings={{ pageSize: 10 }}
+            pageSettings={{ pageSize: 50 }}
             allowFiltering={true}
             allowGrouping={true}
             filterSettings={filter}

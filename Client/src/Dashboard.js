@@ -29,7 +29,8 @@ import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import AppBrevet from "./Brevet/Brevet.js";
 import { UserContext } from "./UserContext";
 import Profil from "./Profil";
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import SearchTable from "./Formation/Search.js";
 
 const drawerWidth = 180;
 
@@ -224,6 +225,14 @@ export default function Dashboard() {
           </div>
           <Divider />
           <List>
+            <Link to="/search" className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <GroupIcon />
+                </ListItemIcon>
+                <ListItemText primary="البحث" />
+              </ListItem>
+            </Link>
             <Link to="/candidat" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
@@ -278,12 +287,14 @@ export default function Dashboard() {
                     />
                   )}
                 />
-                <Route path="/" render={<div> welcome </div>} exact />
                 <Route path="/op/mor">
                   <AppOp
                     id={"http://localhost:3001/api/get_op/mor"}
                     Title={"Liste des opérateurs/Personne Morale"}
                   />
+                </Route>
+                <Route path="/search">
+                  <SearchTable/>
                 </Route>
                 <Route
                   path="/op/phy"
@@ -332,7 +343,7 @@ export default function Dashboard() {
                     />
                   )}
                 />
-                <Route path="/Profile" render={(props) => <Profil/>} />
+                <Route path="/Profile" render={(props) => <Profil />} />
               </Switch>
             </Grid>
           </Container>
