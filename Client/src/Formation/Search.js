@@ -20,6 +20,8 @@ import {
 } from "@syncfusion/ej2-react-grids";
 import { L10n } from "@syncfusion/ej2-base";
 import { UserContext } from "../UserContext";
+import PageHeader from "../PageHeader";
+import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -108,6 +110,11 @@ export default function SearchTable() {
   });
   return (
     <Fragment>
+       <PageHeader
+        title="قائمة البحث "
+        subTitle="قائمة المترشحين الذين إجتازوا أو سجلوا في الدورات"
+        icon={<SearchIcon />}
+      />
       <div id="cont">
         <GridComponent
           dataSource={data}
@@ -118,7 +125,7 @@ export default function SearchTable() {
           filterSettings={filter}
           allowResizing={true}
           allowSorting={true}
-          height={200}
+          height={240}
           ref={TableRef3}
           enableRtl={true}
           locale="ar-AE"

@@ -31,6 +31,7 @@ import { UserContext } from "./UserContext";
 import Profil from "./Profil";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SearchTable from "./Formation/Search.js";
+import SearchIcon from "@material-ui/icons/Search";
 
 const drawerWidth = 180;
 
@@ -225,10 +226,10 @@ export default function Dashboard() {
           </div>
           <Divider />
           <List>
-            <Link to="/search" className={classes.link}>
+            <Link to="/" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
-                  <GroupIcon />
+                  <SearchIcon />
                 </ListItemIcon>
                 <ListItemText primary="البحث" />
               </ListItem>
@@ -277,24 +278,12 @@ export default function Dashboard() {
           <Container maxWidth="lg" className={classes.container}>
             <Grid item xs={12}>
               <Switch>
-                <Route
-                  path="/"
-                  exact
-                  render={(props) => (
-                    <AppFor
-                      {...props}
-                      id={"http://localhost:3001/api/get_form"}
-                    />
-                  )}
-                />
+                <Route path="/" exact render={() => <SearchTable />} />
                 <Route path="/op/mor">
                   <AppOp
                     id={"http://localhost:3001/api/get_op/mor"}
                     Title={"Liste des opérateurs/Personne Morale"}
                   />
-                </Route>
-                <Route path="/search">
-                  <SearchTable/>
                 </Route>
                 <Route
                   path="/op/phy"

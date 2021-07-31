@@ -241,8 +241,6 @@ export default function AppBrevet({ id }) {
           "/" +
           Values.NUMERO_FORMATION +
           "/" +
-          Values.NUM_PERMIS +
-          "/" +
           Values.DATE_INS +
           "/" +
           Values.NUMERO_AGREMENT +
@@ -277,21 +275,18 @@ export default function AppBrevet({ id }) {
           />
         </form>
         <Button
-         
-            text="تاريخ الصلاحية"
-            variant="outlined"
-            size="small"
-            startIcon={<EditOutlinedIcon />}
-            className={classes.newButton}
-            disabled={
-              Values === undefined || userData[0].ADMIN !== "admin"
-                ? true
-                : false
-            }
-            onClick={()=>{
-              setopenDateBrevet(true)
-            }}
-          />
+          text="تاريخ الصلاحية"
+          variant="outlined"
+          size="small"
+          startIcon={<EditOutlinedIcon />}
+          className={classes.newButton}
+          disabled={
+            Values === undefined || userData[0].ADMIN !== "admin" ? true : false
+          }
+          onClick={() => {
+            setopenDateBrevet(true);
+          }}
+        />
       </div>
       <div className={classes.container}>
         <Paper className={classes.paper}>
@@ -385,7 +380,12 @@ export default function AppBrevet({ id }) {
         openPopup={openDateBrevet}
         setOpenPopup={setopenDateBrevet}
       >
-        <BrevetDateForm setEtat ={setEtat} etat={etat} Close={setopenDateBrevet} values={Values} />
+        <BrevetDateForm
+          setEtat={setEtat}
+          etat={etat}
+          Close={setopenDateBrevet}
+          values={Values}
+        />
       </Popup>
       <AlertDialog
         title="تنبيه"
@@ -398,8 +398,6 @@ export default function AppBrevet({ id }) {
               Values.NUM_INS +
               "/" +
               Values.NUMERO_FORMATION +
-              "/" +
-              Values.NUM_PERMIS +
               "/" +
               Values.DATE_INS +
               "/" +

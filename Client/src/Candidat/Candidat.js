@@ -356,8 +356,6 @@ export default function AppCand({ id }) {
                 ? "http://localhost:3001/report/EVALUATION/" +
                   Values.NUM_INS +
                   "/" +
-                  Values.NUM_PERMIS +
-                  "/" +
                   Values.DATE_INS +
                   "/"
                 : "error"

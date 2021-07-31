@@ -495,36 +495,14 @@ app.get(
       fullUrl,
       function (dt) {
         //console.log(dt);
-<<<<<<< HEAD
-        var filen =
-          idinn + idformm + idperm + dateins + numagr + groupe + ".pdf";
-        displayPDF(filen, res);
-=======
          var filen=idinn+idformm+dateins+numagr+groupe+".pdf";
        displayPDF(filen , res)
->>>>>>> 5db53f879f79a523da8fd9723a7e19322605935e
       }
     );
   }
 );
 
 // EVALUATION GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
-<<<<<<< HEAD
-app.get("/report/EVALUATION/:idin/:idperm/:dateins", (req, res) => {
-  var fullUrl = req.protocol + "://" + req.get("host");
-
-  const idin = req.params.idin;
-
-  const idperm = req.params.idperm;
-  const dateins = req.params.dateins;
-
-  pdf.generatepdf2(idin, idperm, dateins, fullUrl, function (dt) {
-    //console.log(dt);
-    var filen = idin + idperm + dateins + ".pdf";
-    displayPDF(filen, res);
-  });
-});
-=======
 app.get(
   "/report/EVALUATION/:idin/:dateins",
   (req, res) => {
@@ -548,7 +526,6 @@ app.get(
     );
   }
 );
->>>>>>> 5db53f879f79a523da8fd9723a7e19322605935e
 
 app.post("/Add_passe", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
