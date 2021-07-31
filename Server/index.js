@@ -476,12 +476,12 @@ app.post("/delete_passe", (req, res) => {
 
 // DIPLOME GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
 app.get(
-  "/report/DIPLOME/:idinn/:idformm/:idperm/:dateins/:numagr/:groupe",
+  "/report/DIPLOME/:idinn/:idformm/:dateins/:numagr/:groupe",
   (req, res) => {
     var fullUrl = req.protocol + "://" + req.get("host");
     const idinn = req.params.idinn;
     const idformm = req.params.idformm;
-    const idperm = req.params.idperm;
+    
     const dateins = req.params.dateins;
     const numagr = req.params.numagr;
     const groupe = req.params.groupe;
@@ -489,22 +489,27 @@ app.get(
     pdf.generatepdf(
       idinn,
       idformm,
-      idperm,
       dateins,
       numagr,
       groupe,
       fullUrl,
       function (dt) {
         //console.log(dt);
+<<<<<<< HEAD
         var filen =
           idinn + idformm + idperm + dateins + numagr + groupe + ".pdf";
         displayPDF(filen, res);
+=======
+         var filen=idinn+idformm+dateins+numagr+groupe+".pdf";
+       displayPDF(filen , res)
+>>>>>>> 5db53f879f79a523da8fd9723a7e19322605935e
       }
     );
   }
 );
 
 // EVALUATION GENERATION BY ID_INSC ID_FORMATION  ID_PERMIS DATE_INS NUM_AGR FROM PASSE TABLE
+<<<<<<< HEAD
 app.get("/report/EVALUATION/:idin/:idperm/:dateins", (req, res) => {
   var fullUrl = req.protocol + "://" + req.get("host");
 
@@ -519,6 +524,31 @@ app.get("/report/EVALUATION/:idin/:idperm/:dateins", (req, res) => {
     displayPDF(filen, res);
   });
 });
+=======
+app.get(
+  "/report/EVALUATION/:idin/:dateins",
+  (req, res) => {
+    var fullUrl = req.protocol + "://" + req.get("host");
+
+    const idin = req.params.idin;
+    
+    
+    const dateins = req.params.dateins;
+    
+
+    pdf.generatepdf2(
+      idin,
+      dateins,
+      fullUrl,
+      function (dt) {
+        //console.log(dt);
+        var filen=idin+dateins+".pdf";
+        displayPDF(filen , res)
+      }
+    );
+  }
+);
+>>>>>>> 5db53f879f79a523da8fd9723a7e19322605935e
 
 app.post("/Add_passe", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
