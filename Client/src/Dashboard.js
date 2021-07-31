@@ -29,7 +29,9 @@ import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import AppBrevet from "./Brevet/Brevet.js";
 import { UserContext } from "./UserContext";
 import Profil from "./Profil";
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import SearchTable from "./Formation/Search.js";
+import SearchIcon from "@material-ui/icons/Search";
 
 const drawerWidth = 180;
 
@@ -224,6 +226,14 @@ export default function Dashboard() {
           </div>
           <Divider />
           <List>
+            <Link to="/" className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <SearchIcon />
+                </ListItemIcon>
+                <ListItemText primary="البحث" />
+              </ListItem>
+            </Link>
             <Link to="/candidat" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
@@ -268,17 +278,7 @@ export default function Dashboard() {
           <Container maxWidth="lg" className={classes.container}>
             <Grid item xs={12}>
               <Switch>
-                <Route
-                  path="/"
-                  exact
-                  render={(props) => (
-                    <AppFor
-                      {...props}
-                      id={"http://localhost:3001/api/get_form"}
-                    />
-                  )}
-                />
-                <Route path="/" render={<div> welcome </div>} exact />
+                <Route path="/" exact render={() => <SearchTable />} />
                 <Route path="/op/mor">
                   <AppOp
                     id={"http://localhost:3001/api/get_op/mor"}
@@ -332,7 +332,7 @@ export default function Dashboard() {
                     />
                   )}
                 />
-                <Route path="/Profile" render={(props) => <Profil/>} />
+                <Route path="/Profile" render={(props) => <Profil />} />
               </Switch>
             </Grid>
           </Container>

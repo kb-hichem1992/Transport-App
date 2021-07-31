@@ -82,10 +82,10 @@ function convert(word)
 }
 
 
-async function generatepdf(idin,idform,idPerm,dateins,numagr,grp,uurl,fn) {
+async function generatepdf(idin,idform,dateins,numagr,grp,uurl,fn) {
 
  
-  data.GetDiplomeData(idin,idform,idPerm,dateins,numagr,grp,async function(result){
+  data.GetDiplomeData(idin,idform,dateins,numagr,grp,async function(result){
 	   
 	   
   var NomPeren=result[0].NOM_CANDIDAT+" "+result[0].PRENOM_CANDIDAT;	   
@@ -194,7 +194,7 @@ for (let ob in F1) {
       const pdfBytesToSend = await pdfDoc.saveAsBase64({ dataUri: true });
 
       const pdfBytes = await pdfDoc.save();
-	  var fileN="./"+idin+idform+idPerm+dateins+numagr+grp+".pdf";
+	  var fileN="./"+idin+idform+dateins+numagr+grp+".pdf";
       fs.writeFileSync(fileN, pdfBytes);
 
       fn(pdfBytesToSend);
@@ -202,10 +202,9 @@ for (let ob in F1) {
   );
 }
 
-async function generatepdf2(idin,idPerm, dateins,uurl, fn) {
+async function generatepdf2(idin,dateins,uurl, fn) {
   data.GetEvaluationData(
     idin,
-    idPerm,
     dateins,
     
     async function (result) {
@@ -300,7 +299,7 @@ async function generatepdf2(idin,idPerm, dateins,uurl, fn) {
 
       const pdfBytes = await pdfDoc.save();
 	  //idin,idPerm, dateins, numagr
-	  var filename="./"+idin+idPerm+dateins+".pdf";
+	  var filename="./"+idin+dateins+".pdf";
       fs.writeFileSync(filename, pdfBytes);
 
       fn(pdfBytesToSend);

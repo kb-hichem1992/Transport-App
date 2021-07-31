@@ -1,4 +1,5 @@
 import { Button, Grid, makeStyles, TextField } from "@material-ui/core";
+import axios from "axios";
 import React, { useState } from "react";
 import Controls from "../components/controls/Controls";
 
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BrevetForm(props) {
+export default function BrevetDateForm(props) {
   const classes = useStyles();
   const tempo = [];
   const {
@@ -44,10 +45,12 @@ export default function BrevetForm(props) {
     NUM_INS,
     GROUPE,
     BREVET,
-  } = props.values || tempo ;
+  } = props.values || tempo;
 
   const [Brevet, setBrevet] = useState(BREVET);
   const [open, setOpen] = useState(false);
+  const [LivBrevt, setLivBrevt] = useState(new Date());
+  const [ExpBrevet, setExpBrevet] = useState(new Date());
 
   function convert(date) {
     const current_datetime = new Date(date);
@@ -72,21 +75,37 @@ export default function BrevetForm(props) {
       );
     }
   }
-
-  function BrevetExist(id) {
-    return props.data.some(function (el) {
-      if (el.BREVET === id) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
-
+  const insertDateBrevet = (
+    LivBrevt,
+    ExpBrevet,
+    numeroCandidat,
+    Date_ins,
+    Num_permis,
+    numeroFormation,
+    numeroAgrement,
+    GROUPE,
+    NumeroBrevet
+  ) => {
+    axios
+      .put("http://localhost:3001/insert_Date_brevet", {
+        LivBrevt: LivBrevt,
+        ExpBrevet: ExpBrevet,
+        numeroCandidat: numeroCandidat,
+        Date_ins: Date_ins,
+        Num_permis: Num_permis,
+        numeroFormation: numeroFormation,
+        numeroAgrement: numeroAgrement,
+        GROUPE: GROUPE,
+        NumeroBrevet: NumeroBrevet,
+      })
+      .then(() => {
+        props.setEtat(!props.etat);
+      });
+  };
   const Enregister = () => {
     try {
-      if (BrevetExist(Brevet) === true && Brevet !== "") {
-        alert("رقم الشهادة مسجل من قبل");
+      if (LivBrevt >= ExpBrevet) {
+        alert("تاريخ إصدار الشهادة خاطئ");
       } else {
         setOpen(true);
       }
@@ -96,18 +115,20 @@ export default function BrevetForm(props) {
   };
   return (
     <>
-      <form className={classes.root} noValidate autoComplete="off">
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              label="رقم الشهادة"
-              value={Brevet}
-              size="small"
-              className={classes.textField}
-              onChange={(e) => setBrevet(e.target.value)}
-            />
-            {/*     <Controls.DatePicker
+      <div style={{width : 300 , height : 270}}  >
+        <form className={classes.root} noValidate autoComplete="off">
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                label="رقم الشهادة"
+                value={Brevet}
+                size="small"
+                disabled
+                className={classes.textField}
+                onChange={(e) => setBrevet(e.target.value)}
+              />
+              <Controls.DatePicker
                 label="تاريخ الإصدار"
                 value={LivBrevt}
                 onChange={setLivBrevt}
@@ -116,43 +137,35 @@ export default function BrevetForm(props) {
                 label="تاريخ نهاية الصلاحية"
                 value={ExpBrevet}
                 onChange={setExpBrevet}
-              /> */}
-            <Button
-              variant="contained"
-              color="Primary"
-              size="small"
-              onClick={Enregister}
-            >
-              تأكيد
-            </Button>
-            {/*         <Button
+              />
+              <Button
                 variant="contained"
-                color="secondary"
+                color="Primary"
                 size="small"
-                onClick={() => {
-                  props.Close(false);
-                }}
+                onClick={Enregister}
               >
-                إلغاء
-              </Button> */}
+                تأكيد
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
-
+        </form>
+      </div>
       <Controls.AlertDialog
         title="تأكيد"
         message="هل أنت متأكد من القيام بهذه العملية ؟"
         open={open}
         setOpen={setOpen}
         method={() => {
-          props.onClick(
-            Brevet,
+          insertDateBrevet(
+            convert(LivBrevt),
+            convert(ExpBrevet),
             NUM_INS,
             convert(DATE_INS),
             NUM_PERMIS,
             NUMERO_FORMATION,
             NUMERO_AGREMENT,
-            GROUPE
+            GROUPE,
+            Brevet
           );
           props.Close(false);
         }}

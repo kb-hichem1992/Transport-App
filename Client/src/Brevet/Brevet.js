@@ -32,6 +32,8 @@ import PrintIcon from "@material-ui/icons/Print";
 import AlertDialog from "../components/controls/Dialog";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import BrevetDateForm from "./BrevetDateForm.js";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -103,6 +105,7 @@ export default function AppBrevet({ id }) {
   const [etat, setEtat] = useState(false);
   const [open, setOpen] = useState(false);
   const [openSnack, setOpenSnack] = useState(false);
+  const [openDateBrevet, setopenDateBrevet] = useState(false);
 
   useEffect(() => {
     fetch(id)
@@ -215,14 +218,13 @@ export default function AppBrevet({ id }) {
     if (reason === "clickaway") {
       return;
     }
-
     setOpenSnack(false);
   };
 
   const showPdf = (e) => {
     e.preventDefault();
     if (Values.PRINT === 1) {
-      setOpen(true)
+      setOpen(true);
     } else {
       setPrinted(
         Values.NUM_INS,
@@ -238,8 +240,6 @@ export default function AppBrevet({ id }) {
           Values.NUM_INS +
           "/" +
           Values.NUMERO_FORMATION +
-          "/" +
-          Values.NUM_PERMIS +
           "/" +
           Values.DATE_INS +
           "/" +
@@ -274,6 +274,19 @@ export default function AppBrevet({ id }) {
             }
           />
         </form>
+        <Button
+          text="تاريخ الصلاحية"
+          variant="outlined"
+          size="small"
+          startIcon={<EditOutlinedIcon />}
+          className={classes.newButton}
+          disabled={
+            Values === undefined || userData[0].ADMIN !== "admin" ? true : false
+          }
+          onClick={() => {
+            setopenDateBrevet(true);
+          }}
+        />
       </div>
       <div className={classes.container}>
         <Paper className={classes.paper}>
@@ -362,6 +375,18 @@ export default function AppBrevet({ id }) {
           data={data}
         />
       </Popup>
+      <Popup
+        title="تاريخ الصلاحية"
+        openPopup={openDateBrevet}
+        setOpenPopup={setopenDateBrevet}
+      >
+        <BrevetDateForm
+          setEtat={setEtat}
+          etat={etat}
+          Close={setopenDateBrevet}
+          values={Values}
+        />
+      </Popup>
       <AlertDialog
         title="تنبيه"
         message="هذه الشهادة قد طبعت من قبل. هل تود طباعتها من جديد؟"
@@ -373,8 +398,6 @@ export default function AppBrevet({ id }) {
               Values.NUM_INS +
               "/" +
               Values.NUMERO_FORMATION +
-              "/" +
-              Values.NUM_PERMIS +
               "/" +
               Values.DATE_INS +
               "/" +
