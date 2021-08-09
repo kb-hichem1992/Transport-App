@@ -326,6 +326,7 @@ app.post("/Add_condidat", (req, res) => {
 
 app.put("/update_candidat", (req, res) => {
   const numeroCandidat = req.body.numeroCandidat;
+  const numins = req.body.numins;
   const Date_ins = req.body.Date_ins;
   const Nom = req.body.Nom;
   const Prénom = req.body.Prénom;
@@ -343,8 +344,9 @@ app.put("/update_candidat", (req, res) => {
   const categorie_permis = req.body.categorie_permis;
   const newDate_ins = req.body.newDate_ins;
   db.query(
-    "UPDATE candidat SET `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `TYPE_CANDIDAT`= ?,`DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ?, `DATE_INS` = ?   WHERE  `NUM_PERMIS` = ? and `DATE_INS` = ? and `NUM_INS` = ? ;",
+    "UPDATE candidat SET NUM_INS = ? , `NOM_CANDIDAT`=?, `PRENOM_CANDIDAT`= ?, `DATE_NAIS_CANDIDAT`=? , `LIEU_NAIS_CANDIDAT`= ?, `NIVEAU_SCOL_CANDIDAT`= ?, `ADRESSE_CANDIDAT`= ?, `PRENOM_PERE`= ?, `SEX_CONDIDAT` = ?, `TYPE_CANDIDAT`= ?,`DATE_LIV_PERMIS` = ?, `DATE_EXP_PERMIS` = ?, `CATEGORIE_PERMIS` = ?, `TYPE_PERMIS` = ?, `DATE_INS` = ?   WHERE  `NUM_PERMIS` = ? and `DATE_INS` = ? and `NUM_INS` = ? ;",
     [
+      numins,
       Nom,
       Prénom,
       Date_naissance,
@@ -362,6 +364,30 @@ app.put("/update_candidat", (req, res) => {
       Num_permis,
       Date_ins,
       numeroCandidat,
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+app.put("/update_NUMINS", (req, res) => {
+  const numeroCandidat = req.body.numeroCandidat;
+  const newNum = req.body.newNum;
+  const Num_permis = req.body.Num_permis;
+  const Date_ins = req.body.Date_ins;
+
+ 
+  db.query(
+    "UPDATE candidat SET `NUM_INS`=? WHERE  `NUM_PERMIS` = ? and `DATE_INS` = ? and `NUM_INS` = ? ;",
+    [
+      newNum,
+      Num_permis,
+      Date_ins,
+      numeroCandidat
     ],
     (err, result) => {
       if (err) {

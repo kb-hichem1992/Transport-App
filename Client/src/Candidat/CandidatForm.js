@@ -107,7 +107,7 @@ export default function Candidat(props) {
   const [Categorie, setOpenCategorie] = useState(false);
   const { userData } = useContext(UserContext);
   const numeroAgrement = userData[0].NUMERO_AGREMENT;
-  const Num_insc = numeroAgrement + "-" + numeroCandidat;
+  const Num_insc = numeroCandidat + "-" + new Date().getFullYear()+"-"+numeroAgrement;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -147,13 +147,30 @@ export default function Candidat(props) {
 
   function CandidatExists(id, date, num_permis) {
     return props.data.some(function (el) {
-      if (el.NUM_INS === id && el.DATE_INS === convert(date) && el.NUM_PERMIS === num_permis) {
+      if (
+        el.NUM_INS === id &&
+        el.DATE_INS === convert(date) &&
+        el.NUM_PERMIS === num_permis
+      ) {
         return true;
       } else {
-        return false; 
+        return false;
       }
     });
   }
+  function TestNumIns(id) {
+    return props.data.some(function (el) {
+      if (
+        el.NUM_INS === id
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+  
+  const messageB = "هل أنت متأكد من القيام بهذه العملية ؟";
 
   const Enregister = () => {
     const dt1 = new Date(selectedDate);
@@ -195,6 +212,8 @@ export default function Candidat(props) {
       textChanged === true
     ) {
       alert("المترشح مسجل من قبل");
+    } else if (TestNumIns(Num_insc)) {
+      alert("رقم التسجيل مكرر");
     } else {
       handleClickOpen();
     }
@@ -214,9 +233,9 @@ export default function Candidat(props) {
                 label=" رقم التسجيل"
                 value={numeroCandidat}
                 size="small"
-                disabled={
+             /*    disabled={
                   props.onClick.name === "updateCandidat" ? true : false
-                }
+                } */
                 onChange={(e) => setNumeroCandidat(e.target.value)}
               />
               <Controls.DatePicker
@@ -421,7 +440,7 @@ export default function Candidat(props) {
 
       <AlertDialog
         title="تأكيد"
-        message="هل أنت متأكد من القيام بهذه العملية ؟"
+        message={messageB}
         open={open}
         setOpen={setOpen}
         method={() => {
@@ -448,6 +467,7 @@ export default function Candidat(props) {
               );
             } else if (props.onClick.name === "updateCandidat") {
               props.onClick(
+                NUM_INS,
                 numeroCandidat,
                 convert(DATE_INS),
                 Nom,
