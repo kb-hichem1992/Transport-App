@@ -208,55 +208,68 @@ async function generatepdf2(idin,dateins,uurl, fn) {
     dateins,
     
     async function (result) {
-      /*
-  
-  var FICH1={"NOM":{"text":"اللقب:","x":520,"y":503},
-            "PRENOM":{"text":"الاسم:","x":520,"y":473},
-			"DATE_NAI":{"text":"تاريخ و مكان الازدياد :","x":436,"y":450},
-			"ARESSE":{"text":"العنوان:","x":510,"y":426},
-			"DATE_INS":{"text":"مسجل بتاريخ","x":480,"y":401},
-			"NUM_INS":{"text":"تحت رقم","x":210,"y":401},
+      
+  /*
+  var FICH1={"NOM":{"text":"اللقب:","x":522,"y":506},
+            "PRENOM":{"text":"الاسم:","x":522,"y":476},
+			"DATE_NAI":{"text":"تاريخ و مكان الازدياد :","x":435,"y":452},
+			"ARESSE":{"text":"العنوان:","x":513,"y":428},
+			"DATE_INS":{"text":"مسجل بتاريخ","x":485,"y":404},
+			"NUM_INS":{"text":"تحت رقم","x":210,"y":404},
+			"CATEGORIE":{"text":"الصنف:","x":514,"y":380}
 		
            };
+<<<<<<< HEAD
     */
+=======
+
+   */
+>>>>>>> 30dde67f7733e7ba72eb21459e2a2f7ba0c00e90
 
       var FICH1 = {
         NOM: {
           text: result[0].NOM_CANDIDAT,
           x: 438 - Math.max(0, result[0].NOM_CANDIDAT.length - 8) * 7,
-          y: 503,
+          y: 506,
         },
         PRENOM: {
           text: result[0].PRENOM_CANDIDAT,
           x: 438 - Math.max(0, result[0].PRENOM_CANDIDAT.length - 8) * 7,
-          y: 473,
+          y: 476,
         },
-        DATE_NAI: { text: result[0].DATE_NAIS_CANDIDAT, x: 330, y: 450 },
+        DATE_NAI: { text: result[0].DATE_NAIS_CANDIDAT, x: 330, y: 452 },
         LIEU_NAI: {
           text: result[0].LIEU_NAIS_CANDIDAT,
           x: 270 - Math.max(0, result[0].LIEU_NAIS_CANDIDAT.length - 8) * 8,
-          y: 450,
+          y: 452,
         },
         ARESSE: {
           text: convert(result[0].ADRESSE_CANDIDAT),
           x: 410 - Math.max(0, result[0].ADRESSE_CANDIDAT.length - 10) * 7,
-          y: 426,
+          y: 428,
         },
-        DATE_INS: { text: result[0].DATE_INS, x: 370, y: 401 },
+        DATE_INS: { text: result[0].DATE_INS, x: 370, y: 404 },
         NUM_INS: {
           text: result[0].NUM_INS,
           x: 130 - Math.max(0, result[0].NUM_INS.length - 5) * 7,
-          y: 401,
+          y: 404,
         },
+		CATEGORIE_PERMIS: {
+          text: result[0].CATEGORIE_PERMIS,
+          x: 370,
+          y: 380,
+        },
+		
+		
       };
-
-      const url = uurl + "/vierge2.pdf";
+ 
+      const url = uurl + "/eval.pdf";
 
       const existingPdfBytes = await fetch(url).then((res) =>
         res.arrayBuffer()
       );
 
-      const ubuntuFontBytes = await fetch(uurl + "/Cairo-Regular.ttf").then(
+      const ubuntuFontBytes = await fetch(uurl + "/times.ttf").then(
         (res) => res.arrayBuffer()
       );
 
@@ -307,6 +320,7 @@ async function generatepdf2(idin,dateins,uurl, fn) {
   );
 }
 
+<<<<<<< HEAD
 /*
  module.exports.generatepdf = (idin,idform,idPerm,dateins,numagr,uurl)=>{
  
@@ -315,5 +329,7 @@ async function generatepdf2(idin,dateins,uurl, fn) {
 //.catch(err => console.log(err))
 }
 */
+=======
+>>>>>>> 30dde67f7733e7ba72eb21459e2a2f7ba0c00e90
 
 module.exports = { generatepdf: generatepdf, generatepdf2: generatepdf2 };
