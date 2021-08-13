@@ -31,6 +31,7 @@ import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import TableFormation from "../Formation/TableFormation.js";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AlertDialog from "../components/controls/Dialog";
+import GroupeForm from "../Formation/GroupeForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,6 +88,7 @@ export default function TableCandForm({
   const { userData } = useContext(UserContext);
   const numeroAgrement = userData[0].NUMERO_AGREMENT;
   const [open, setOpen] = useState(false);
+  const [openNumero, setOpenNumero] = useState(false);
 
   useEffect(() => {
     fetch(
@@ -179,7 +181,6 @@ export default function TableCandForm({
         setEtat(!etat);
       });
   };
-
   const deletePasse = (
     numeroCandidat,
     Date_ins,
@@ -279,6 +280,18 @@ export default function TableCandForm({
             setOpen(true);
           }}
         />
+        <Button
+          text="رقم الترتيب"
+          variant="outlined"
+          size="small"
+          color="primary"
+          startIcon={<EditOutlinedIcon />}
+          className={classes.newButton}
+          disabled={Values === undefined || userData[0].ADMIN !== "admin"}
+          onClick={() => {
+            setOpenNumero(true);
+          }}
+        />
       </div>
       <div id="cont">
         <GridComponent
@@ -304,6 +317,7 @@ export default function TableCandForm({
               headerText="الفوج"
               clipMode="EllipsisWithTooltip"
             />
+            <ColumnDirective field="NUMERO" headerText="رقم" />
             <ColumnDirective
               field="NOM_CANDIDAT"
               headerText="اللقب"
@@ -365,6 +379,13 @@ export default function TableCandForm({
           values={Values}
           data={data}
         />
+      </Popup>
+      <Popup
+        title="الترتيب"
+        openPopup={openNumero}
+        setOpenPopup={setOpenNumero}
+      >
+        <GroupeForm close={setOpenNumero} values={Values} data={data} etat={etat} setEtat={setEtat} />
       </Popup>
 
       <Popup
