@@ -79,12 +79,11 @@ export default function Candidat(props) {
     SEX_CONDIDAT,
     NUM_PERMIS,
     DATE_LIV_PERMIS,
-    DATE_EXP_PERMIS,
     CATEGORIE_PERMIS,
     TYPE_PERMIS,
     DATE_INS,
     TYPE_CANDIDAT,
-  } = props.values;
+  } = props.values || [];
 
   const [selectedDate, setSelectedDate] = useState(DATE_NAIS_CANDIDAT);
   const [numeroCandidat, setNumeroCandidat] = useState(NUM_INS);
@@ -100,7 +99,7 @@ export default function Candidat(props) {
   const [Typepermis, setTypePermis] = useState(TYPE_PERMIS);
   const [NumPermis, setNumPermis] = useState(NUM_PERMIS);
   const [LivPermis, setLivPermis] = useState(DATE_LIV_PERMIS);
-  const [ExpPermis, setExpPermis] = useState(DATE_EXP_PERMIS);
+  //  const [ExpPermis, setExpPermis] = useState(DATE_EXP_PERMIS);
   const [CategoriePermis, setCategoriePermis] = useState(CATEGORIE_PERMIS);
   const [textChanged, setTextChanged] = useState(false);
   const [open, setOpen] = useState(false);
@@ -147,10 +146,14 @@ export default function Candidat(props) {
 
   function CandidatExists(id, date, num_permis) {
     return props.data.some(function (el) {
-      if (el.NUM_INS === id && el.DATE_INS === convert(date) && el.NUM_PERMIS === num_permis) {
+      if (
+        el.NUM_INS === id &&
+        el.DATE_INS === convert(date) &&
+        el.NUM_PERMIS === num_permis
+      ) {
         return true;
       } else {
-        return false; 
+        return false;
       }
     });
   }
@@ -158,7 +161,6 @@ export default function Candidat(props) {
   const Enregister = () => {
     const dt1 = new Date(selectedDate);
     const dt2 = new Date(LivPermis);
-    const dt3 = new Date(ExpPermis);
     const dt0 = new Date();
 
     if (
@@ -175,15 +177,12 @@ export default function Candidat(props) {
       Sexe === "" ||
       NumPermis === "" ||
       LivPermis === "" ||
-      ExpPermis === "" ||
       CategoriePermis === "" ||
       Typepermis === ""
     ) {
       alert("يجب ملئ جميع البيانات ");
     } else if (convert(dt1) >= convert(dt0)) {
       alert("تاريخ الميلاد خاطئ");
-    } else if (convert(dt2) >= convert(dt3)) {
-      alert("تاريخ إصدار رخسة السياقة خاطئ");
     } else if (
       CandidatExists(Num_insc, Date_ins, NumPermis) === true &&
       props.onClick.name === "addCondidat"
@@ -200,7 +199,7 @@ export default function Candidat(props) {
     }
   };
 
-  const niveauScolaire = ["ابتدائي", "متوسط", "ثانوي", "جامعي"];
+  const niveauScolaire = ["ابتدائي", "متوسط", "ثانوي", "جامعي","بدون مستوى"];
   const Type = ["متعاقد", "حر"];
 
   return (
@@ -279,6 +278,8 @@ export default function Candidat(props) {
                 size="small"
                 onChange={(e) => setLieu(e.target.value)}
               />
+            </Grid>
+            <Grid item xs={6}>
               <Controls.DatePicker
                 label="تاريخ الميلاد"
                 value={selectedDate}
@@ -326,8 +327,6 @@ export default function Candidat(props) {
                   />
                 </RadioGroup>
               </FormControl>
-            </Grid>
-            <Grid item xs={6}>
               <TextField
                 variant="outlined"
                 label="رقم رخسة السياقة"
@@ -346,11 +345,6 @@ export default function Candidat(props) {
                 label="تاريخ الإصدار"
                 value={LivPermis}
                 onChange={setLivPermis}
-              />
-              <Controls.DatePicker
-                label="نهاية الصلاحية"
-                value={ExpPermis}
-                onChange={setExpPermis}
               />
               <FormControl component="fieldset">
                 <FormLabel component="legend">Type de Permis</FormLabel>
@@ -441,7 +435,6 @@ export default function Candidat(props) {
                 Type_candidat,
                 NumPermis,
                 convert(LivPermis),
-                convert(ExpPermis),
                 CategoriePermis.toString(),
                 Typepermis,
                 convert(Date_ins)
@@ -461,7 +454,6 @@ export default function Candidat(props) {
                 Type_candidat,
                 NumPermis,
                 convert(LivPermis),
-                convert(ExpPermis),
                 CategoriePermis.toString(),
                 Typepermis,
                 convert(Date_ins)

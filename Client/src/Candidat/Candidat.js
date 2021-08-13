@@ -169,7 +169,6 @@ export default function AppCand({ id }) {
     Type_Candidat,
     Num_permis,
     date_liv,
-    date_exp,
     categorie_permis,
     type_permis
   ) => {
@@ -187,7 +186,6 @@ export default function AppCand({ id }) {
       Type_Candidat: Type_Candidat,
       Num_permis: Num_permis,
       date_liv: date_liv,
-      date_exp: date_exp,
       categorie_permis: categorie_permis,
       type_permis: type_permis,
     }).then(() => {
@@ -208,7 +206,6 @@ export default function AppCand({ id }) {
     Type_Candidat,
     Num_permis,
     date_liv,
-    date_exp,
     categorie_permis,
     type_permis,
     newDate_ins
@@ -224,7 +221,6 @@ export default function AppCand({ id }) {
       Sexe: Sexe,
       Type_Candidat: Type_Candidat,
       date_liv: date_liv,
-      date_exp: date_exp,
       categorie_permis: categorie_permis,
       type_permis: type_permis,
       newDate_ins: newDate_ins,
@@ -268,7 +264,6 @@ export default function AppCand({ id }) {
     TYPE_CANDIDAT: "",
     NUM_PERMIS: "",
     DATE_LIV_PERMIS: new Date(),
-    DATE_EXP_PERMIS: new Date(),
     CATEGORIE_PERMIS: "",
     TYPE_PERMIS: "القديم",
   };
