@@ -219,12 +219,8 @@ async function generatepdf2(idin,dateins,uurl, fn) {
 			"CATEGORIE":{"text":"الصنف:","x":514,"y":380}
 		
            };
-<<<<<<< HEAD
-    */
-=======
 
    */
->>>>>>> 30dde67f7733e7ba72eb21459e2a2f7ba0c00e90
 
       var FICH1 = {
         NOM: {
@@ -320,16 +316,5 @@ async function generatepdf2(idin,dateins,uurl, fn) {
   );
 }
 
-<<<<<<< HEAD
-/*
- module.exports.generatepdf = (idin,idform,idPerm,dateins,numagr,uurl)=>{
- 
- 
- GenerationFich1(idin,idform,idPerm,dateins,numagr,uurl);
-//.catch(err => console.log(err))
-}
-*/
-=======
->>>>>>> 30dde67f7733e7ba72eb21459e2a2f7ba0c00e90
 
 module.exports = { generatepdf: generatepdf, generatepdf2: generatepdf2 };
