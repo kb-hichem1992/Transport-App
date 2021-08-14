@@ -629,7 +629,7 @@ app.get("/file", (req, res) => {
 
 app.listen(3001, () => {
   console.log("it works");
-  pdf.generatepdf() ; 
+
 });
 
 const displayPDF = (filename, res) => {
