@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Profil() {
   const classes = useStyles();
-  const { userData, setstate } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
   const [openSnack, setOpenSnack] = useState(false);
   const [oldpass, setoldpass] = useState("");
   const [newpass, setnewpass] = useState("");

@@ -195,7 +195,7 @@ export default function AppCand({ id }) {
   const updateCandidat = (
     numeroCandidat,
     numins,
-    Date_ins,
+    DATE_INS,
     Nom,
     Prénom,
     Date_naissance,
@@ -209,10 +209,9 @@ export default function AppCand({ id }) {
     date_liv,
     categorie_permis,
     type_permis,
-    newDate_ins
+    Date_ins,
   ) => {
     Axios.put("http://localhost:3001/update_candidat", {
-      numins: numins,
       Nom: Nom,
       Prénom: Prénom,
       Date_naissance: Date_naissance,
@@ -225,9 +224,9 @@ export default function AppCand({ id }) {
       date_liv: date_liv,
       categorie_permis: categorie_permis,
       type_permis: type_permis,
-      newDate_ins: newDate_ins,
-      Num_permis: Num_permis,
       Date_ins: Date_ins,
+      Num_permis: Num_permis,
+      DATE_INS: DATE_INS,
       numeroCandidat: numeroCandidat,
     }).then(() => {
       setEtat(!etat);
@@ -236,20 +235,6 @@ export default function AppCand({ id }) {
 
   const deleteCandidat = (Num_permis, Date_ins, numeroCandidat) => {
     Axios.post(`http://localhost:3001/delete_candidat`, {
-      Num_permis: Num_permis,
-      Date_ins: Date_ins,
-      numeroCandidat: numeroCandidat,
-    }).then(() => {
-      setEtat(!etat);
-    });
-  };
-  const update_NUMINS = (Num_permis, Date_ins, numeroCandidat) => {
-    const spliteID = numeroCandidat.split("-");
-    const num = spliteID[1];
-
-    const newNum = num + "-" + new Date().getFullYear() + "-" + numeroAgrement;
-    Axios.put(`http://localhost:3001/update_NUMINS`, {
-      newNum: newNum,
       Num_permis: Num_permis,
       Date_ins: Date_ins,
       numeroCandidat: numeroCandidat,
@@ -294,7 +279,7 @@ export default function AppCand({ id }) {
   }
   const Values = rowSelected();
 
-  const numeroAgrement = userData[0].NUMERO_AGREMENT;
+  // const numeroAgrement = userData[0].NUMERO_AGREMENT;
 
   const contextMenuItems = ["Copy", "ExcelExport"];
 

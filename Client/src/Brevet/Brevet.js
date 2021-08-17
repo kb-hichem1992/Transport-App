@@ -323,11 +323,6 @@ export default function AppBrevet({ id }) {
                 clipMode="EllipsisWithTooltip"
               />
               <ColumnDirective
-                field="PRENOM_PERE"
-                headerText="إسم الأب"
-                clipMode="EllipsisWithTooltip"
-              />
-              <ColumnDirective
                 field="LIV_BREVET"
                 headerText="تاريخ الإصدار"
                 type="date"
@@ -346,6 +341,16 @@ export default function AppBrevet({ id }) {
               <ColumnDirective
                 field="TYPE_FORMATION"
                 headerText="نوع الدورة"
+                clipMode="EllipsisWithTooltip"
+              />
+              <ColumnDirective
+                field="NUMERO_FORMATION"
+                headerText="رقم الدورة"
+                clipMode="EllipsisWithTooltip"
+              />
+              <ColumnDirective
+                field="GROUPE"
+                headerText=" الفوج"
                 clipMode="EllipsisWithTooltip"
               />
             </ColumnsDirective>

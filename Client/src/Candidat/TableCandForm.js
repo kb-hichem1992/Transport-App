@@ -344,6 +344,11 @@ export default function TableCandForm({
               clipMode="EllipsisWithTooltip"
             />
             <ColumnDirective
+              field="CATEGORIE_PERMIS"
+              headerText=" أصناف رخصة السياقة "
+              clipMode="EllipsisWithTooltip"
+            />
+            <ColumnDirective
               field="REMARQUE"
               headerText="الملاحظة"
               clipMode="EllipsisWithTooltip"

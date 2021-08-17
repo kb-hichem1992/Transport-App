@@ -1,6 +1,14 @@
-import { Button, Grid, makeStyles, TextField } from "@material-ui/core";
+import {
+  Button,
+  Grid,
+  makeStyles,
+  Snackbar,
+  TextField,
+} from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import axios from "axios";
 import React, { useState } from "react";
-import Controls from "../components/controls/Controls";
+import AlertDialog from "../components/controls/Dialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,10 +52,44 @@ export default function BrevetForm(props) {
     NUM_INS,
     GROUPE,
     BREVET,
-  } = props.values || tempo ;
+    PRINT,
+  } = props.values || tempo;
 
   const [Brevet, setBrevet] = useState(BREVET);
   const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [openSnack, setOpenSnack] = useState(false);
+
+  const setPrinted = (
+    numeroCandidat,
+    Num_permis,
+    dateins,
+    numeroFormation,
+    GROUPE,
+    numeroAgrement
+  ) => {
+    axios
+      .put("http://localhost:3001/Printed", {
+        numeroCandidat: numeroCandidat,
+        Num_permis: Num_permis,
+        dateins: dateins,
+        numeroFormation: numeroFormation,
+        GROUPE: GROUPE,
+        numeroAgrement: numeroAgrement,
+      })
+      .then(() => {
+        console.log("");
+      });
+  };
+  const handleClick = () => {
+    setOpenSnack(true);
+  };
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnack(false);
+  };
 
   function convert(date) {
     const current_datetime = new Date(date);
@@ -87,8 +129,10 @@ export default function BrevetForm(props) {
     try {
       if (BrevetExist(Brevet) === true && Brevet !== "") {
         alert("رقم الشهادة مسجل من قبل");
-      } else {
+      } else if (PRINT === 0) {
         setOpen(true);
+      } else {
+        setOpen2(true);
       }
     } catch (error) {
       console.log(error);
@@ -107,16 +151,6 @@ export default function BrevetForm(props) {
               className={classes.textField}
               onChange={(e) => setBrevet(e.target.value)}
             />
-            {/*     <Controls.DatePicker
-                label="تاريخ الإصدار"
-                value={LivBrevt}
-                onChange={setLivBrevt}
-              />
-              <Controls.DatePicker
-                label="تاريخ نهاية الصلاحية"
-                value={ExpBrevet}
-                onChange={setExpBrevet}
-              /> */}
             <Button
               variant="contained"
               color="Primary"
@@ -125,21 +159,11 @@ export default function BrevetForm(props) {
             >
               تأكيد
             </Button>
-            {/*         <Button
-                variant="contained"
-                color="secondary"
-                size="small"
-                onClick={() => {
-                  props.Close(false);
-                }}
-              >
-                إلغاء
-              </Button> */}
           </Grid>
         </Grid>
       </form>
 
-      <Controls.AlertDialog
+      <AlertDialog
         title="تأكيد"
         message="هل أنت متأكد من القيام بهذه العملية ؟"
         open={open}
@@ -154,9 +178,63 @@ export default function BrevetForm(props) {
             NUMERO_AGREMENT,
             GROUPE
           );
+          window.open(
+            "http://localhost:3001/report/DIPLOME/" +
+              NUM_INS +
+              "/" +
+              NUMERO_FORMATION +
+              "/" +
+              DATE_INS +
+              "/" +
+              NUMERO_AGREMENT +
+              "/" +
+              GROUPE +
+              ""
+          );
+          setPrinted(
+            NUM_INS,
+            NUM_PERMIS,
+            DATE_INS,
+            NUMERO_FORMATION,
+            GROUPE,
+            NUMERO_AGREMENT
+          );
+          handleClick();
           props.Close(false);
         }}
       />
+      <AlertDialog
+        title="تنبيه"
+        message="هذه الشهادة قد طبعت من قبل. هل تود طباعتها من جديد؟"
+        open={open2}
+        setOpen={setOpen2}
+        method={() => {
+          window.open(
+            "http://localhost:3001/report/DIPLOME/" +
+              NUM_INS +
+              "/" +
+              NUMERO_FORMATION +
+              "/" +
+              DATE_INS +
+              "/" +
+              NUMERO_AGREMENT +
+              "/" +
+              GROUPE +
+              ""
+          );
+        }}
+      />
+      <div className={classes.root}>
+        <Snackbar
+          open={openSnack}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="info">
+            طبعت لأول مرة
+          </Alert>
+        </Snackbar>
+      </div>
     </>
   );
 }
