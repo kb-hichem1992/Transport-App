@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+
 import "../Candidat/Candidat.css";
 import {
   GridComponent,
@@ -23,47 +23,7 @@ import { UserContext } from "../UserContext";
 import PageHeader from "../PageHeader";
 import SearchIcon from '@material-ui/icons/Search';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    ...theme.typography.button,
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(1),
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200,
-  },
-  pageContent: {
-    margin: theme.spacing(0),
-    padding: theme.spacing(2),
-    height: 350,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  paper: {
-    width: "auto",
-  },
-  formControl: {
-    display: "flex",
-    margin: theme.spacing(1),
-    minWidth: 170,
-  },
-  link: {
-    textDecoration: "none",
-    color: theme.palette.text.primary,
-  },
-  Button: {
-    marginInline: theme.spacing(1),
-  },
-  container: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    display: "flex",
-    justifyContent: "flex-end",
-  },
-}));
+
 
 export default function SearchTable() {
   const [data, setdata] = useState([]);

@@ -214,9 +214,9 @@ async function generatepdf2(idin,dateins,uurl, fn) {
             "PRENOM":{"text":"الاسم:","x":522,"y":476},
 			"DATE_NAI":{"text":"تاريخ و مكان الازدياد :","x":435,"y":452},
 			"ARESSE":{"text":"العنوان:","x":513,"y":428},
-			"DATE_INS":{"text":"مسجل بتاريخ","x":485,"y":404},
-			"NUM_INS":{"text":"تحت رقم","x":210,"y":404},
-			"CATEGORIE":{"text":"الصنف:","x":514,"y":380}
+			"DATE_INS":{"text":"مسجل بتاريخ:","x":482,"y":404},
+			"NUM_INS":{"text":"تحت رقم:","x":210,"y":404},
+			"CATEGORIE":{"text":"صنف رخصة السياقة:","x":441,"y":380}
 		
            };
 
@@ -244,7 +244,7 @@ async function generatepdf2(idin,dateins,uurl, fn) {
           x: 410 - Math.max(0, result[0].ADRESSE_CANDIDAT.length - 10) * 7,
           y: 428,
         },
-        DATE_INS: { text: result[0].DATE_INS, x: 370, y: 404 },
+        DATE_INS: { text: result[0].DATE_INS, x: 369, y: 404 },
         NUM_INS: {
           text: result[0].NUM_INS,
           x: 130 - Math.max(0, result[0].NUM_INS.length - 5) * 7,
@@ -252,7 +252,7 @@ async function generatepdf2(idin,dateins,uurl, fn) {
         },
 		CATEGORIE_PERMIS: {
           text: result[0].CATEGORIE_PERMIS,
-          x: 370,
+          x: 290,
           y: 380,
         },
 		

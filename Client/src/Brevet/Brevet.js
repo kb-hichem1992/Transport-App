@@ -313,6 +313,14 @@ export default function AppBrevet({ id }) {
                 clipMode="EllipsisWithTooltip"
               />
               <ColumnDirective
+                field="DATE_EMISSION"
+                headerText="تاريخ الإصدار"
+                type="date"
+                format="dd/MM/yyyy"
+                clipMode="EllipsisWithTooltip"
+                allowFiltering={false}
+              />
+              <ColumnDirective
                 field="NOM_CANDIDAT"
                 headerText="اللقب"
                 clipMode="EllipsisWithTooltip"
@@ -323,13 +331,8 @@ export default function AppBrevet({ id }) {
                 clipMode="EllipsisWithTooltip"
               />
               <ColumnDirective
-                field="PRENOM_PERE"
-                headerText="إسم الأب"
-                clipMode="EllipsisWithTooltip"
-              />
-              <ColumnDirective
                 field="LIV_BREVET"
-                headerText="تاريخ الإصدار"
+                headerText="تاريخ بداية الصلاحية"
                 type="date"
                 format="dd/MM/yyyy"
                 clipMode="EllipsisWithTooltip"
@@ -346,6 +349,16 @@ export default function AppBrevet({ id }) {
               <ColumnDirective
                 field="TYPE_FORMATION"
                 headerText="نوع الدورة"
+                clipMode="EllipsisWithTooltip"
+              />
+              <ColumnDirective
+                field="NUMERO_FORMATION"
+                headerText="رقم الدورة"
+                clipMode="EllipsisWithTooltip"
+              />
+              <ColumnDirective
+                field="GROUPE"
+                headerText=" الفوج"
                 clipMode="EllipsisWithTooltip"
               />
             </ColumnsDirective>

@@ -173,7 +173,6 @@ export default function Candidat(props) {
 
   const Enregister = () => {
     const dt1 = new Date(selectedDate);
-    const dt2 = new Date(LivPermis);
     const dt0 = new Date();
 
     if (
@@ -438,7 +437,7 @@ export default function Candidat(props) {
             if (props.onClick.name === "addCondidat") {
               props.onClick(
                 Num_insc,
-                convert(DATE_INS),
+                convert(Date_ins),
                 Nom,
                 Prenom,
                 convert(selectedDate),
