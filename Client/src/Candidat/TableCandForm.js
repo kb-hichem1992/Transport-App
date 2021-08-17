@@ -86,9 +86,9 @@ export default function TableCandForm({
   const [openImprimer, setOpenImprimer] = useState(false);
   const [openFormation, setOpenFormation] = useState(false);
   const { userData } = useContext(UserContext);
-  const numeroAgrement = userData[0].NUMERO_AGREMENT;
   const [open, setOpen] = useState(false);
   const [openNumero, setOpenNumero] = useState(false);
+  const numeroAgrement = userData[0].NUMERO_AGREMENT;
 
   useEffect(() => {
     fetch(
@@ -390,9 +390,14 @@ export default function TableCandForm({
         openPopup={openNumero}
         setOpenPopup={setOpenNumero}
       >
-        <GroupeForm close={setOpenNumero} values={Values} data={data} etat={etat} setEtat={setEtat} />
+        <GroupeForm
+          close={setOpenNumero}
+          values={Values}
+          data={data}
+          etat={etat}
+          setEtat={setEtat}
+        />
       </Popup>
-
       <Popup
         title="تحديد التكوين"
         openPopup={openFormation}

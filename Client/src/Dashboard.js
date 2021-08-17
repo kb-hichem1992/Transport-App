@@ -328,7 +328,7 @@ export default function Dashboard() {
                   render={(props) => (
                     <AppBrevet
                       {...props}
-                      id={"http://localhost:3001/api/get_brevet"}
+                      id={`http://localhost:3001/api/get_brevet/${numeroAgrement}`}
                     />
                   )}
                 />

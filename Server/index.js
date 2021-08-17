@@ -206,10 +206,11 @@ app.put("/Printed", (req, res) => {
     }
   );
 });
-app.get("/api/get_brevet", (req, res) => {
+app.get("/api/get_brevet/:numeroAgrement", (req, res) => {
+  const numeroAgrement = req.params.numeroAgrement;
   const sqlquery =
-    "SELECT passe.PRINT, passe.BREVET, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, passe.LIV_BREVET, passe.EXP_BREVET, formation.TYPE_FORMATION, passe.GROUPE,passe.NUMERO_FORMATION, passe.NUM_INS, passe.NUM_PERMIS, passe.DATE_INS, passe.NUMERO_AGREMENT, passe.GROUPE FROM ((passe INNER JOIN candidat ON candidat.NUM_INS = passe.NUM_INS AND candidat.DATE_INS = passe.DATE_INS AND candidat.NUM_PERMIS = passe.NUM_PERMIS) INNER JOIN formation ON formation.NUMERO_FORMATION = passe.NUMERO_FORMATION  AND formation.NUMERO_AGREMENT = passe.NUMERO_AGREMENT AND formation.GROUPE = passe.GROUPE) where passe.BREVET != '';";
-  db.query(sqlquery, (err, result) => {
+    "SELECT passe.PRINT, passe.BREVET, candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, passe.DATE_EMISSION, passe.LIV_BREVET, passe.EXP_BREVET, formation.TYPE_FORMATION, passe.GROUPE,passe.NUMERO_FORMATION, passe.NUM_INS, passe.NUM_PERMIS, passe.DATE_INS, passe.NUMERO_AGREMENT, passe.GROUPE FROM ((passe INNER JOIN candidat ON candidat.NUM_INS = passe.NUM_INS AND candidat.DATE_INS = passe.DATE_INS AND candidat.NUM_PERMIS = passe.NUM_PERMIS) INNER JOIN formation ON formation.NUMERO_FORMATION = passe.NUMERO_FORMATION  AND formation.NUMERO_AGREMENT = passe.NUMERO_AGREMENT AND formation.GROUPE = passe.GROUPE) where passe.NUMERO_AGREMENT = ? and passe.BREVET != '';";
+  db.query(sqlquery, [numeroAgrement], (err, result) => {
     res.send(result);
   });
 });
@@ -267,12 +268,14 @@ app.put("/insert_Date_brevet", (req, res) => {
   const GROUPE = req.body.GROUPE;
   const LivBrevt = req.body.LivBrevt;
   const ExpBrevet = req.body.ExpBrevet;
+  const Emission = req.body.Emission;
 
   db.query(
-    "UPDATE passe SET LIV_BREVET = ?, EXP_BREVET= ? WHERE `NUM_INS`= ? and `DATE_INS` = ? and `NUM_PERMIS` =? and `NUMERO_FORMATION`= ? and `NUMERO_AGREMENT`= ? and `GROUPE`= ?  and BREVET =?;",
+    "UPDATE passe SET LIV_BREVET = ?, EXP_BREVET= ?, DATE_EMISSION = ? WHERE `NUM_INS`= ? and `DATE_INS` = ? and `NUM_PERMIS` =? and `NUMERO_FORMATION`= ? and `NUMERO_AGREMENT`= ? and `GROUPE`= ?  and BREVET =?;",
     [
       LivBrevt,
       ExpBrevet,
+      Emission,
       numeroCandidat,
       Date_ins,
       Num_permis,
