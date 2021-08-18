@@ -314,7 +314,7 @@ export default function AppBrevet({ id }) {
               />
               <ColumnDirective
                 field="DATE_EMISSION"
-                headerText="تاريخ الإصدار"
+                headerText="تاريخ التسليم"
                 type="date"
                 format="dd/MM/yyyy"
                 clipMode="EllipsisWithTooltip"

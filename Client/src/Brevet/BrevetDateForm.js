@@ -121,7 +121,7 @@ export default function BrevetDateForm(props) {
   };
   return (
     <>
-      <div style={{ width: 300, height: 270 }}>
+      <div style={{width : 300 , height : 320}}  >
         <form className={classes.root} noValidate autoComplete="off">
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -135,7 +135,7 @@ export default function BrevetDateForm(props) {
                 onChange={(e) => setBrevet(e.target.value)}
               />
               <Controls.DatePicker
-                label="تاريخ الإصدار"
+                label="تاريخ التسليم"
                 value={Emission}
                 onChange={setEmission}
               />
