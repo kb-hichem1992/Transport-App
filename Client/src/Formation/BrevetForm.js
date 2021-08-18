@@ -209,6 +209,15 @@ export default function BrevetForm(props) {
         open={open2}
         setOpen={setOpen2}
         method={() => {
+          props.onClick(
+            Brevet,
+            NUM_INS,
+            convert(DATE_INS),
+            NUM_PERMIS,
+            NUMERO_FORMATION,
+            NUMERO_AGREMENT,
+            GROUPE
+          );
           window.open(
             "http://localhost:3001/report/DIPLOME/" +
               NUM_INS +
@@ -222,6 +231,7 @@ export default function BrevetForm(props) {
               GROUPE +
               ""
           );
+          props.Close(false);
         }}
       />
       <div className={classes.root}>

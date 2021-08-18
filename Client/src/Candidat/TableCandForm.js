@@ -304,6 +304,7 @@ export default function TableCandForm({
           allowResizing={true}
           allowSorting={true}
           height={200}
+          width="auto"
           ref={TableRef3}
           enableRtl={true}
           locale="ar-AE"
@@ -317,7 +318,7 @@ export default function TableCandForm({
               headerText="الفوج"
               clipMode="EllipsisWithTooltip"
             />
-            <ColumnDirective field="NUMERO" headerText="رقم" />
+            <ColumnDirective field="NUMERO" headerText="رقم" Width={50} />
             <ColumnDirective
               field="NOM_CANDIDAT"
               headerText="اللقب"
@@ -347,16 +348,25 @@ export default function TableCandForm({
               field="CATEGORIE_PERMIS"
               headerText=" أصناف رخصة السياقة "
               clipMode="EllipsisWithTooltip"
+              Width='100'
+            />
+            <ColumnDirective
+              field="DATE_LIV_PERMIS"
+              headerText="تاريخ إصدار رخصة السياقة"
+              clipMode="EllipsisWithTooltip"
+              Width="120"
             />
             <ColumnDirective
               field="REMARQUE"
               headerText="الملاحظة"
               clipMode="EllipsisWithTooltip"
+              Width="100"
             />
             <ColumnDirective
               field="NOTE"
               headerText="العلامة"
               clipMode="EllipsisWithTooltip"
+              Width="80"
             />
           </ColumnsDirective>
           <Inject services={[Page, Sort, Filter, Group, Resize, ExcelExport]} />

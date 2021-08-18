@@ -212,6 +212,7 @@ export default function AppCand({ id }) {
     Date_ins,
   ) => {
     Axios.put("http://localhost:3001/update_candidat", {
+      numins:numins,
       Nom: Nom,
       Prénom: Prénom,
       Date_naissance: Date_naissance,
