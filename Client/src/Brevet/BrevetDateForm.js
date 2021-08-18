@@ -47,14 +47,14 @@ export default function BrevetDateForm(props) {
     BREVET,
     LIV_BREVET,
     EXP_BREVET,
-    DATE_EMISSION
+    DATE_EMISSION,
   } = props.values || tempo;
 
   const [Brevet, setBrevet] = useState(BREVET);
   const [open, setOpen] = useState(false);
-  const [LivBrevt, setLivBrevt] = useState(LIV_BREVET || new Date());
-  const [ExpBrevet, setExpBrevet] = useState(EXP_BREVET|| new Date());
-  const [Emission, setEmission] = useState(DATE_EMISSION||new Date());
+  const [LivBrevt, setLivBrevt] = useState(LIV_BREVET || null);
+  const [ExpBrevet, setExpBrevet] = useState(EXP_BREVET || null);
+  const [Emission, setEmission] = useState(DATE_EMISSION || null);
 
   function convert(date) {
     const current_datetime = new Date(date);
@@ -95,7 +95,7 @@ export default function BrevetDateForm(props) {
       .put("http://localhost:3001/insert_Date_brevet", {
         LivBrevt: LivBrevt,
         ExpBrevet: ExpBrevet,
-        Emission:Emission,
+        Emission: Emission,
         numeroCandidat: numeroCandidat,
         Date_ins: Date_ins,
         Num_permis: Num_permis,
@@ -121,7 +121,7 @@ export default function BrevetDateForm(props) {
   };
   return (
     <>
-      <div style={{width : 300 , height : 270}}  >
+      <div style={{ width: 300, height: 270 }}>
         <form className={classes.root} noValidate autoComplete="off">
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -167,18 +167,34 @@ export default function BrevetDateForm(props) {
         open={open}
         setOpen={setOpen}
         method={() => {
-          insertDateBrevet(
-            convert(LivBrevt),
-            convert(ExpBrevet),
-            convert(Emission),
-            NUM_INS,
-            convert(DATE_INS),
-            NUM_PERMIS,
-            NUMERO_FORMATION,
-            NUMERO_AGREMENT,
-            GROUPE,
-            Brevet
-          );
+          if (Emission === null) {
+            insertDateBrevet(
+              convert(LivBrevt),
+              convert(ExpBrevet),
+              null,
+              NUM_INS,
+              convert(DATE_INS),
+              NUM_PERMIS,
+              NUMERO_FORMATION,
+              NUMERO_AGREMENT,
+              GROUPE,
+              Brevet
+            );
+          } else {
+            insertDateBrevet(
+              convert(LivBrevt),
+              convert(ExpBrevet),
+              convert(Emission),
+              NUM_INS,
+              convert(DATE_INS),
+              NUM_PERMIS,
+              NUMERO_FORMATION,
+              NUMERO_AGREMENT,
+              GROUPE,
+              Brevet
+            );
+          }
+
           props.Close(false);
         }}
       />
