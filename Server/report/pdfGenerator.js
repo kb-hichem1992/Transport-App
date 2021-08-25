@@ -221,7 +221,12 @@ async function generatepdf2(idin,dateins,uurl, fn) {
            };
 
    */
-
+    var sz=8; 
+    if(result[0].CATEGORIE_PERMIS.length>44)
+		sz=5;
+ 
+    
+  
       var FICH1 = {
         NOM: {
           text: result[0].NOM_CANDIDAT,
@@ -252,7 +257,7 @@ async function generatepdf2(idin,dateins,uurl, fn) {
         },
 		CATEGORIE_PERMIS: {
           text: result[0].CATEGORIE_PERMIS,
-          x: 290,
+          x: 290- Math.max(0, result[0].CATEGORIE_PERMIS.length - 15) * sz,
           y: 380,
         },
 		
@@ -279,21 +284,22 @@ async function generatepdf2(idin,dateins,uurl, fn) {
       const firstPage = pages[0];
       const { width, height } = firstPage.getSize();
 
-      console.log(width);
-      console.log(height);
+      console.log(result[0].CATEGORIE_PERMIS.length);
 
       var F1 = JSON.parse(JSON.stringify(FICH1));
 
       for (let ob in F1) {
         var textSize = 16;
-
+        
+        if(sz==5) 		
+		    textSize = 12;
         var textHeight = helveticaFont.heightAtSize(textSize);
-
+         
         var textWidth = helveticaFont.widthOfTextAtSize(
           F1[ob]["text"],
           textSize
         );
-
+         
         firstPage.drawText(F1[ob]["text"], {
           x: F1[ob]["x"],
           y: F1[ob]["y"],
