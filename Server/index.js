@@ -10,7 +10,7 @@ const path = require("path");
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "root",
   database: "bdd",
   dateStrings: true,
 });
