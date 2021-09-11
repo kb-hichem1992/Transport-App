@@ -281,7 +281,7 @@ export default function Dashboard() {
                 <Route path="/" exact render={() => <SearchTable />} />
                 <Route path="/op/mor">
                   <AppOp
-                    id={"http://localhost:3001/api/get_op/mor"}
+                    id={process.env.REACT_APP_API_URL + "/api/get_op/mor"}
                     Title={"Liste des opérateurs/Personne Morale"}
                   />
                 </Route>
@@ -290,7 +290,7 @@ export default function Dashboard() {
                   render={(props) => (
                     <AppOp
                       {...props}
-                      id={"http://localhost:3001/api/get_op/phy"}
+                      id={process.env.REACT_APP_API_URL + "/api/get_op/phy"}
                       Title={"Liste des opérateurs/Personne Physique"}
                     />
                   )}
@@ -300,7 +300,7 @@ export default function Dashboard() {
                   render={(props) => (
                     <AppFor
                       {...props}
-                      id={"http://localhost:3001/api/get_form"}
+                      id={process.env.REACT_APP_API_URL + "/api/get_form"}
                     />
                   )}
                 />
@@ -309,7 +309,7 @@ export default function Dashboard() {
                   render={(props) => (
                     <AppCand
                       {...props}
-                      id={"http://localhost:3001/api/get_candidat"}
+                      id={process.env.REACT_APP_API_URL + "/api/get_candidat"}
                     />
                   )}
                 />
@@ -318,8 +318,8 @@ export default function Dashboard() {
                   render={(props) => (
                     <AppVeh
                       {...props}
-                      id={"http://localhost:3001/api/get_veh_Mar"}
-                      id2={"http://localhost:3001/api/get_veh_voyag"}
+                      id={process.env.REACT_APP_API_URL + "/api/get_veh_Mar"}
+                      id2={process.env.REACT_APP_API_URL + "/api/get_veh_voyag"}
                     />
                   )}
                 />
@@ -328,7 +328,7 @@ export default function Dashboard() {
                   render={(props) => (
                     <AppBrevet
                       {...props}
-                      id={`http://localhost:3001/api/get_brevet/${numeroAgrement}`}
+                      id={`${process.env.REACT_APP_API_URL}/api/get_brevet/${numeroAgrement}`}
                     />
                   )}
                 />

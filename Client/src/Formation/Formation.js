@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  Fragment,
-  useContext,
-} from "react";
+import React, { useState, useEffect, useRef, Fragment, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./Formation.css";
 import Form from "./FormationForm.js";
@@ -91,43 +85,16 @@ function AppFor({ id }) {
   const [openModifier, setOpenModifier] = useState(false);
   const [etat, setEtat] = useState(false);
   const [open, setopen] = useState(false);
+  const [Values, setValues] = useState();
   useEffect(() => {
     fetch(id)
       .then((response) => response.json())
       .then((json) => setdata(json));
-  }, [id, data, etat]);
+  }, [id, etat]);
 
-  const addFormation = (
-    numeroFormation,
-    numeroAgrement,
-    groupe,
-    Type,
-    Debut,
-    Fin
-  ) => {
+  const updateFormation = (numeroFormation, numeroAgrement, groupe, Type, Debut, Fin) => {
     axios
-      .post("http://localhost:3001/Add_formation", {
-        numeroFormation: numeroFormation,
-        numeroAgrement: numeroAgrement,
-        groupe: groupe,
-        Type: Type,
-        Debut: Debut,
-        Fin: Fin,
-      })
-      .then(() => {
-        setEtat(!etat);
-      });
-  };
-  const updateFormation = (
-    numeroFormation,
-    numeroAgrement,
-    groupe,
-    Type,
-    Debut,
-    Fin
-  ) => {
-    axios
-      .put("http://localhost:3001/update_formation", {
+      .put(process.env.REACT_APP_API_URL + "/update_formation", {
         Type: Type,
         Debut: Debut,
         Fin: Fin,
@@ -141,10 +108,7 @@ function AppFor({ id }) {
   };
   const deleteFormation = (numeroFormation, numeroAgrement, groupe) => {
     axios
-      .delete(
-        `http://localhost:3001/delete_formation/${numeroFormation}/${numeroAgrement}/${groupe}`,
-        {}
-      )
+      .delete(`${process.env.REACT_APP_API_URL}/delete_formation/${numeroFormation}/${numeroAgrement}/${groupe}`, {})
       .then(() => {
         setEtat(!etat);
       });
@@ -167,26 +131,36 @@ function AppFor({ id }) {
 
   const TableRef = useRef(null);
 
-  function rowSelected() {
+  async function rowSelected() {
     try {
-      const selectedrecords = TableRef.current.getSelectedRecords();
+      const selectedrecords = await TableRef.current.getSelectedRecords();
       const obj = JSON.stringify(selectedrecords);
       const parsedobj = JSON.parse(obj);
-      return parsedobj[0];
+      setValues(parsedobj[0]);
     } catch (error) {
       console.log(error);
     }
   }
+  const addFormation = (numeroFormation, numeroAgrement, groupe, Type, Debut, Fin) => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/Add_formation`, {
+        numeroFormation: numeroFormation,
+        numeroAgrement: numeroAgrement,
+        groupe: groupe,
+        Type: Type,
+        Debut: Debut,
+        Fin: Fin,
+      })
+      .then(() => {
+        setEtat(!etat);
+      });
+  };
 
-  const Values = rowSelected();
+  //  const Values = rowSelected();
 
   return (
     <Fragment>
-      <PageHeader
-        title="الدورات التكوينية"
-        subTitle="قائمة الدورات"
-        icon={<LaptopChromebookIcon />}
-      />
+      <PageHeader title="الدورات التكوينية" subTitle="قائمة الدورات" icon={<LaptopChromebookIcon />} />
       <div className={classes.container}>
         <Button
           text="إضافة"
@@ -204,9 +178,7 @@ function AppFor({ id }) {
           size="small"
           startIcon={<EditOutlinedIcon />}
           className={classes.newButton}
-          disabled={
-            Values === undefined || userData[0].ADMIN !== "admin" ? true : false
-          }
+          disabled={Values === undefined || userData[0].ADMIN !== "admin" ? true : false}
           onClick={() => {
             setOpenModifier(true);
           }}
@@ -218,9 +190,7 @@ function AppFor({ id }) {
           color="secondary"
           startIcon={<DeleteIcon />}
           className={classes.newButton}
-          disabled={
-            Values === undefined || userData[0].ADMIN !== "admin" ? true : false
-          }
+          disabled={Values === undefined || userData[0].ADMIN !== "admin" ? true : false}
           onClick={() => {
             setopen(true);
           }}
@@ -241,17 +211,15 @@ function AppFor({ id }) {
             ref={TableRef}
             enableRtl={true}
             locale="ar-AE"
+            rowSelected={rowSelected}
+            rowDeselected={() => {
+              setValues(undefined);
+            }}
           >
             <ColumnsDirective>
-              <ColumnDirective
-                field="NUMERO_FORMATION"
-                headerText="رقم الدورة"
-              />
+              <ColumnDirective field="NUMERO_FORMATION" headerText="رقم الدورة" />
               <ColumnDirective field="GROUPE" headerText="الفوج" />
-              <ColumnDirective
-                field="TYPE_FORMATION"
-                headerText="نوع التكوين"
-              />
+              <ColumnDirective field="TYPE_FORMATION" headerText="نوع التكوين" />
               <ColumnDirective
                 field="DEBUT"
                 headerText="تاريخ البداية"
@@ -273,11 +241,7 @@ function AppFor({ id }) {
           </GridComponent>
         </div>
       </div>
-      <PageHeader
-        title="الدورات التكوينية"
-        subTitle="ٌقائمة المترشحين لكل فوج "
-        icon={<LaptopChromebookIcon />}
-      />
+      <PageHeader title="الدورات التكوينية" subTitle="ٌقائمة المترشحين لكل فوج " icon={<LaptopChromebookIcon />} />
       <Paper>
         <TableCandForm
           setEtat={setEtat}
@@ -287,28 +251,19 @@ function AppFor({ id }) {
         />
       </Paper>
 
-      <Popup
-        title="إضافة"
-        openPopup={openAjouter}
-        setOpenPopup={setOpenAjouter}
-      >
+      <Popup title="إضافة" openPopup={openAjouter} setOpenPopup={setOpenAjouter}>
         <Form
-          onClick={addFormation}
+          type="add"
+          execute={addFormation}
           Close={setOpenAjouter}
           values={initialvalues}
+          etat={etat}
+          setEtat={setEtat}
         />
       </Popup>
 
-      <Popup
-        title="تعديل"
-        openPopup={openModifier}
-        setOpenPopup={setOpenModifier}
-      >
-        <Form
-          onClick={updateFormation}
-          Close={setOpenModifier}
-          values={Values}
-        />
+      <Popup title="تعديل" openPopup={openModifier} setOpenPopup={setOpenModifier}>
+        <Form type="update" onClick={updateFormation} Close={setOpenModifier} values={Values} />
       </Popup>
       <AlertDialog
         title="تأكيد"
@@ -316,11 +271,7 @@ function AppFor({ id }) {
         open={open}
         setOpen={setopen}
         method={() => {
-          deleteFormation(
-            Values.NUMERO_FORMATION,
-            userData[0].NUMERO_AGREMENT,
-            Values.GROUPE
-          );
+          deleteFormation(Values.NUMERO_FORMATION, userData[0].NUMERO_AGREMENT, Values.GROUPE);
           setopen(false);
         }}
       />

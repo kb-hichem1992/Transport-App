@@ -106,12 +106,13 @@ export default function AppBrevet({ id }) {
   const [open, setOpen] = useState(false);
   const [openSnack, setOpenSnack] = useState(false);
   const [openDateBrevet, setopenDateBrevet] = useState(false);
+  const [Values, setValues] = useState();
 
   useEffect(() => {
     fetch(id)
       .then((response) => response.json())
       .then((json) => setdata(json));
-  }, [id, data, etat]);
+  }, [id, etat]);
 
   const filter = {
     type: "CheckBox",
@@ -129,7 +130,7 @@ export default function AppBrevet({ id }) {
     GROUPE
   ) => {
     axios
-      .put("http://localhost:3001/insert_brevet", {
+      .put(process.env.REACT_APP_API_URL + "/insert_brevet", {
         NumeroBrevet: NumeroBrevet,
         LivBrevet: LivBrevet,
         ExpBrevet: ExpBrevet,
@@ -154,7 +155,7 @@ export default function AppBrevet({ id }) {
     numeroAgrement
   ) => {
     axios
-      .put("http://localhost:3001/Printed", {
+      .put(process.env.REACT_APP_API_URL + "/Printed", {
         numeroCandidat: numeroCandidat,
         Num_permis: Num_permis,
         dateins: dateins,
@@ -198,17 +199,17 @@ export default function AppBrevet({ id }) {
 
   const TableRef2 = useRef(null);
 
-  function rowSelected() {
+  async function rowSelected() {
     try {
-      const selectedrecords = TableRef2.current.getSelectedRecords();
+      const selectedrecords = await TableRef2.current.getSelectedRecords();
       const obj = JSON.stringify(selectedrecords);
       const parsedobj = JSON.parse(obj);
-      return parsedobj[0];
+      setValues(parsedobj[0]);
     } catch (error) {
       console.log(error);
     }
   }
-  const Values = rowSelected();
+  //  const Values = rowSelected();
   const { userData } = useContext(UserContext);
   const handleClick = () => {
     setOpenSnack(true);
@@ -236,7 +237,8 @@ export default function AppBrevet({ id }) {
       );
       handleClick();
       window.open(
-        "http://localhost:3001/report/DIPLOME/" +
+        process.env.REACT_APP_API_URL +
+          "/report/DIPLOME/" +
           Values.NUM_INS +
           "/" +
           Values.NUMERO_FORMATION +
@@ -305,6 +307,10 @@ export default function AppBrevet({ id }) {
             locale="ar-AE"
             contextMenuItems={contextMenuItems}
             allowExcelExport={true}
+            rowSelected={rowSelected}
+            rowDeselected={() => {
+              setValues(undefined);
+            }}
           >
             <ColumnsDirective>
               <ColumnDirective
@@ -407,7 +413,8 @@ export default function AppBrevet({ id }) {
         setOpen={setOpen}
         method={() => {
           window.open(
-            "http://localhost:3001/report/DIPLOME/" +
+            process.env.REACT_APP_API_URL +
+              "/report/DIPLOME/" +
               Values.NUM_INS +
               "/" +
               Values.NUMERO_FORMATION +

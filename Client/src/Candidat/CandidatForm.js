@@ -106,7 +106,12 @@ export default function Candidat(props) {
   const [Categorie, setOpenCategorie] = useState(false);
   const { userData } = useContext(UserContext);
   const numeroAgrement = userData[0].NUMERO_AGREMENT;
-  const Num_insc = numeroCandidat + "-" + new Date().getFullYear()+"-"+numeroAgrement;
+  const Num_insc =
+    numeroCandidat +
+    "-" +
+    new Date(Date_ins).getFullYear() +
+    "-" +
+    numeroAgrement;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -159,16 +164,14 @@ export default function Candidat(props) {
   }
   function TestNumIns(id) {
     return props.data.some(function (el) {
-      if (
-        el.NUM_INS === id
-      ) {
+      if (el.NUM_INS === id) {
         return true;
       } else {
         return false;
       }
     });
   }
-  
+
   const messageB = "هل أنت متأكد من القيام بهذه العملية ؟";
 
   const Enregister = () => {
@@ -197,12 +200,12 @@ export default function Candidat(props) {
       alert("تاريخ الميلاد خاطئ");
     } else if (
       CandidatExists(Num_insc, Date_ins, NumPermis) === true &&
-      props.onClick.name === "addCondidat"
+      props.type === "add"
     ) {
       alert("المترشح مسجل من قبل");
     } else if (
       CandidatExists(numeroCandidat, Date_ins, NumPermis) === true &&
-      props.onClick.name === "updateCandidat" &&
+      props.type === "update" &&
       textChanged === true
     ) {
       alert("المترشح مسجل من قبل");
@@ -213,7 +216,10 @@ export default function Candidat(props) {
     }
   };
 
-  const niveauScolaire = ["ابتدائي", "متوسط", "ثانوي", "جامعي","بدون مستوى"];
+  const handleDateChange = (date) => {
+    setDate_ins(date);
+  };
+  const niveauScolaire = ["ابتدائي", "متوسط", "ثانوي", "جامعي", "بدون مستوى"];
   const Type = ["متعاقد", "حر"];
 
   return (
@@ -227,7 +233,7 @@ export default function Candidat(props) {
                 label=" رقم التسجيل"
                 value={numeroCandidat}
                 size="small"
-             /*    disabled={
+                /*    disabled={
                   props.onClick.name === "updateCandidat" ? true : false
                 } */
                 onChange={(e) => setNumeroCandidat(e.target.value)}
@@ -235,7 +241,7 @@ export default function Candidat(props) {
               <Controls.DatePicker
                 label="تاريخ التسجيل"
                 value={Date_ins}
-                onChange={setDate_ins}
+                onChange={handleDateChange}
               />
               <FormControl>
                 <InputLabel id="demo-simple-select-label">
@@ -410,7 +416,9 @@ export default function Candidat(props) {
                   variant="contained"
                   color="primary"
                   size="small"
-                  onClick={Enregister}
+                  onClick={() => {
+                    Enregister();
+                  }}
                 />
                 <Controls.Button
                   text="إلغاء"
@@ -434,7 +442,7 @@ export default function Candidat(props) {
         setOpen={setOpen}
         method={() => {
           try {
-            if (props.onClick.name === "addCondidat") {
+            if (props.type === "add") {
               props.onClick(
                 Num_insc,
                 convert(Date_ins),
@@ -453,7 +461,7 @@ export default function Candidat(props) {
                 Typepermis,
                 convert(Date_ins)
               );
-            } else if (props.onClick.name === "updateCandidat") {
+            } else if (props.type === "update") {
               props.onClick(
                 NUM_INS,
                 numeroCandidat,

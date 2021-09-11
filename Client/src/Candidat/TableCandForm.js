@@ -89,10 +89,11 @@ export default function TableCandForm({
   const [open, setOpen] = useState(false);
   const [openNumero, setOpenNumero] = useState(false);
   const numeroAgrement = userData[0].NUMERO_AGREMENT;
+  const [Values, setValues] = useState();
 
   useEffect(() => {
     fetch(
-      `http://localhost:3001/api/get_candidat_form/${numeroFormation}/${numeroAgrement}/${groupe}`
+      `${process.env.REACT_APP_API_URL}/api/get_candidat_form/${numeroFormation}/${numeroAgrement}/${groupe}`
     )
       .then((response) => response.json())
       .then((json) => setdata(json));
@@ -144,7 +145,7 @@ export default function TableCandForm({
     numeroAgrement
   ) => {
     axios
-      .put("http://localhost:3001/update_passe", {
+      .put(process.env.REACT_APP_API_URL + "/update_passe", {
         remarque: remarque,
         note: note,
         numeroCandidat: numeroCandidat,
@@ -168,7 +169,7 @@ export default function TableCandForm({
     GROUPE
   ) => {
     axios
-      .put("http://localhost:3001/insert_brevet", {
+      .put(process.env.REACT_APP_API_URL + "/insert_brevet", {
         NumeroBrevet: NumeroBrevet,
         numeroCandidat: numeroCandidat,
         Date_ins: Date_ins,
@@ -190,7 +191,7 @@ export default function TableCandForm({
     numeroAgrement
   ) => {
     axios
-      .post(`http://localhost:3001/delete_passe`, {
+      .post(`${process.env.REACT_APP_API_URL}/delete_passe`, {
         numeroCandidat: numeroCandidat,
         Date_ins: Date_ins,
         Num_permis: Num_permis,
@@ -202,17 +203,16 @@ export default function TableCandForm({
         setEtat(!etat);
       });
   };
-  function rowSelected() {
+  async function rowSelected() {
     try {
-      const selectedrecords = TableRef3.current.getSelectedRecords();
+      const selectedrecords = await TableRef3.current.getSelectedRecords();
       const obj = JSON.stringify(selectedrecords);
       const parsedobj = JSON.parse(obj);
-      return parsedobj[0];
+      setValues(parsedobj[0]);
     } catch (error) {
       console.log(error);
     }
   }
-  const Values = rowSelected();
 
   return (
     <Fragment>
@@ -311,6 +311,10 @@ export default function TableCandForm({
           groupSettings={GroupSettingsModel}
           contextMenuItems={contextMenuItems}
           allowExcelExport={true}
+          rowSelected={rowSelected}
+          rowDeselected={() => {
+            setValues(undefined);
+          }}
         >
           <ColumnsDirective>
             <ColumnDirective
@@ -348,7 +352,7 @@ export default function TableCandForm({
               field="CATEGORIE_PERMIS"
               headerText=" أصناف رخصة السياقة "
               clipMode="EllipsisWithTooltip"
-              Width='100'
+              Width="100"
             />
             <ColumnDirective
               field="DATE_LIV_PERMIS"
