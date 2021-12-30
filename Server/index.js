@@ -255,6 +255,26 @@ app.get("/api/getOp", (req, res) => {
   });
 });
 
+app.post("/Add_operateur", (req, res) => {
+  const numeroEnregistrement = req.body.numeroEnregistrement;
+  const nomOperateur = req.body.nomOperateur;
+  const siege = req.body.siege;
+  const propriétaire = req.body.propriétaire;
+  const wilaya = req.body.wilaya;
+  const date_Enregistrement = req.body.date_Enregistrement;
+
+  db.query(
+    "INSERT INTO OPERATEUR (`NOM_OP`, `SIEGE_OP`, `PROPRIETAIRE`, `WILAYA`, `NUMERO_ENREGISTREMENT`, `DATE_ENREGISTREMENT`) VALUES (?, ?, ?, ?, ?, ?);",
+    [nomOperateur, siege, propriétaire, wilaya, numeroEnregistrement, date_Enregistrement],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("inserted");
+      }
+    }
+  );
+});
 app.get("/api/getUser/:username/:password", (req, res) => {
   const username = req.params.username;
   const password = req.params.password;
