@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function OperateurForm(props) {
   const { setEtat, etat, Values } = props;
+  const tempo = [];
   const {
     NOM_OP,
     SIEGE_OP,
@@ -43,14 +44,18 @@ export default function OperateurForm(props) {
     WILAYA,
     NUMERO_ENREGISTREMENT,
     DATE_ENREGISTREMENT,
-  } = Values;
+  } = Values || tempo;
   const classes = useStyles();
-  const [numeroEnregistrement, setNumeroEnregistrement] = useState(NUMERO_ENREGISTREMENT);
+  const [numeroEnregistrement, setNumeroEnregistrement] = useState(
+    NUMERO_ENREGISTREMENT
+  );
   const [nomOperateur, setNomOperateur] = useState(NOM_OP);
   const [siege, setSiege] = useState(SIEGE_OP);
   const [propriétaire, setPropriétaire] = useState(PROPRIETAIRE);
   const [wilaya, setWilaya] = useState(WILAYA);
-  const [date_Enregistrement, setdate_Enregistrement] = useState(convert(DATE_ENREGISTREMENT));
+  const [date_Enregistrement, setdate_Enregistrement] = useState(
+    convert(DATE_ENREGISTREMENT)
+  );
 
   const add = (
     numeroEnregistrement,
@@ -68,6 +73,27 @@ export default function OperateurForm(props) {
         wilaya: wilaya,
         numeroEnregistrement: numeroEnregistrement,
         date_Enregistrement: date_Enregistrement,
+      })
+      .then(() => {
+        setEtat(!etat);
+      });
+  };
+  const update = (
+    numeroEnregistrement,
+    nomOperateur,
+    siege,
+    propriétaire,
+    wilaya,
+    date_Enregistrement
+  ) => {
+    axios
+      .put(`${process.env.REACT_APP_API_URL}/Update_operateur`, {
+        nomOperateur: nomOperateur,
+        siege: siege,
+        propriétaire: propriétaire,
+        wilaya: wilaya,
+        date_Enregistrement: date_Enregistrement,
+        numeroEnregistrement: numeroEnregistrement,
       })
       .then(() => {
         setEtat(!etat);
@@ -146,19 +172,40 @@ export default function OperateurForm(props) {
             color="primary"
             size="small"
             onClick={() => {
-              add(
-                numeroEnregistrement,
-                nomOperateur,
-                siege,
-                propriétaire,
-                wilaya,
-                convert(date_Enregistrement)
-              );
+              if (props.type === "add") {
+                add(
+                  numeroEnregistrement,
+                  nomOperateur,
+                  siege,
+                  propriétaire,
+                  wilaya,
+                  convert(date_Enregistrement)
+                );
+                props.Close(false);
+              }
+              if (props.type === "update") {
+                update(
+                  numeroEnregistrement,
+                  nomOperateur,
+                  siege,
+                  propriétaire,
+                  wilaya,
+                  convert(date_Enregistrement)
+                );
+                props.Close(false);
+              }
             }}
           >
             تأكيد
           </Button>
-          <Button variant="contained" color="secondary" size="small">
+          <Button
+            variant="contained"
+            color="secondary"
+            size="small"
+            onClick={() => {
+              props.Close(false);
+            }}
+          >
             إلغاء
           </Button>
         </form>

@@ -275,6 +275,42 @@ app.post("/Add_operateur", (req, res) => {
     }
   );
 });
+app.put("/Update_operateur", (req, res) => {
+  const numeroEnregistrement = req.body.numeroEnregistrement;
+  const nomOperateur = req.body.nomOperateur;
+  const siege = req.body.siege;
+  const propriétaire = req.body.propriétaire;
+  const wilaya = req.body.wilaya;
+  const date_Enregistrement = req.body.date_Enregistrement;
+
+  db.query(
+    "UPDATE `operateur` SET `NOM_OP` = ?, `SIEGE_OP` = ?, `PROPRIETAIRE` = ?, `WILAYA` = ?, `DATE_ENREGISTREMENT` = ? WHERE (`NUMERO_ENREGISTREMENT` = ?);",
+    [nomOperateur, siege, propriétaire, wilaya, date_Enregistrement, numeroEnregistrement],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("updated");
+      }
+    }
+  );
+});
+
+app.post("/delete_operateur", (req, res) => {
+  const numeroEnregistrement = req.body.numeroEnregistrement;
+  db.query(
+    "DELETE FROM `operateur` WHERE (`NUMERO_ENREGISTREMENT` = ?);",
+    [numeroEnregistrement],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("deleted");
+      }
+    }
+  );
+});
+
 app.get("/api/getUser/:username/:password", (req, res) => {
   const username = req.params.username;
   const password = req.params.password;
