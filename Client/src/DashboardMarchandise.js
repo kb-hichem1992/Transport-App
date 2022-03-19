@@ -18,6 +18,8 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Button from "./components/controls/Button";
 import Operateur from "./Opérateur/Opérateur";
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+
 import {
   BrowserRouter as Router,
   Route,
@@ -144,7 +146,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DashboardService(props) {
+export default function DashboardMarchandise(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -185,7 +187,7 @@ export default function DashboardService(props) {
               noWrap
               className={classes.title}
             >
-              مديرية النقل
+              مديرية النقل - البضائع{" "}
             </Typography>
             <Button
               text="خروج"
@@ -234,7 +236,15 @@ export default function DashboardService(props) {
                 <ListItemIcon>
                   <SearchIcon />
                 </ListItemIcon>
-                <ListItemText primary="المعاملين" />
+                <ListItemText primary="المتعاملين" />
+              </ListItem>
+            </Link>
+            <Link to={url + "/véhicule"} className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <LocalShippingIcon />
+                </ListItemIcon>
+                <ListItemText primary="العربات" />
               </ListItem>
             </Link>
           </List>
@@ -269,7 +279,7 @@ export default function DashboardService(props) {
                 <Route
                   path={path + "/operateur"}
                   exact
-                  render={() => <Operateur/>}
+                  render={() => <Operateur />}
                 />
                 <Route
                   path={path + "/Profile"}

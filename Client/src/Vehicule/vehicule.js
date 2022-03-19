@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import "./Opérateur.css";
 import {
   GridComponent,
   ColumnDirective,
@@ -15,7 +14,6 @@ import { makeStyles } from "@material-ui/core";
 import Button from "../components/controls/Button";
 import { L10n } from "@syncfusion/ej2-base";
 import PageHeader from "../PageHeader";
-import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import AddIcon from "@material-ui/icons/Add";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -28,9 +26,9 @@ import AlertDialog from "../components/controls/Dialog";
 import ListCandidat from "../Candidat/ListCandidat";
 import PopupFull from "../components/PopupFullScreen";
 import ViewListIcon from "@mui/icons-material/ViewList";
-import PersonOutlineSharpIcon from "@mui/icons-material/PersonOutlineSharp";
 
-export default function Operateur(props) {
+
+export default function Vehicule(props) {
   const [admin] = useLocalStorage("typeUser", "");
   const [Values, setValues] = useState();
   const [openAlert, setOpenAlert] = useState(false);
@@ -120,8 +118,8 @@ export default function Operateur(props) {
   return (
     <Fragment>
       <PageHeader
-        title=" المتعاملين"
-        subTitle="قائمة المتعاملين"
+        title=" العربات"
+        subTitle="قائمة العربات"
         icon={<ViewListIcon />}
       />
       <div className={classes.container}>
@@ -157,30 +155,6 @@ export default function Operateur(props) {
             disabled={Values === undefined || admin !== "admin" ? true : false}
             onClick={() => {
               setOpenAlert(true);
-            }}
-          />
-        </div>
-        <div>
-          <Button
-            text="إضافة عامل"
-            variant="outlined"
-            size="small"
-            startIcon={<SupervisedUserCircleIcon />}
-            className={classes.newButton}
-            disabled={Values === undefined || admin !== "admin" ? true : false}
-            onClick={() => {
-              setOpenCandList(true);
-            }}
-          />
-          <Button
-            text="قائمة العمال"
-            variant="outlined"
-            size="small"
-            startIcon={<PersonOutlineSharpIcon />}
-            className={classes.newButton}
-            disabled={Values === undefined || admin !== "admin" ? true : false}
-            onClick={() => {
-              setOpenList(true);
             }}
           />
         </div>

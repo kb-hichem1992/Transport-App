@@ -14,16 +14,21 @@ import {
 import { makeStyles } from "@material-ui/core";
 import Button from "../components/controls/Button";
 import { L10n } from "@syncfusion/ej2-base";
-import PageHeader from "../PageHeader";
-import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
-import AddIcon from "@material-ui/icons/Add";
+
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useLocalStorage } from "../useLocalStorage";
 
-export default function ListTravailleur() {
+import Popup from "../components/Popup";
+import TravailDateForm from "./travailDateForm";
+import axios from "axios";
+
+export default function ListTravailleur(props) {
   const [admin] = useLocalStorage("typeUser", "");
   const [Values, setValues] = useState();
+  const [openDateForm, setopenDateForm] = useState(false);
+  const [state, setstate] = useState(false);
+  const NUMERO_ENREGISTREMENT = props.selectedValue.NUMERO_ENREGISTREMENT;
 
   L10n.load({
     "ar-AE": {
@@ -51,11 +56,16 @@ export default function ListTravailleur() {
     },
   });
   const [data, setdata] = useState([]);
+
   useEffect(() => {
-    fetch("http://localhost:3001/api/getOp")
+    fetch(
+      process.env.REACT_APP_API_URL +
+        "/api/get_candidat_foreach_operateur/" +
+        NUMERO_ENREGISTREMENT
+    )
       .then((response) => response.json())
       .then((json) => setdata(json));
-  }, []);
+  }, [NUMERO_ENREGISTREMENT, state]);
 
   const useStyles = makeStyles((theme) => ({
     container: {
@@ -84,46 +94,91 @@ export default function ListTravailleur() {
       console.log(error);
     }
   }
-
+  const delete_travail = () => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/delete_travail`, {
+        numeroEnregistrement: Values.NUMERO_ENREGISTREMENT,
+        NUM_INS: Values.NUM_INS,
+        DATE_INS: Values.DATE_INS,
+        NUM_PERMIS: Values.NUM_PERMIS,
+        DATE_RECRUTEMENT: Values.DATE_RECRUT,
+      })
+      .then(() => {
+        setstate(!state);
+        alert("تم الحذف")
+      });
+  };
   return (
-    <div style={{ width: "auto" }}>
-      <GridComponent
-        dataSource={data}
-        allowPaging={true}
-        pageSettings={{ pageSize: 10 }}
-        allowFiltering={true}
-        allowGrouping={true}
-        filterSettings={filter}
-        allowResizing={true}
-        allowSorting={true}
-        height={200}
-        ref={TableRef}
-        enableRtl={true}
-        locale="ar-AE"
-        rowSelected={rowSelected}
-        rowDeselected={() => {
-          setValues(undefined);
-        }}
+    <>
+      <div className={classes.container}>
+        <Button
+          text="تعديل"
+          variant="outlined"
+          size="small"
+          startIcon={<EditOutlinedIcon />}
+          className={classes.newButton}
+          disabled={Values === undefined || admin !== "admin" ? true : false}
+          onClick={() => {
+            setopenDateForm(true);
+          }}
+        />
+        <Button
+          text="حذف"
+          variant="outlined"
+          size="small"
+          color="secondary"
+          startIcon={<DeleteIcon />}
+          className={classes.newButton}
+          disabled={Values === undefined || admin !== "admin" ? true : false}
+          onClick={delete_travail}
+        />
+      </div>
+      <div style={{ width: "auto" }}>
+        <GridComponent
+          dataSource={data}
+          allowPaging={true}
+          pageSettings={{ pageSize: 10 }}
+          allowFiltering={true}
+          allowGrouping={true}
+          filterSettings={filter}
+          allowResizing={true}
+          allowSorting={true}
+          height={300}
+          ref={TableRef}
+          enableRtl={true}
+          locale="ar-AE"
+          rowSelected={rowSelected}
+          rowDeselected={() => {
+            setValues(undefined);
+          }}
+        >
+          <ColumnsDirective>
+            <ColumnDirective field="NUM_INS" headerText="رقم التسجيل " />
+            <ColumnDirective field="NUM_PERMIS" headerText="رخصة السياقة" />
+            <ColumnDirective field="NOM_CANDIDAT" headerText="اللفب" />
+            <ColumnDirective field="PRENOM_CANDIDAT" headerText="الإسم" />
+            <ColumnDirective
+              field="DATE_NAIS_CANDIDAT"
+              headerText="تاريخ الميلاد"
+            />
+            <ColumnDirective field="DATE_RECRUT" headerText="بداية التوظيف" />
+            <ColumnDirective field="DATE_FIN" headerText="نهابة التوظيف" />
+          </ColumnsDirective>
+          <Inject services={[Page, Sort, Filter, Group, Resize]} />
+        </GridComponent>
+      </div>
+      <Popup
+        title=" تعديل تاريخ الإنتساب"
+        openPopup={openDateForm}
+        setOpenPopup={setopenDateForm}
       >
-        <ColumnsDirective>
-          <ColumnDirective field="NUM_INS" headerText="رقم التسجيل " />
-          <ColumnDirective field="NUM_PERMIS" headerText="رخصة السياقة" />
-          <ColumnDirective field="NOM_CANDIDAT" headerText="اللفب" />
-          <ColumnDirective field="PRENOM_CANDIDAT" headerText="الإسم" />
-          <ColumnDirective
-            field="DATE_NAIS_CANDIDAT"
-            headerText="تاريخ الميلاد"
-          />
-          <ColumnDirective
-            field="LIEU_NAIS_CANDIDAT"
-            headerText="مكان الميلاد"
-          />
-          <ColumnDirective field="DATE_RECRUT" headerText="بداية التوظيف" />
-          <ColumnDirective field="DATE_FIN" headerText="نهابة التوظيف" />
-          <ColumnDirective field="ETAT" headerText="الحالة المهنية " />
-        </ColumnsDirective>
-        <Inject services={[Page, Sort, Filter, Group, Resize]} />
-      </GridComponent>
-    </div>
+        <TravailDateForm
+          setOpenPopup={setopenDateForm}
+          selectedValue={Values}
+          state={state}
+          setstate={setstate}
+        />
+      </Popup>
+    </>
   );
 }
