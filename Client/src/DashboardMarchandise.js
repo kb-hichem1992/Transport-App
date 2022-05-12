@@ -18,7 +18,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Button from "./components/controls/Button";
 import Operateur from "./Opérateur/Opérateur";
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 
 import {
   BrowserRouter as Router,
@@ -32,6 +32,9 @@ import Profil from "./Profil";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SearchTable from "./Formation/Search.js";
 import SearchIcon from "@material-ui/icons/Search";
+import Vehicule from "./Vehicule/vehicule";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import GroupIcon from "@mui/icons-material/Group";
 
 const drawerWidth = 180;
 
@@ -234,7 +237,7 @@ export default function DashboardMarchandise(props) {
             <Link to={url + "/operateur"} className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
-                  <SearchIcon />
+                  <GroupIcon />
                 </ListItemIcon>
                 <ListItemText primary="المتعاملين" />
               </ListItem>
@@ -252,7 +255,7 @@ export default function DashboardMarchandise(props) {
           <Link to={url + "/Profile"} className={classes.link}>
             <ListItem button>
               <ListItemIcon>
-                <AccountCircleIcon />
+                <AdminPanelSettingsIcon />
               </ListItemIcon>
               <ListItemText primary="الحساب" />
             </ListItem>
@@ -280,6 +283,11 @@ export default function DashboardMarchandise(props) {
                   path={path + "/operateur"}
                   exact
                   render={() => <Operateur />}
+                />
+                <Route
+                  path={path + "/véhicule"}
+                  exact
+                  render={() => <Vehicule />}
                 />
                 <Route
                   path={path + "/Profile"}

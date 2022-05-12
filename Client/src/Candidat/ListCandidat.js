@@ -127,8 +127,6 @@ export default function ListCandidat({
       .then((json) => setdata(json));
   }, [etat]);
 
-
-
   function convert(date) {
     if (date === null) {
       return null;
@@ -217,9 +215,12 @@ export default function ListCandidat({
           DATE_FIN: convert(DateFinRecrutement),
           ETAT: relation,
         })
-        .then(() => {
-          // setEtat(!etat);
-          alert("terminé");
+        .then((response) => {
+          if (response.data.message) {
+            alert(response.data.message);
+          } else {
+            alert("terminé");
+          }
         });
     }
   };

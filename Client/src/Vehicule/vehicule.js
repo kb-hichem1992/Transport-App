@@ -18,24 +18,15 @@ import AddIcon from "@material-ui/icons/Add";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useLocalStorage } from "../useLocalStorage";
-import Popup from "../components/Popup";
-import ListTravailleur from "./ListTravailleur";
-import OperateurForm from "./Operateur_form.js";
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import axios from "axios";
 import AlertDialog from "../components/controls/Dialog";
-import ListCandidat from "../Candidat/ListCandidat";
-import PopupFull from "../components/PopupFullScreen";
-import ViewListIcon from "@mui/icons-material/ViewList";
-
 
 export default function Vehicule(props) {
   const [admin] = useLocalStorage("typeUser", "");
   const [Values, setValues] = useState();
   const [openAlert, setOpenAlert] = useState(false);
-  const [openAdd, setOpenAdd] = useState(false);
-  const [openCandList, setOpenCandList] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
-  const [openList, setOpenList] = useState(false);
   const [etat, setEtat] = useState(false);
   L10n.load({
     "ar-AE": {
@@ -64,7 +55,7 @@ export default function Vehicule(props) {
   });
   const [data, setdata] = useState([]);
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + "/api/getOp")
+    fetch(process.env.REACT_APP_API_URL + "/api/get_veh_Mar")
       .then((response) => response.json())
       .then((json) => setdata(json));
   }, [etat]);
@@ -97,20 +88,10 @@ export default function Vehicule(props) {
     }
   }
 
-  const initialvalues = {
-    NOM_OP: "",
-    SIEGE_OP: "",
-    PROPRIETAIRE: "",
-    WILAYA: "",
-    NUMERO_ENREGISTREMENT: "",
-    DATE_ENREGISTREMENT: new Date(),
-  };
-
-  const delete_operateur = (numeroEnregistrement) => {
+  const delete_vehicule = () => {
+    const MATRECULE = Values.MATRECULE;
     axios
-      .post(`${process.env.REACT_APP_API_URL}/delete_operateur`, {
-        numeroEnregistrement: numeroEnregistrement,
-      })
+      .delete(`${process.env.REACT_APP_API_URL}/delete_vehicule/${MATRECULE}`)
       .then(() => {
         setEtat(!etat);
       });
@@ -120,20 +101,10 @@ export default function Vehicule(props) {
       <PageHeader
         title=" العربات"
         subTitle="قائمة العربات"
-        icon={<ViewListIcon />}
+        icon={<LocalShippingIcon />}
       />
       <div className={classes.container}>
         <div>
-          <Button
-            text="إضافة"
-            variant="outlined"
-            size="small"
-            startIcon={<AddIcon />}
-            className={classes.newButton}
-            onClick={() => {
-              setOpenAdd(true);
-            }}
-          />
           <Button
             text="تعديل"
             variant="outlined"
@@ -179,73 +150,29 @@ export default function Vehicule(props) {
           }}
         >
           <ColumnsDirective>
-            <ColumnDirective field="NOM_OP" headerText="إسم المتعامل" />
-            <ColumnDirective field="SIEGE_OP" headerText="عنوان المقر" />
+            <ColumnDirective field="MATRECULE" headerText="الترقيم " />
+            <ColumnDirective field="MARQUE" headerText=" العلامة" />
+            <ColumnDirective field="PTC" headerText="ptc " />
+            <ColumnDirective field="PTAC" headerText="ptac " />
+            <ColumnDirective field="CU" headerText="cu" />
+            <ColumnDirective field="NOM_OP" headerText="  المتعامل " />
+            <ColumnDirective field="PROPRIETAIRE" headerText=" المالك  " />
             <ColumnDirective
               field="NUMERO_ENREGISTREMENT"
               headerText=" رقم القيد"
             />
-            <ColumnDirective
-              field="DATE_ENREGISTREMENT"
-              headerText=" تاريخ القيد "
-            />
-            <ColumnDirective field="PROPRIETAIRE" headerText=" المالك  " />
           </ColumnsDirective>
           <Inject services={[Page, Sort, Filter, Group, Resize]} />
         </GridComponent>
       </div>
-      <Popup
-        title="قائمة المترشحين"
-        openPopup={openCandList}
-        setOpenPopup={setOpenCandList}
-      >
-        <ListCandidat
-          setOpenPopup={setOpenCandList}
-          etat={etat}
-          setEtat={setEtat}
-          selectedValue={Values}
-        />
-      </Popup>
-      <Popup
-        title=" إضافة المتعامل"
-        openPopup={openAdd}
-        setOpenPopup={setOpenAdd}
-      >
-        <OperateurForm
-          type="Add"
-          Values={initialvalues}
-          setEtat={setEtat}
-          etat={etat}
-          Close={setOpenAdd}
-        />
-      </Popup>
-      <Popup
-        title=" تعديل المتعامل"
-        openPopup={openUpdate}
-        setOpenPopup={setOpenUpdate}
-      >
-        <OperateurForm
-          type="update"
-          Values={Values}
-          setEtat={setEtat}
-          etat={etat}
-          Close={setOpenUpdate}
-        />
-      </Popup>
-      <PopupFull
-        title=" قائمة العمال "
-        openPopup={openList}
-        setOpenPopup={setOpenList}
-      >
-        <ListTravailleur selectedValue={Values || ""} type="show" />
-      </PopupFull>
+
       <AlertDialog
         title="تأكيد"
         message=" هل تريد حذف هذا المتعامل ؟"
         open={openAlert}
         setOpen={setOpenAlert}
         method={() => {
-          delete_operateur(Values.NUMERO_ENREGISTREMENT);
+          delete_vehicule();
           setOpenAlert(false);
         }}
       />

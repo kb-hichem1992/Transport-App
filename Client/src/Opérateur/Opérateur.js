@@ -27,13 +27,16 @@ import axios from "axios";
 import AlertDialog from "../components/controls/Dialog";
 import ListCandidat from "../Candidat/ListCandidat";
 import PopupFull from "../components/PopupFullScreen";
-import ViewListIcon from "@mui/icons-material/ViewList";
+import VehiculeForm from"../Vehicule/vehiculeForm";
 import PersonOutlineSharpIcon from "@mui/icons-material/PersonOutlineSharp";
+import GroupIcon from "@mui/icons-material/Group";
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 export default function Operateur(props) {
   const [admin] = useLocalStorage("typeUser", "");
   const [Values, setValues] = useState();
   const [openAlert, setOpenAlert] = useState(false);
+  const [openVehForm, setopenVehForm] = useState(false)
   const [openAdd, setOpenAdd] = useState(false);
   const [openCandList, setOpenCandList] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -122,7 +125,7 @@ export default function Operateur(props) {
       <PageHeader
         title=" المتعاملين"
         subTitle="قائمة المتعاملين"
-        icon={<ViewListIcon />}
+        icon={<GroupIcon />}
       />
       <div className={classes.container}>
         <div>
@@ -170,6 +173,17 @@ export default function Operateur(props) {
             disabled={Values === undefined || admin !== "admin" ? true : false}
             onClick={() => {
               setOpenCandList(true);
+            }}
+          />
+          <Button
+            text="إضافة عربة"
+            variant="outlined"
+            size="small"
+            startIcon={<LocalShippingIcon />}
+            className={classes.newButton}
+            disabled={Values === undefined || admin !== "admin" ? true : false}
+            onClick={() => {
+              setopenVehForm(true);
             }}
           />
           <Button
@@ -258,12 +272,25 @@ export default function Operateur(props) {
           Close={setOpenUpdate}
         />
       </Popup>
+      <Popup
+        title="  إضافة عربة"
+        openPopup={openVehForm}
+        setOpenPopup={setopenVehForm}
+      >
+        <VehiculeForm
+          type="update"
+          Values={Values}
+          setEtat={setEtat}
+          etat={etat}
+          Close={setOpenUpdate}
+        />
+      </Popup>
       <PopupFull
         title=" قائمة العمال "
         openPopup={openList}
         setOpenPopup={setOpenList}
       >
-        <ListTravailleur selectedValue={Values || ""} type="show" />
+        <ListTravailleur api={"/api/get_candidat_foreach_operateur/"} selectedValue={Values || ""} type="show" />
       </PopupFull>
       <AlertDialog
         title="تأكيد"

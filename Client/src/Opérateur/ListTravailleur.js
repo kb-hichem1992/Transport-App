@@ -58,11 +58,7 @@ export default function ListTravailleur(props) {
   const [data, setdata] = useState([]);
 
   useEffect(() => {
-    fetch(
-      process.env.REACT_APP_API_URL +
-        "/api/get_candidat_foreach_operateur/" +
-        NUMERO_ENREGISTREMENT
-    )
+    fetch(process.env.REACT_APP_API_URL + props.api + NUMERO_ENREGISTREMENT)
       .then((response) => response.json())
       .then((json) => setdata(json));
   }, [NUMERO_ENREGISTREMENT, state]);
@@ -94,6 +90,11 @@ export default function ListTravailleur(props) {
       console.log(error);
     }
   }
+
+  const selectCandidat = () => {
+    props.setnum_peris(Values.NUM_PERMIS);
+    props.setOpenPopup(false);
+  };
   const delete_travail = () => {
     axios
       .post(`${process.env.REACT_APP_API_URL}/delete_travail`, {
@@ -105,33 +106,51 @@ export default function ListTravailleur(props) {
       })
       .then(() => {
         setstate(!state);
-        alert("تم الحذف")
+        alert("تم الحذف");
       });
   };
   return (
     <>
       <div className={classes.container}>
-        <Button
-          text="تعديل"
-          variant="outlined"
-          size="small"
-          startIcon={<EditOutlinedIcon />}
-          className={classes.newButton}
-          disabled={Values === undefined || admin !== "admin" ? true : false}
-          onClick={() => {
-            setopenDateForm(true);
-          }}
-        />
-        <Button
-          text="حذف"
-          variant="outlined"
-          size="small"
-          color="secondary"
-          startIcon={<DeleteIcon />}
-          className={classes.newButton}
-          disabled={Values === undefined || admin !== "admin" ? true : false}
-          onClick={delete_travail}
-        />
+        {props.api === "/api/get_candidat_foreach_operateur_noVehcule/" ? (
+          <Button
+            text="تأكيد"
+            variant="outlined"
+            size="small"
+            startIcon={<EditOutlinedIcon />}
+            className={classes.newButton}
+            disabled={Values === undefined ? true : false}
+            onClick={selectCandidat}
+          />
+        ) : (
+          <div>
+            <Button
+              text="تعديل"
+              variant="outlined"
+              size="small"
+              startIcon={<EditOutlinedIcon />}
+              className={classes.newButton}
+              disabled={
+                Values === undefined || admin !== "admin" ? true : false
+              }
+              onClick={() => {
+                setopenDateForm(true);
+              }}
+            />
+            <Button
+              text="حذف"
+              variant="outlined"
+              size="small"
+              color="secondary"
+              startIcon={<DeleteIcon />}
+              className={classes.newButton}
+              disabled={
+                Values === undefined || admin !== "admin" ? true : false
+              }
+              onClick={delete_travail}
+            />
+          </div>
+        )}
       </div>
       <div style={{ width: "auto" }}>
         <GridComponent

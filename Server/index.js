@@ -42,7 +42,7 @@ const db = mysql.createPool({
   // database: "transport_app",
   user: "root",
   password: "root",
-  database: "bdd",
+  database: "transport_app",
   dateStrings: true,
 });
 
@@ -291,8 +291,8 @@ app.post("/Add_travail", (req, res) => {
       ETAT,
     ],
     (err, result) => {
-      if (err.errno === 1062) {
-        res.send({ message: " مسجل من قبل" });
+      if (err) {
+        res.send(err);
       } else {
         res.send("inserted");
       }
@@ -501,6 +501,17 @@ app.get(
     });
   }
 );
+app.get(
+  "/api/get_candidat_foreach_operateur_noVehcule/:NUMERO_ENREGISTREMENT",
+  (req, res) => {
+    const numeroEnregistrement = req.params.NUMERO_ENREGISTREMENT;
+    const sqlquery =
+      "SELECT * from operateur inner join travail on operateur.NUMERO_ENREGISTREMENT = travail.NUMERO_ENREGISTREMENT inner join candidat on candidat.NUM_INS = travail.NUM_INS and candidat.DATE_INS = travail.DATE_INS and candidat.NUM_PERMIS = travail.NUM_PERMIS  where travail.NUMERO_ENREGISTREMENT = ? and candidat.MATRECULE IS NULL AND travail.ETAT = 'منتسب';";
+    db.query(sqlquery, [numeroEnregistrement], (err, result) => {
+      res.send(result);
+    });
+  }
+);
 /* app.get("/api/get_candidat_form", (req, res) => {
   const sqlquery =
     "SELECT passe.NUMERO_FORMATION, candidat.NUM_INS,candidat.NOM_CANDIDAT, candidat.PRENOM_CANDIDAT, candidat.PRENOM_PERE, formation.TYPE_FORMATION, passe.GROUPE, formation.DEBUT, formation.FIN,passe.REMARQUE, passe.NOTE from ((passe inner join candidat on candidat.NUM_INS = passe.NUM_INS) inner join formation on formation.NUMERO_FORMATION = passe.NUMERO_FORMATION) where passe.NUMERO_FORMATION= ?";
@@ -527,6 +538,44 @@ app.get(
     );
   }
 );
+
+app.post("/add_vehicule/:num_enregistrement", (req, res) => {
+  const NUMERO_ENREGISTREMENT = req.params.num_enregistrement;
+  const MATRECULE = req.body.MATRECULE;
+  const GENRE = req.body.GENRE;
+  const MARQUE = req.body.MARQUE;
+  const PTC = req.body.PTC;
+  const PTAC = req.body.PTAC;
+  const CU = req.body.CU;
+  const NOMBRE_PLACE = req.body.NOMBRE_PLACE;
+  const NUM_INS = req.body.NUM_INS;
+  const DATE_INS = req.body.DATE_INS;
+  const NUM_PERMIS = req.body.NUM_PERMIS;
+
+  db.query(
+    "INSERT INTO `vehicule` (`MATRECULE`, `NUMERO_ENREGISTREMENT`, `GENRE`, `MARQUE`, `PTC`, `PTAC`, `CU`, `NOMBRE_PLACE`, `NUM_INS`, `DATE_INS`, `NUM_PERMIS`) VALUES (?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?);",
+    [
+      MATRECULE,
+      NUMERO_ENREGISTREMENT,
+      "marchandise",
+      MARQUE,
+      PTC,
+      PTAC,
+      CU,
+      NOMBRE_PLACE,
+      NUM_INS,
+      DATE_INS,
+      NUM_PERMIS,
+    ],
+    (err, result) => {
+      if (err && err.errno === 1062) {
+        res.send(result.data.message("العربة مسجلة من قبل"));
+      } else {
+        res.send(result.data.message("  تم التسجيل بنجاح "));
+      }
+    }
+  );
+});
 app.put("/update_groupe_number", (req, res) => {
   const number = req.body.number;
   const numeroCandidat = req.body.numeroCandidat;
@@ -715,9 +764,21 @@ app.put("/insert_Date_brevet", (req, res) => {
 });
 app.get("/api/get_veh_Mar", (req, res) => {
   const sqlquery =
-    "select vehicule.IMMATRECULATION, vehicule.MARQUE, vehicule.PTC, vehicule.PTAC, vehicule.CU  , operateur.NOM_OPERATEUR, operateur.PRENOM_OPERATEUR, operateur.PRENOM_PERE  from vehicule, operateur where vehicule.GENRE = 'Marchandise' and vehicule.NUMERO_OPERATEUR = operateur.NUMERO_OPERATEUR;";
+    "select *  from vehicule, operateur where vehicule.NUMERO_ENREGISTREMENT = operateur.NUMERO_ENREGISTREMENT and vehicule.GENRE ='marchandise';";
   db.query(sqlquery, (err, result) => {
     res.send(result);
+  });
+});
+
+app.delete("/delete_vehicule/:MATRECULE", (req, res) => {
+  const MATRECULE = req.params.MATRECULE;
+  const sqlquery = "delete from vehicule where MATRECULE =?;";
+  db.query(sqlquery, [MATRECULE], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send("row deleted");
+    }
   });
 });
 app.get("/api/get_veh_voyag", (req, res) => {
