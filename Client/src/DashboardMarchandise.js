@@ -36,7 +36,7 @@ import Vehicule from "./Vehicule/vehicule";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import GroupIcon from "@mui/icons-material/Group";
 
-const drawerWidth = 180;
+const drawerWidth = 200;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -267,7 +267,7 @@ export default function DashboardMarchandise(props) {
           })}
         >
           <div className={classes.drawerHeader} />
-          <Container maxWidth="lg" className={classes.container}>
+          <Container maxWidth={false} className={classes.container}>
             <Grid item xs={12}>
               <Switch>
                 <Route

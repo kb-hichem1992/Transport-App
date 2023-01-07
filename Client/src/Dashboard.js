@@ -161,6 +161,7 @@ export default function Dashboard(props) {
   let { path, url } = useRouteMatch();
   const [isLogedIn] = useLocalStorage("isLoggedIn");
   const [side] = useLocalStorage("side");
+  const [type] = useLocalStorage("typeUser");
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -237,12 +238,19 @@ export default function Dashboard(props) {
             <Link to={`${url}`} className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
-                  <SearchIcon />
+                  {type === "auto_ecole" ? <GroupIcon /> : <SearchIcon />}
                 </ListItemIcon>
-                <ListItemText primary="البحث" />
+                <ListItemText
+                  primary={type === "auto_ecole" ? "المنرشحين" : "البحث"}
+                />
               </ListItem>
             </Link>
-            <Link to={`${url}/candidat`} className={classes.link}>
+            <Link
+              hidden={type === "admin" ? false : true}
+              to={`${url}/candidat`}
+              className={classes.link}
+            >
+              ''
               <ListItem button>
                 <ListItemIcon>
                   <GroupIcon />
@@ -250,7 +258,11 @@ export default function Dashboard(props) {
                 <ListItemText primary="المنرشحين" />
               </ListItem>
             </Link>
-            <Link to={`${url}/Formation`} className={classes.link}>
+            <Link
+              to={`${url}/Formation`}
+              className={classes.link}
+              hidden={type === "admin" ? false : true}
+            >
               <ListItem button>
                 <ListItemIcon>
                   <LaptopChromebookIcon />
@@ -258,7 +270,11 @@ export default function Dashboard(props) {
                 <ListItemText primary="الدورات" />
               </ListItem>
             </Link>
-            <Link to={url + "/Diplômes"} className={classes.link}>
+            <Link
+              to={url + "/Diplômes"}
+              className={classes.link}
+              hidden={type === "admin" ? false : true}
+            >
               <ListItem button>
                 <ListItemIcon>
                   <LibraryBooksIcon />
@@ -283,17 +299,19 @@ export default function Dashboard(props) {
           })}
         >
           <div className={classes.drawerHeader} />
-          <Container maxWidth="lg" className={classes.container}>
+          <Container maxWidth={false} className={classes.container}>
             <Grid item xs={12}>
               <Switch>
                 <Route
                   path={`${path}`}
                   exact
-                  render={() =>
+                  render={(props) =>
                     isLogedIn && side === "مركز" ? (
-                      <SearchTable
-                        id={`${process.env.REACT_APP_API_URL}/api/Passing_List/${numeroAgrement}`}
-                      />
+                      type === "auto_ecole" ? (
+                        <AppCand {...props} />
+                      ) : (
+                        <SearchTable />
+                      )
                     ) : (
                       <Redirect to="/signIn" />
                     )
@@ -334,12 +352,7 @@ export default function Dashboard(props) {
                 />
                 <Route
                   path={`${path}/candidat`}
-                  render={(props) => (
-                    <AppCand
-                      {...props}
-                      id={process.env.REACT_APP_API_URL + "/api/get_candidat"}
-                    />
-                  )}
+                  render={(props) => <AppCand {...props} />}
                 />
                 <Route
                   path="/Vehicule"
@@ -362,7 +375,7 @@ export default function Dashboard(props) {
                 />
                 <Route
                   path={path + "/Profile"}
-                  render={(props) => (
+                  render={() => (
                     <Profil
                       id={process.env.REACT_APP_API_URL + "/pass_Center_update"}
                     />

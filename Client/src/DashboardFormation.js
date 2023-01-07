@@ -30,8 +30,9 @@ import Profil from "./Profil";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SearchTable from "./Formation/Search.js";
 import SearchIcon from "@material-ui/icons/Search";
+import Statistics from "./Statistics/Statistics";
 
-const drawerWidth = 180;
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -226,17 +227,9 @@ export default function DashboardFormation(props) {
                 <ListItemIcon>
                   <SearchIcon />
                 </ListItemIcon>
-                <ListItemText primary="البحث" />
+                <ListItemText primary="الإحصائيات" />
               </ListItem>
             </Link>
-            {/* <Link to={url + "/operateur"} className={classes.link}>
-              <ListItem button>
-                <ListItemIcon>
-                  <SearchIcon />
-                </ListItemIcon>
-                <ListItemText primary="المعاملين" />
-              </ListItem>
-            </Link> */}
           </List>
           <Divider />
           <Link to={url + "/Profile"} className={classes.link}>
@@ -254,11 +247,20 @@ export default function DashboardFormation(props) {
           })}
         >
           <div className={classes.drawerHeader} />
-          <Container maxWidth="lg" className={classes.container}>
+          <Container maxWidth={false} className={classes.container}>
             <Grid item xs={12}>
               <Switch>
                 <Route
                   path={path}
+                  exact
+                  render={() => (
+                    <Statistics
+                      id={`${process.env.REACT_APP_API_URL}/get_Statistic`}
+                    />
+                  )}
+                />
+                <Route
+                  path={path + "/search"}
                   exact
                   render={() => (
                     <SearchTable
@@ -266,11 +268,7 @@ export default function DashboardFormation(props) {
                     />
                   )}
                 />
-                <Route
-                  path={path + "/operateur"}
-                  exact
-                  render={() => <Operateur />}
-                />
+
                 <Route
                   path={path + "/Profile"}
                   render={(props) => (
